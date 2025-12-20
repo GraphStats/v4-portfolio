@@ -1,3 +1,0 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["chunks/3d860_Code_Newer_Projet-Perso_portfolio-new_New-Portfolio_edge-wrapper_fb6d79c3.js",62413,(e,r,t)=>{self._ENTRIES||={};let o=Promise.resolve().then(()=>e.i(92459));o.catch(()=>{}),self._ENTRIES.middleware_middleware=new Proxy(o,{get(e,r){if("then"===r)return(r,t)=>e.then(r,t);let t=(...t)=>e.then(e=>(0,e[r])(...t));return t.then=(t,o)=>e.then(e=>e[r]).then(t,o),t}})}]);
-
-//# sourceMappingURL=3d860_Code_Newer_Projet-Perso_portfolio-new_New-Portfolio_edge-wrapper_fb6d79c3.js.map
