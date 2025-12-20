@@ -11,6 +11,8 @@ import { Lock, ArrowRight, Sparkles } from "lucide-react"
 import { AdBanner } from "@/components/ad-banner"
 import { ClientOnly } from "@/components/client-only"
 
+export const dynamic = "force-dynamic"
+
 export default async function HomePage() {
   let projects: Project[] = []
   let fetchError = false
