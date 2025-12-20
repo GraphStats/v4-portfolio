@@ -4,6 +4,7 @@ import { useState, useMemo } from "react"
 import type { Project } from "@/lib/types"
 import { ProjectCard } from "@/components/project-card"
 import { TagFilter } from "@/components/tag-filter"
+import { AdBanner } from "@/components/ad-banner"
 
 interface PortfolioContentProps {
   projects: Project[]
@@ -32,8 +33,16 @@ export function PortfolioContent({ projects }: PortfolioContentProps) {
       <TagFilter tags={allTags} selectedTag={selectedTag} onTagSelect={setSelectedTag} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProjects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
+        {filteredProjects.map((project, index) => (
+          <div key={project.id} className="contents">
+            <ProjectCard project={project} />
+            {(index + 1) % 2 === 0 && (
+              <div className="md:col-span-1 lg:col-span-1 border border-dashed border-primary/50 flex flex-col justify-center items-center p-4 bg-primary/5 rounded-xl overflow-hidden">
+                <span className="text-[10px] uppercase tracking-widest text-primary font-bold mb-2">Sponsored</span>
+                <AdBanner />
+              </div>
+            )}
+          </div>
         ))}
       </div>
 
@@ -45,3 +54,4 @@ export function PortfolioContent({ projects }: PortfolioContentProps) {
     </div>
   )
 }
+

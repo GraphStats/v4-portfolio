@@ -1,0 +1,110 @@
+{
+  "node": {
+    "40d4d8067242e6f9c1720b87a3a9c21b6060117e6a": {
+      "workers": {
+        "app/admin/dashboard/page": {
+          "moduleId": 54279,
+          "async": false,
+          "exportedName": "createProject",
+          "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/dashboard/page": "action-browser"
+      },
+      "exportedName": "createProject",
+      "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/actions.ts"
+    },
+    "60bfb56a6b8bc00792e1e67c8573a4668abe23c56f": {
+      "workers": {
+        "app/admin/dashboard/page": {
+          "moduleId": 54279,
+          "async": false,
+          "exportedName": "updateProject",
+          "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/dashboard/page": "action-browser"
+      },
+      "exportedName": "updateProject",
+      "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/actions.ts"
+    },
+    "40f4a1912753ad07a8618ac4beb0ef0d0465218754": {
+      "workers": {
+        "app/admin/dashboard/page": {
+          "moduleId": 54279,
+          "async": false,
+          "exportedName": "deleteProject",
+          "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/dashboard/page": "action-browser"
+      },
+      "exportedName": "deleteProject",
+      "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/actions.ts"
+    },
+    "4091921f9b99646f6d459821464ad48967905d55e8": {
+      "workers": {
+        "app/admin/dashboard/page": {
+          "moduleId": 54279,
+          "async": false,
+          "exportedName": "createAdmin",
+          "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/dashboard/page": "action-browser"
+      },
+      "exportedName": "createAdmin",
+      "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/actions.ts"
+    },
+    "40c58ac037c23df836e14400331c8871a9e9174332": {
+      "workers": {
+        "app/admin/dashboard/page": {
+          "moduleId": 54279,
+          "async": false,
+          "exportedName": "deleteAdmin",
+          "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/dashboard/page": "action-browser"
+      },
+      "exportedName": "deleteAdmin",
+      "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/actions.ts"
+    },
+    "00f239c33ba855bae1176710cef746cc2e85e1879e": {
+      "workers": {
+        "app/admin/dashboard/page": {
+          "moduleId": 54279,
+          "async": false,
+          "exportedName": "logoutAdmin",
+          "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/auth.ts"
+        }
+      },
+      "layer": {
+        "app/admin/dashboard/page": "action-browser"
+      },
+      "exportedName": "logoutAdmin",
+      "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/auth.ts"
+    },
+    "004d81a2a0dc611841a0c181542c6af9e55277024c": {
+      "workers": {
+        "app/admin/dashboard/page": {
+          "moduleId": 54279,
+          "async": false,
+          "exportedName": "getAdmins",
+          "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/dashboard/page": "action-browser"
+      },
+      "exportedName": "getAdmins",
+      "filename": "Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/lib/actions.ts"
+    }
+  },
+  "edge": {}
+}

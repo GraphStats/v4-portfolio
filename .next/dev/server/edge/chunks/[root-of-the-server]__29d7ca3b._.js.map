@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 16, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/Desktop/Code/Newer/Projet-Perso/portfolio-new/New-Portfolio/middleware.ts"],"sourcesContent":["import { NextResponse } from \"next/server\"\r\nimport type { NextRequest } from \"next/server\"\r\n\r\nexport function middleware(request: NextRequest) {\r\n  // Check if the request is for the admin dashboard\r\n  if (request.nextUrl.pathname.startsWith(\"/admin/dashboard\")) {\r\n    const adminSession = request.cookies.get(\"admin_session\")\r\n\r\n    // If no admin session, redirect to admin login\r\n    if (!adminSession) {\r\n      return NextResponse.redirect(new URL(\"/admin\", request.url))\r\n    }\r\n  }\r\n\r\n  return NextResponse.next()\r\n}\r\n\r\nexport const config = {\r\n  matcher: [\"/admin/dashboard/:path*\"],\r\n}\r\n"],"names":[],"mappings":";;;;;;AAAA;AAAA;;AAGO,SAAS,WAAW,OAAoB;IAC7C,kDAAkD;IAClD,IAAI,QAAQ,OAAO,CAAC,QAAQ,CAAC,UAAU,CAAC,qBAAqB;QAC3D,MAAM,eAAe,QAAQ,OAAO,CAAC,GAAG,CAAC;QAEzC,+CAA+C;QAC/C,IAAI,CAAC,cAAc;YACjB,OAAO,uRAAY,CAAC,QAAQ,CAAC,IAAI,IAAI,UAAU,QAAQ,GAAG;QAC5D;IACF;IAEA,OAAO,uRAAY,CAAC,IAAI;AAC1B;AAEO,MAAM,SAAS;IACpB,SAAS;QAAC;KAA0B;AACtC"}}]
+}
