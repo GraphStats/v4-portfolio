@@ -12,15 +12,25 @@ import { AdBanner } from "@/components/ad-banner"
 import { ClientOnly } from "@/components/client-only"
 
 export default async function HomePage() {
-  const supabase = await createClient()
+  let projects: Project[] = []
+  let fetchError = false
 
-  const { data: projects, error } = await supabase
-    .from("projects")
-    .select("*")
-    .order("created_at", { ascending: false })
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .order("created_at", { ascending: false })
 
-  if (error) {
-    console.error("Error fetching projects:", error)
+    if (error) {
+      console.error("Error fetching projects:", error)
+      fetchError = true
+    } else {
+      projects = (data as Project[]) || []
+    }
+  } catch (e) {
+    console.error("Supabase config or connection error:", e)
+    fetchError = true
   }
 
   return (
@@ -109,10 +119,16 @@ export default async function HomePage() {
             <p className="text-lg text-muted-foreground text-pretty max-w-2xl mx-auto">
               Explore my latest work and discover the technologies behind each project
             </p>
+            {fetchError && (
+              <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive max-w-md mx-auto">
+                <p className="font-semibold">⚠️ Configuration Error</p>
+                <p className="text-sm">Unable to connect to the database. Please check your Supabase environment variables.</p>
+              </div>
+            )}
             <AdBanner />
           </div>
 
-          <PortfolioContent projects={(projects as Project[]) || []} />
+          <PortfolioContent projects={projects} />
 
           <div className="mt-16 flex justify-center">
             <AdBanner />
