@@ -2,7 +2,8 @@
 
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { getFirestoreServer } from "@/lib/firebase/server"
+import { collection, query, where, getDocs } from "firebase/firestore"
 
 const ADMIN_SESSION_COOKIE = "admin_session"
 
@@ -17,26 +18,29 @@ async function hashPassword(password: string): Promise<string> {
 
 export async function verifyAdminCredentials(email: string, password: string): Promise<boolean> {
   console.log("[v0] Verifying credentials for:", email)
-  const supabase = await createClient()
+  const db = await getFirestoreServer()
   const hashedPassword = await hashPassword(password)
   console.log("[v0] Hashed password:", hashedPassword)
 
-  const { data, error } = await supabase
-    .from("admins")
-    .select("*")
-    .eq("email", email)
-    .eq("password", hashedPassword)
-    .maybeSingle()
+  try {
+    const adminsQuery = query(
+      collection(db, "admins"),
+      where("email", "==", email),
+      where("password", "==", hashedPassword)
+    )
+    const querySnapshot = await getDocs(adminsQuery)
 
-  console.log("[v0] Query result:", { data, error })
+    if (querySnapshot.empty) {
+      console.log("[v0] Verification failed")
+      return false
+    }
 
-  if (error || !data) {
-    console.log("[v0] Verification failed")
+    console.log("[v0] Verification successful")
+    return true
+  } catch (error) {
+    console.log("[v0] Verification error:", error)
     return false
   }
-
-  console.log("[v0] Verification successful")
-  return true
 }
 
 export async function createAdminSession() {
