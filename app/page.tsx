@@ -86,7 +86,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="projects" className="py-24 animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+      <section id="projects" className="py-24 animate-fade-in-up">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16 space-y-4">
             <h3 className="text-4xl md:text-5xl font-bold text-balance">Featured Projects</h3>
