@@ -32,8 +32,10 @@ export function PortfolioContent({ projects }: PortfolioContentProps) {
       <TagFilter tags={allTags} selectedTag={selectedTag} onTagSelect={setSelectedTag} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProjects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
+        {filteredProjects.map((project, index) => (
+          <div key={project.id} style={{ animationDelay: `${index * 150}ms` }} className="h-full">
+            <ProjectCard project={project} />
+          </div>
         ))}
       </div>
 

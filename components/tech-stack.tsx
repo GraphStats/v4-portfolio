@@ -25,9 +25,9 @@ export function TechStack() {
     <section id="tech-stack" className="py-32 relative overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="flex flex-col items-center text-center mb-24 space-y-4">
-          <div className="text-primary font-bold tracking-widest text-sm uppercase">Expertise</div>
-          <h3 className="text-5xl md:text-6xl font-bold tracking-tight font-display">TECHNICAL ECOSYSTEM</h3>
-          <p className="text-lg text-muted-foreground font-medium max-w-2xl mx-auto">
+          <div className="text-primary font-bold tracking-widest text-sm uppercase reveal-up">Expertise</div>
+          <h3 className="text-5xl md:text-6xl font-bold tracking-tight font-display reveal-up stagger-1">TECHNICAL ECOSYSTEM</h3>
+          <p className="text-lg text-muted-foreground font-medium max-w-2xl mx-auto reveal-up stagger-2">
             Leveraging cutting-edge technologies to build robust, scalable,
             and future-proof digital solutions.
           </p>
@@ -38,8 +38,8 @@ export function TechStack() {
             return (
               <div
                 key={tech.name}
-                className="group relative h-40 flex flex-col items-center justify-center gap-4 rounded-3xl glass border-white/5 hover:border-primary/30 transition-all duration-500 cursor-pointer overflow-hidden animate-fade-in-up"
-                style={{ animationDelay: `${index * 50}ms` }}
+                className="group relative h-40 flex flex-col items-center justify-center gap-4 rounded-3xl glass border-white/5 hover:border-primary/30 transition-all duration-500 cursor-pointer overflow-hidden reveal-up perspective-card"
+                style={{ animationDelay: `${(index + 3) * 100}ms` }}
               >
                 <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors duration-500" />
                 <div className="relative w-12 h-12 flex items-center justify-center p-1 group-hover:scale-125 transition-all duration-500">
