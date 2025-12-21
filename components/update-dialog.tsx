@@ -45,7 +45,6 @@ export function UpdateDialog({ open, onOpenChange, onSuccess }: UpdateDialogProp
             setUpdateData(prev => ({
                 ...prev,
                 ...data,
-                // Ensure arrays exist if they were missing
                 planned_features: data.planned_features || [],
                 changelog: data.changelog || []
             }))
