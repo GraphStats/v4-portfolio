@@ -31,7 +31,7 @@ export default function TermsPage() {
                 <div className="glass p-10 md:p-16 rounded-[2.5rem] border-white/5 space-y-12 shadow-2xl">
                     <section className="space-y-4">
                         <h1 className="text-4xl md:text-5xl font-black tracking-tight font-display text-gradient">TERMS OF SERVICE</h1>
-                        <p className="text-muted-foreground font-medium">Last updated: {new Date().toLocaleDateString()}</p>
+                        <p className="text-muted-foreground font-medium">Last updated: December 21, 2025</p>
                     </section>
 
                     <div className="prose prose-invert max-w-none space-y-8 font-medium text-muted-foreground leading-relaxed">
@@ -86,7 +86,7 @@ export default function TermsPage() {
             </main>
 
             <footer className="py-12 border-t border-white/5 text-center text-sm text-muted-foreground font-medium">
-                <p>&copy; {new Date().getFullYear()} Drayko. Legal Framework & Terms.</p>
+                <p>&copy; 2025 Drayko. Legal Framework & Terms.</p>
             </footer>
         </div>
     )

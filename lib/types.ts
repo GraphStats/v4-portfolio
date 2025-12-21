@@ -15,3 +15,21 @@ export interface Admin {
   email: string
   created_at: string
 }
+
+export interface ChangelogEntry {
+  id: string
+  version: string
+  date: string
+  changes: string[]
+}
+
+export interface SiteUpdate {
+  id?: string
+  next_update_date: string | null
+  no_update_planned: boolean
+  planned_features: string[];
+  changelog: ChangelogEntry[];
+  latest_update_text?: string;
+  updated_at: string;
+}
+

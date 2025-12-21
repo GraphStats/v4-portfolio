@@ -31,7 +31,7 @@ export default function PrivacyPage() {
                 <div className="glass p-10 md:p-16 rounded-[2.5rem] border-white/5 space-y-12 shadow-2xl">
                     <section className="space-y-4">
                         <h1 className="text-4xl md:text-5xl font-black tracking-tight font-display text-gradient">PRIVACY POLICY</h1>
-                        <p className="text-muted-foreground font-medium">Last updated: {new Date().toLocaleDateString()}</p>
+                        <p className="text-muted-foreground font-medium">Last updated: December 21, 2025</p>
                     </section>
 
                     <div className="prose prose-invert max-w-none space-y-8 font-medium text-muted-foreground leading-relaxed">
@@ -75,8 +75,8 @@ export default function PrivacyPage() {
                         <section className="space-y-4">
                             <h2 className="text-2xl font-bold text-foreground tracking-tight">5. Contact Us</h2>
                             <p>
-                                If you have any questions about this privacy policy or our privacy practices, please contact us at:
-                                <span className="text-primary ml-1">admin@drayko.dev</span>
+                                Notre fonction de contact sur le Web arrive bientôt. En attendant, pour toute question concernant cette politique de confidentialité, veuillez nous contacter par e-mail à :
+                                <span className="text-primary ml-1">admin@drayko.xyz</span>
                             </p>
                         </section>
                     </div>
@@ -84,7 +84,7 @@ export default function PrivacyPage() {
             </main>
 
             <footer className="py-12 border-t border-white/5 text-center text-sm text-muted-foreground font-medium">
-                <p>&copy; {new Date().getFullYear()} Drayko. Professional Ethics & Privacy.</p>
+                <p>&copy; 2025 Drayko. Professional Ethics & Privacy.</p>
             </footer>
         </div>
     )

@@ -1,20 +1,21 @@
 import type React from "react"
 import { getFirestoreServer } from "@/lib/firebase/server"
-import { collection, getDocs, query, orderBy } from "firebase/firestore"
-import type { Project } from "@/lib/types"
+import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
+import type { Project, SiteUpdate } from "@/lib/types"
 import { PortfolioContent } from "@/components/portfolio-content"
 import { TechStack } from "@/components/tech-stack"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { ScrollButton } from "@/components/scroll-button"
 import Link from "next/link"
-import { Lock, ArrowRight, Sparkles, Code2, Globe, Command, ChevronDown } from "lucide-react"
+import { Lock, ArrowRight, Sparkles, Code2, Globe, Command, ChevronDown, Github, Gitlab, MessageSquare, Rocket, Timer } from "lucide-react"
 
 export const dynamic = "force-dynamic"
 
 export default async function HomePage() {
   let projects: Project[] = []
   let fetchError = false
+  let updateData: SiteUpdate | null = null
 
   try {
     const db = await getFirestoreServer()
@@ -25,6 +26,13 @@ export default async function HomePage() {
       id: doc.id,
       ...doc.data()
     })) as Project[]
+
+    // Fetch site update info for the badge
+    const updateDocRef = doc(db, "update-p", "main")
+    const updateDocSnap = await getDoc(updateDocRef)
+    if (updateDocSnap.exists()) {
+      updateData = updateDocSnap.data() as SiteUpdate
+    }
   } catch (e) {
     console.error("Firebase config or connection error:", e)
     fetchError = true
@@ -72,10 +80,11 @@ export default async function HomePage() {
       <main className="relative z-10 pt-20">
         <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
           <div className="container px-6 py-24 mx-auto text-center space-y-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-white/10 text-sm font-medium animate-fade-in text-muted-foreground">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <span>Fix database bug and new interface (v3!)</span>
-            </div>
+            <Link href="/update" className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-white/10 text-sm font-medium animate-fade-in text-muted-foreground hover:bg-white/5 hover:text-foreground transition-all group">
+              <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+              <span>Latest update: {updateData?.latest_update_text || "Fix database bug and new interface (v3!)"}</span>
+              <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
+            </Link>
 
             <div className="space-y-6">
               <h2 className="text-7xl md:text-8xl lg:text-[10rem] font-black tracking-[calc(-0.05em)] leading-[0.85] animate-fade-in-up font-display">
@@ -92,12 +101,12 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-              <ScrollButton targetId="projects" size="lg" className="rounded-full px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 group w-full sm:w-auto transition-all">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+              <ScrollButton targetId="projects" size="lg" className="rounded-full px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 group w-full sm:w-auto transition-all text-sm font-bold uppercase tracking-widest">
                 Discover Projects
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </ScrollButton>
-              <ScrollButton targetId="tech-stack" variant="ghost" size="lg" className="rounded-full px-8 border border-white/10 glass hover:bg-white/10 hover:text-foreground w-full sm:w-auto transition-all">
+              <ScrollButton targetId="tech-stack" variant="ghost" size="lg" className="rounded-full px-8 border border-white/10 glass hover:bg-white/10 hover:text-foreground w-full sm:w-auto transition-all text-sm font-bold uppercase tracking-widest">
                 Explore Tech
               </ScrollButton>
             </div>
@@ -147,8 +156,10 @@ export default async function HomePage() {
                   Let's bring your vision to life.
                 </p>
                 <div className="pt-8">
-                  <Button size="lg" className="rounded-full px-12 h-16 text-lg bg-foreground text-background hover:bg-foreground/90 transition-all hover:scale-105 active:scale-95">
-                    Start a Conversation
+                  <Button asChild size="lg" className="rounded-full px-12 h-16 text-lg bg-foreground text-background hover:bg-foreground/90 transition-all hover:scale-105 active:scale-95 shadow-2xl">
+                    <Link href="/contact">
+                      Start a Conversation
+                    </Link>
                   </Button>
                 </div>
               </div>
@@ -178,22 +189,23 @@ export default async function HomePage() {
                 <ul className="space-y-3 text-muted-foreground font-medium">
                   <li><ScrollButton targetId="projects" variant="link" className="p-0 h-auto hover:text-foreground">Projects</ScrollButton></li>
                   <li><ScrollButton targetId="tech-stack" variant="link" className="p-0 h-auto hover:text-foreground">Tech Stack</ScrollButton></li>
+                  <li><Link href="/update" className="hover:text-foreground">Site Updates</Link></li>
                   <li><Link href="/admin" className="hover:text-foreground">Admin Access</Link></li>
                 </ul>
               </div>
               <div className="space-y-4">
                 <h5 className="font-bold text-sm uppercase tracking-widest text-primary">Social</h5>
                 <ul className="space-y-3 text-muted-foreground font-medium">
-                  <li><Link href="#" className="hover:text-foreground transition-all flex items-center gap-2"><Globe className="h-4 w-4" /> GitHub</Link></li>
-                  <li><Link href="#" className="hover:text-foreground transition-all flex items-center gap-2"><Globe className="h-4 w-4" /> LinkedIn</Link></li>
-                  <li><Link href="#" className="hover:text-foreground transition-all flex items-center gap-2"><Globe className="h-4 w-4" /> Twitter</Link></li>
+                  <li><Link href="https://github.com/GraphStats" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-all flex items-center gap-2"><Github className="h-4 w-4" /> GitHub</Link></li>
+                  <li><Link href="https://gitlab.com/graphstats.pro" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-all flex items-center gap-2"><Gitlab className="h-4 w-4" /> GitLab</Link></li>
+                  <li><Link href="/contact" className="hover:text-foreground transition-all flex items-center gap-2"><MessageSquare className="h-4 w-4" /> Contact</Link></li>
                 </ul>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/5 text-sm text-muted-foreground font-medium gap-4">
-            <p>&copy; {new Date().getFullYear()} Drayko. All rights reserved.</p>
+            <p>&copy; 2025 Drayko. All rights reserved.</p>
             <div className="flex gap-8">
               <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
               <Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Trash2, Mail } from "lucide-react"
@@ -13,7 +13,12 @@ interface AdminCardProps {
 }
 
 export function AdminCard({ admin, onDeleted }: AdminCardProps) {
+  const [mounted, setMounted] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <>
@@ -25,7 +30,9 @@ export function AdminCard({ admin, onDeleted }: AdminCardProps) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-medium truncate">{admin.email}</p>
-              <p className="text-sm text-muted-foreground">Added {new Date(admin.created_at).toLocaleDateString()}</p>
+              {mounted && (
+                <p className="text-sm text-muted-foreground">Added {new Date(admin.created_at).toLocaleDateString()}</p>
+              )}
             </div>
           </div>
         </CardContent>

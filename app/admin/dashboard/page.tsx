@@ -2,19 +2,22 @@
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield } from "lucide-react"
+import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon } from "lucide-react"
 import { AdminProjectCard } from "@/components/admin-project-card"
 import { ProjectDialog } from "@/components/project-dialog"
 import { AdminDialog } from "@/components/admin-dialog"
 import { AdminCard } from "@/components/admin-card"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { UpdateDialog } from "@/components/update-dialog"
+import { BadgeDialog } from "@/components/badge-dialog"
 import { Separator } from "@/components/ui/separator"
-import type { Project, Admin } from "@/lib/types"
+import type { Project, Admin, SiteUpdate } from "@/lib/types"
 import { logoutAdmin } from "@/lib/auth"
 import { getAdmins } from "@/lib/actions"
 import { getFirestoreClient } from "@/lib/firebase/client"
-import { collection, getDocs, query, orderBy } from "firebase/firestore"
+import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
 import Link from "next/link"
+import { Sparkles } from "lucide-react"
 
 export default function AdminDashboardPage() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -22,6 +25,9 @@ export default function AdminDashboardPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [addProjectOpen, setAddProjectOpen] = useState(false)
   const [addAdminOpen, setAddAdminOpen] = useState(false)
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
+  const [badgeDialogOpen, setBadgeDialogOpen] = useState(false)
+  const [updateData, setUpdateData] = useState<SiteUpdate | null>(null)
 
   const fetchProjects = async () => {
     const db = getFirestoreClient()
@@ -44,9 +50,19 @@ export default function AdminDashboardPage() {
     }
   }
 
+  const fetchUpdateData = async () => {
+    const db = getFirestoreClient()
+    const docRef = doc(db, "update-p", "main")
+    const docSnap = await getDoc(docRef)
+    if (docSnap.exists()) {
+      setUpdateData(docSnap.data() as SiteUpdate)
+    }
+  }
+
   useEffect(() => {
     fetchProjects()
     fetchAdmins()
+    fetchUpdateData()
   }, [])
 
   const handleProjectDeleted = (projectId: string) => {
@@ -158,6 +174,81 @@ export default function AdminDashboardPage() {
 
         <Separator className="bg-white/5" />
 
+        {/* Hero Communication Section */}
+        <section className="space-y-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                <Sparkles className="h-4 w-4" />
+                Hero Communications
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">HOMEPAGE BADGE</h2>
+              <p className="text-muted-foreground font-medium max-w-xl">
+                Update the headline message that visitors see first when landing on your portfolio.
+              </p>
+            </div>
+            <Button
+              onClick={() => setBadgeDialogOpen(true)}
+              className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 transition-all self-start md:self-auto"
+            >
+              <Sparkles className="mr-2 h-5 w-5" />
+              Update Headline
+            </Button>
+          </div>
+
+          <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] relative overflow-hidden group">
+            <div className="flex items-center gap-6 relative z-10">
+              <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
+                <Sparkles className="h-8 w-8 text-primary shadow-glow shadow-primary/20" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Current Live Badge Content</p>
+                <p className="text-xl md:text-3xl font-bold text-foreground/90 italic">
+                  "{updateData?.latest_update_text || "Fix database bug and new interface (v3!)"}"
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <Separator className="bg-white/5" />
+
+        {/* Site Updates Section */}
+        <section className="space-y-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                <HistoryIcon className="h-4 w-4" />
+                Evolution & Roadmap
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">SITE SYSTEM UPDATES</h2>
+              <p className="text-muted-foreground font-medium max-w-xl">
+                Coordinate the release cycle, document breaking changes, and announce future capabilities.
+              </p>
+            </div>
+            <Button onClick={() => setUpdateDialogOpen(true)} variant="outline" className="rounded-2xl h-14 px-8 glass border-white/10 hover:bg-white/10 hover:text-foreground self-start md:self-auto transition-all">
+              <HistoryIcon className="mr-2 h-5 w-5" />
+              Manage Ecosystem Logs
+            </Button>
+          </div>
+
+          <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02]">
+            <div className="flex items-center gap-4">
+              <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
+                <HistoryIcon className="h-8 w-8" />
+              </div>
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Historical Records</p>
+                <p className="text-xl font-bold text-foreground/90 font-sans">
+                  Track the evolution of the platform with detailed version logs.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <Separator className="bg-white/5" />
+
         {/* Admins Section */}
         <section className="space-y-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -193,6 +284,8 @@ export default function AdminDashboardPage() {
 
       <ProjectDialog open={addProjectOpen} onOpenChange={setAddProjectOpen} onSuccess={fetchProjects} />
       <AdminDialog open={addAdminOpen} onOpenChange={setAddAdminOpen} onSuccess={fetchAdmins} />
+      <UpdateDialog open={updateDialogOpen} onOpenChange={setUpdateDialogOpen} onSuccess={fetchUpdateData} />
+      <BadgeDialog open={badgeDialogOpen} onOpenChange={setBadgeDialogOpen} onSuccess={fetchUpdateData} />
     </div>
   )
 }
