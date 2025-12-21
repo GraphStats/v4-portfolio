@@ -115,10 +115,107 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+.special-new-year:is(.dark *) {
+  --primary: oklch(0.78 0.18 75);
+  /* Rich Golden Primary */
+  --primary-foreground: oklch(0.12 0 0);
+  --accent: oklch(0.88 0.15 85);
+  /* Bright Gold Accent */
+  --ring: oklch(0.78 0.18 75);
+  --background: oklch(0.10 0.03 70);
+  /* Deep warm dark background with golden tint */
+  --card: oklch(0.15 0.04 75);
+  /* Slightly golden card background */
+  --border: oklch(0.35 0.08 75);
+  /* Golden borders */
+  --muted: oklch(0.25 0.05 75);
+  --muted-foreground: oklch(0.65 0.08 80);
+}
+
+.special-new-year {
+  --primary: oklch(0.68 0.18 75);
+  /* Deep golden primary for light mode */
+  --primary-foreground: oklch(1 0 0);
+  --accent: oklch(0.78 0.16 80);
+  /* Warm golden accent */
+  --ring: oklch(0.68 0.18 75);
+  --border: oklch(0.85 0.05 80);
+  /* Subtle golden borders */
+  --muted: oklch(0.92 0.03 85);
+  --muted-foreground: oklch(0.50 0.10 75);
+}
+
+.special-new-year .text-gradient {
+  background: linear-gradient(135deg, #ffd700, #ffed4e, #ff8c00, #daa520, #ffd700);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+  animation: shine 3s linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.special-new-year .animate-pulse-glow {
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, rgba(255, 140, 0, 0.2) 50%, transparent 70%);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.7s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

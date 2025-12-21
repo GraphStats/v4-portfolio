@@ -6,7 +6,8 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "eslint .",
-    "start": "next start"
+    "start": "next start",
+    "sync-themes": "xcopy /Y styles\\special-themes\\*.css public\\styles\\special-themes\\"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

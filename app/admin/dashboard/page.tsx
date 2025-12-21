@@ -249,6 +249,44 @@ export default function AdminDashboardPage() {
 
         <Separator className="bg-white/5" />
 
+        {/* Special Themes Section */}
+        <section className="space-y-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                <Sparkles className="h-4 w-4" />
+                Thèmes Festifs
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">THÈMES SPÉCIAUX</h2>
+              <p className="text-muted-foreground font-medium max-w-xl">
+                Configurez les périodes d'activation des thèmes festifs pour créer des expériences uniques.
+              </p>
+            </div>
+            <Button asChild className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 self-start md:self-auto transition-all">
+              <Link href="/admin/special-themes">
+                <Sparkles className="mr-2 h-5 w-5" />
+                Gérer les Thèmes
+              </Link>
+            </Button>
+          </div>
+
+          <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] relative overflow-hidden group">
+            <div className="flex items-center gap-6 relative z-10">
+              <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
+                <Sparkles className="h-8 w-8 text-primary shadow-glow shadow-primary/20" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Thème Actuel</p>
+                <p className="text-xl md:text-3xl font-bold text-foreground/90 italic">
+                  Nouvel An 2026 (20 déc - 2 jan)
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <Separator className="bg-white/5" />
+
         {/* Admins Section */}
         <section className="space-y-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">

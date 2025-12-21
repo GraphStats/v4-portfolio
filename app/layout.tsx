@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Inter, Outfit } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
+import { SpecialThemeHandler } from "@/components/special-theme-handler"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${outfit.variable}`}>
       <body className="font-sans antialiased selection:bg-primary/30 selection:text-primary transition-colors duration-300" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <SpecialThemeHandler />
           <div className="relative flex min-h-screen flex-col">
             <main className="flex-1">{children}</main>
           </div>
