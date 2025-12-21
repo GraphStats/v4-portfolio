@@ -12,10 +12,9 @@ import { Separator } from "@/components/ui/separator"
 import type { Project, Admin } from "@/lib/types"
 import { logoutAdmin } from "@/lib/auth"
 import { getAdmins } from "@/lib/actions"
-import { createClient } from "@/lib/supabase/client"
+import { getFirestoreClient } from "@/lib/firebase/client"
+import { collection, getDocs, query, orderBy } from "firebase/firestore"
 import Link from "next/link"
-import { AdBanner } from "@/components/ad-banner"
-import { ClientOnly } from "@/components/client-only"
 
 export default function AdminDashboardPage() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -25,15 +24,16 @@ export default function AdminDashboardPage() {
   const [addAdminOpen, setAddAdminOpen] = useState(false)
 
   const fetchProjects = async () => {
-    const supabase = createClient()
-    const { data, error } = await supabase.from("projects").select("*").order("created_at", { ascending: false })
+    const db = getFirestoreClient()
+    const projectsQuery = query(collection(db, "portfolio"), orderBy("created_at", "desc"))
+    const querySnapshot = await getDocs(projectsQuery)
 
-    if (error) {
-      console.error("Error fetching projects:", error)
-    } else {
-      setProjects((data as Project[]) || [])
-    }
+    const data = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as Project[]
 
+    setProjects(data)
     setIsLoading(false)
   }
 
@@ -95,20 +95,11 @@ export default function AdminDashboardPage() {
 
       {/* Content */}
       <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <AdBanner />
-        </div>
-
         {/* Projects Section */}
         <div className="mb-12">
-          <div className="mb-6 flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Manage Projects</h2>
-              <p className="text-muted-foreground">Add, edit, or remove projects from your portfolio.</p>
-            </div>
-            <div className="hidden md:block scale-50 origin-right">
-              <AdBanner />
-            </div>
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">Manage Projects</h2>
+            <p className="text-muted-foreground">Add, edit, or remove projects from your portfolio.</p>
           </div>
 
           {isLoading ? (
@@ -133,16 +124,8 @@ export default function AdminDashboardPage() {
                   onUpdated={handleProjectUpdated}
                 />
               ))}
-              <div className="border border-dashed border-primary/50 rounded-xl p-4 flex flex-col items-center justify-center bg-primary/5 min-h-[200px]">
-                <span className="text-[10px] uppercase font-bold text-primary mb-2">Internal Ad</span>
-                <AdBanner />
-              </div>
             </div>
           )}
-        </div>
-
-        <div className="my-12">
-          <AdBanner />
         </div>
 
         <Separator className="my-8" />
@@ -169,28 +152,13 @@ export default function AdminDashboardPage() {
               {admins.map((admin) => (
                 <AdminCard key={admin.id} admin={admin} onDeleted={handleAdminDeleted} />
               ))}
-              <div className="border border-dashed border-accent/50 rounded-xl p-4 flex flex-col items-center justify-center bg-accent/5">
-                <AdBanner />
-                <span className="text-[10px] uppercase font-bold text-accent mt-2">Sponsored Admin</span>
-              </div>
             </div>
           )}
-        </div>
-
-        <div className="mt-12">
-          <AdBanner />
         </div>
       </main>
 
       <ProjectDialog open={addProjectOpen} onOpenChange={setAddProjectOpen} onSuccess={fetchProjects} />
       <AdminDialog open={addAdminOpen} onOpenChange={setAddAdminOpen} onSuccess={fetchAdmins} />
-
-      <ClientOnly>
-        <div className="fixed bottom-4 right-4 z-50 scale-75 origin-bottom-right">
-          <AdBanner />
-        </div>
-      </ClientOnly>
     </div>
   )
 }
-

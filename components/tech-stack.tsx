@@ -1,8 +1,7 @@
 "use client"
 
 import { Card } from "@/components/ui/card"
-import { Code2, Cloud, Server, Terminal, FileCode, Laptop, AlertTriangle, type LucideIcon } from "lucide-react"
-import { AdBanner } from "@/components/ad-banner"
+import { Code2, Cloud, Server, Terminal, FileCode, Laptop, type LucideIcon } from "lucide-react"
 
 interface TechItem {
   name: string
@@ -28,14 +27,11 @@ export function TechStack() {
   return (
     <section id="tech-stack" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12 animate-fade-in relative">
+        <div className="text-center mb-12 animate-fade-in">
           <h3 className="text-3xl font-bold mb-4 text-balance">Ma Stack Technique</h3>
           <p className="text-muted-foreground text-pretty max-w-2xl mx-auto">
             Les technologies et outils que j'utilise pour créer des applications modernes et performantes
           </p>
-          <div className="absolute -top-10 left-1/2 -translate-x-1/2 scale-50">
-            <AdBanner />
-          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-5xl mx-auto items-stretch">
@@ -52,26 +48,8 @@ export function TechStack() {
               </Card>
             )
           })}
-          <Card className="p-6 flex flex-col items-center justify-center gap-3 bg-primary/10 border-dashed border-primary animate-pulse overflow-hidden min-h-[160px]">
-            <AlertTriangle className="h-8 w-8 text-primary" />
-            <span className="font-bold text-xs uppercase text-primary">Sponsored Tech</span>
-            <div className="w-full scale-50 origin-center -my-8">
-              <AdBanner />
-            </div>
-          </Card>
-          <Card className="p-6 flex flex-col items-center justify-center gap-3 bg-secondary/10 border-dashed border-secondary overflow-hidden min-h-[160px]">
-            <div className="w-full scale-50 origin-center -my-8">
-              <AdBanner />
-            </div>
-            <span className="font-bold text-xs uppercase text-secondary tracking-tighter">Your Ad Here</span>
-          </Card>
-        </div>
-
-        <div className="mt-12 flex justify-center">
-          <AdBanner />
         </div>
       </div>
     </section>
   )
 }
-
