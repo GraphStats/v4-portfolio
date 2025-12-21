@@ -1,6 +1,5 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 interface TagFilterProps {
@@ -11,27 +10,33 @@ interface TagFilterProps {
 
 export function TagFilter({ tags, selectedTag, onTagSelect }: TagFilterProps) {
   return (
-    <div className="flex flex-wrap gap-2 justify-center">
-      <Badge
-        variant={selectedTag === null ? "default" : "outline"}
-        className={cn("cursor-pointer transition-colors", selectedTag === null && "bg-primary text-primary-foreground")}
+    <div className="flex flex-wrap gap-3 justify-center items-center py-8">
+      <button
         onClick={() => onTagSelect(null)}
+        className={cn(
+          "px-6 py-2 rounded-full text-sm font-bold tracking-tight transition-all duration-300 border",
+          selectedTag === null
+            ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/25 scale-105"
+            : "glass border-white/10 text-muted-foreground hover:border-white/20 hover:text-foreground"
+        )}
       >
-        All Projects
-      </Badge>
+        All Works
+      </button>
       {tags.map((tag) => (
-        <Badge
+        <button
           key={tag}
-          variant={selectedTag === tag ? "default" : "outline"}
-          className={cn(
-            "cursor-pointer transition-colors",
-            selectedTag === tag && "bg-primary text-primary-foreground",
-          )}
           onClick={() => onTagSelect(tag)}
+          className={cn(
+            "px-6 py-2 rounded-full text-sm font-bold tracking-tight transition-all duration-300 border uppercase text-[11px] tracking-widest",
+            selectedTag === tag
+              ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/25 scale-105"
+              : "glass border-white/10 text-muted-foreground hover:border-white/20 hover:text-foreground"
+          )}
         >
           {tag}
-        </Badge>
+        </button>
       ))}
     </div>
   )
 }
+

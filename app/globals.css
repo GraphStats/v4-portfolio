@@ -16,8 +16,8 @@
   --secondary-foreground: oklch(0.15 0.05 220);
   --muted: oklch(0.95 0.02 220);
   --muted-foreground: oklch(0.4 0.05 220);
-  --accent: oklch(0.75 0.25 320);
-  --accent-foreground: oklch(0.99 0.01 220);
+  --accent: oklch(0.92 0.02 220);
+  --accent-foreground: oklch(0.15 0.05 220);
   --destructive: oklch(0.6 0.2 25);
   --destructive-foreground: oklch(0.99 0.01 220);
   --border: oklch(0.9 0.03 220);
@@ -34,13 +34,13 @@
   --popover: oklch(0.1 0.03 240);
   --popover-foreground: oklch(0.98 0.01 240);
   --primary: oklch(0.7 0.2 250);
-  --primary-foreground: oklch(0.05 0.02 240);
+  --primary-foreground: oklch(0.98 0.01 240);
   --secondary: oklch(0.65 0.2 190);
   --secondary-foreground: oklch(0.98 0.01 240);
   --muted: oklch(0.18 0.03 240);
   --muted-foreground: oklch(0.7 0.02 240);
-  --accent: oklch(0.75 0.25 320);
-  --accent-foreground: oklch(0.05 0.02 240);
+  --accent: oklch(0.25 0.04 240);
+  --accent-foreground: oklch(0.98 0.01 240);
   --destructive: oklch(0.5 0.2 25);
   --destructive-foreground: oklch(0.98 0.01 240);
   --border: oklch(0.2 0.04 240);
@@ -48,9 +48,11 @@
   --ring: oklch(0.7 0.2 250);
 }
 
+
+
 @theme inline {
-  --font-sans: "Inter", "Geist", "system-ui", "sans-serif";
-  --font-display: "Outfit", "sans-serif";
+  --font-sans: var(--font-inter), "system-ui", "sans-serif";
+  --font-display: var(--font-outfit), "sans-serif";
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -96,7 +98,8 @@
   }
 
   .dark .glass {
-    @apply bg-card/40 backdrop-blur-2xl border-white/5 shadow-[0_0_50px_-12px_rgba(0, 0, 0, 0.5)];
+    @apply bg-card/40 backdrop-blur-2xl border-white/5;
+    box-shadow: 0 0 50px -12px rgba(0, 0, 0, 0.5);
   }
 
   .glow-border {

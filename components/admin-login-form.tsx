@@ -1,14 +1,13 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { Lock } from "lucide-react"
+import { Lock, Command, ChevronLeft, ShieldCheck } from "lucide-react"
 import { loginAdmin } from "@/lib/auth"
+import Link from "next/link"
 
 export default function AdminLoginForm() {
   const [email, setEmail] = useState("")
@@ -21,65 +20,97 @@ export default function AdminLoginForm() {
     setIsLoading(true)
     setError(null)
 
-    console.log("[v0] Client: Starting login")
-
     const result = await loginAdmin(email, password)
 
-    console.log("[v0] Client: Login result:", result)
-
-    // If we get a result, login failed (redirect would have happened on success)
     if (result && !result.success) {
       setError(result.error || "Invalid credentials")
       setIsLoading(false)
     }
-    // If no result, redirect happened (success)
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
-            <Lock className="h-6 w-6 text-primary-foreground" />
+    <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden font-sans">
+      <div className="noise-overlay" />
+
+      {/* Background Orbs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px] animate-pulse-glow" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/20 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: "-2s" }} />
+      </div>
+
+      <Link href="/" className="absolute top-8 left-8 flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors group z-50">
+        <div className="p-2 rounded-xl glass border-white/10 group-hover:border-primary/50 transition-all">
+          <ChevronLeft className="h-4 w-4" />
+        </div>
+        Back to Portfolio
+      </Link>
+
+      <div className="w-full max-w-md relative z-10 px-6 animate-scale-in">
+        <div className="glass p-10 rounded-[2.5rem] border-white/5 space-y-8 shadow-2xl">
+          <div className="text-center space-y-4">
+            <div className="mx-auto w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-2xl shadow-primary/40 rotate-6 group-hover:rotate-0 transition-transform duration-500">
+              <Lock className="h-8 w-8" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-3xl font-black tracking-tight font-display text-gradient">ADMIN PORTAL</h2>
+              <p className="text-muted-foreground font-medium text-sm">Secure authorization required</p>
+            </div>
           </div>
-          <CardTitle className="text-2xl">Admin Access</CardTitle>
-          <CardDescription>Enter your credentials to continue</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter admin email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoFocus
-              />
+
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-primary ml-1">Email Address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  className="rounded-2xl h-14 bg-white/5 border-white/10 focus:border-primary/50 focus:ring-primary/20 transition-all font-medium"
+                  placeholder="admin@drayko.dev"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-xs font-bold uppercase tracking-widest text-primary ml-1">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  className="rounded-2xl h-14 bg-white/5 border-white/10 focus:border-primary/50 focus:ring-primary/20 transition-all font-medium"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter admin password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
+            {error && (
+              <div className="p-4 rounded-2xl bg-destructive/10 border border-destructive/20 text-destructive text-sm font-bold flex items-center gap-3 animate-shake">
+                <ShieldCheck className="h-4 w-4" />
+                {error}
+              </div>
+            )}
 
-            {error && <p className="text-sm text-destructive">{error}</p>}
-
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Verifying..." : "Access Dashboard"}
+            <Button type="submit" size="lg" className="w-full h-14 rounded-2xl bg-foreground text-background hover:bg-foreground/90 font-bold tracking-tight transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl" disabled={isLoading}>
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
+                  Verifying...
+                </div>
+              ) : (
+                "Authorize Session"
+              )}
             </Button>
           </form>
-        </CardContent>
-      </Card>
+
+          <p className="text-center text-xs text-muted-foreground font-medium pt-4">
+            System protected by end-to-end encryption.
+          </p>
+        </div>
+      </div>
     </div>
   )
 }
+
