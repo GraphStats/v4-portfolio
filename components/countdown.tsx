@@ -133,7 +133,7 @@ export function Countdown({ targetDate }: CountdownProps) {
     if (!timeLeft) {
         return (
             <div className="text-2xl font-bold text-muted-foreground animate-pulse text-center">
-                MAINTENANCE TERMINEE !
+                MODIFICATION TERMINÉE !
             </div>
         )
     }
