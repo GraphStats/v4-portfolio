@@ -46,7 +46,7 @@ export function TechStack() {
                   <img
                     src={tech.logo}
                     alt={tech.name}
-                    className="w-full h-full object-contain filter grayscale group-hover:grayscale-0 brightness-200 group-hover:brightness-100 transition-all duration-500"
+                    className="w-full h-full object-contain transition-all duration-500 group-hover:scale-110"
                   />
                 </div>
                 <span className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground group-hover:text-foreground transition-colors">
