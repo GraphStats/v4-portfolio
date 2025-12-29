@@ -94,6 +94,7 @@
   }
 }
 
+
 @layer utilities {
   .glass {
     @apply bg-background/40 backdrop-blur-xl border border-white/10 shadow-2xl;
