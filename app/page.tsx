@@ -63,6 +63,7 @@ export default async function HomePage() {
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
             <ScrollButton targetId="projects" variant="link" className="p-0 h-auto hover:text-foreground transition-all hover:translate-y-[-2px]">Projects</ScrollButton>
             <ScrollButton targetId="tech-stack" variant="link" className="p-0 h-auto hover:text-foreground transition-all hover:translate-y-[-2px]">Tech</ScrollButton>
+            <Link href="/about" className="hover:text-foreground transition-all hover:translate-y-[-2px]">About</Link>
             <Link href="#contact" className="hover:text-foreground transition-all hover:translate-y-[-2px]">Contact</Link>
           </nav>
 
@@ -238,6 +239,7 @@ export default async function HomePage() {
                 <ul className="space-y-3 text-muted-foreground font-medium">
                   <li className="transition-transform hover:translate-x-1"><ScrollButton targetId="projects" variant="link" className="p-0 h-auto hover:text-foreground">Projects</ScrollButton></li>
                   <li className="transition-transform hover:translate-x-1"><ScrollButton targetId="tech-stack" variant="link" className="p-0 h-auto hover:text-foreground">Tech Stack</ScrollButton></li>
+                  <li className="transition-transform hover:translate-x-1"><Link href="/about" className="hover:text-foreground">About Me</Link></li>
                   <li className="transition-transform hover:translate-x-1"><Link href="/update" className="hover:text-foreground">Site Updates</Link></li>
                   <li className="transition-transform hover:translate-x-1"><Link href="/admin" className="hover:text-foreground">Admin Access</Link></li>
                 </ul>
