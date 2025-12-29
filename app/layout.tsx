@@ -4,6 +4,7 @@ import { Inter, Outfit } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SpecialThemeHandler } from "@/components/special-theme-handler"
+import { CustomCursor } from "@/components/custom-cursor"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className="font-sans antialiased selection:bg-primary/30 selection:text-primary transition-colors duration-300" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <SpecialThemeHandler />
+          <CustomCursor />
           <div className="relative flex min-h-screen flex-col">
             <main className="flex-1">{children}</main>
           </div>
