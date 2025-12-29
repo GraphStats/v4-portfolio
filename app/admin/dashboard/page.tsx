@@ -13,7 +13,8 @@ import { BadgeDialog } from "@/components/badge-dialog"
 import { Separator } from "@/components/ui/separator"
 import type { Project, Admin, SiteUpdate } from "@/lib/types"
 import { logoutAdmin } from "@/lib/auth"
-import { getAdmins } from "@/lib/actions"
+import { getAdmins, getMaintenanceMode } from "@/lib/actions"
+import { MaintenanceToggle } from "@/components/maintenance-toggle"
 import { getFirestoreClient } from "@/lib/firebase/client"
 import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
 import Link from "next/link"
@@ -28,6 +29,9 @@ export default function AdminDashboardPage() {
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
   const [badgeDialogOpen, setBadgeDialogOpen] = useState(false)
   const [updateData, setUpdateData] = useState<SiteUpdate | null>(null)
+  const [maintenanceMode, setMaintenanceMode] = useState(false)
+  const [maintenanceMessage, setMaintenanceMessage] = useState("")
+  const [maintenanceProgress, setMaintenanceProgress] = useState(0)
 
   const fetchProjects = async () => {
     const db = getFirestoreClient()
@@ -59,10 +63,20 @@ export default function AdminDashboardPage() {
     }
   }
 
+  const fetchMaintenanceMode = async () => {
+    const result = await getMaintenanceMode()
+    if (result.success) {
+      setMaintenanceMode(result.isMaintenance)
+      setMaintenanceMessage(result.message || "")
+      setMaintenanceProgress(result.progress || 0)
+    }
+  }
+
   useEffect(() => {
     fetchProjects()
     fetchAdmins()
     fetchUpdateData()
+    fetchMaintenanceMode()
   }, [])
 
   const handleProjectDeleted = (projectId: string) => {
@@ -232,17 +246,23 @@ export default function AdminDashboardPage() {
             </Button>
           </div>
 
-          <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02]">
-            <div className="flex items-center gap-4">
-              <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
-                <HistoryIcon className="h-8 w-8" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02]">
+              <div className="flex items-center gap-4">
+                <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
+                  <HistoryIcon className="h-8 w-8" />
+                </div>
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Historical Records</p>
+                  <p className="text-xl font-bold text-foreground/90 font-sans">
+                    Track the evolution of the platform with detailed version logs.
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Historical Records</p>
-                <p className="text-xl font-bold text-foreground/90 font-sans">
-                  Track the evolution of the platform with detailed version logs.
-                </p>
-              </div>
+            </div>
+
+            <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
+              <MaintenanceToggle initialState={maintenanceMode} initialMessage={maintenanceMessage} initialProgress={maintenanceProgress} />
             </div>
           </div>
         </section>
@@ -327,4 +347,3 @@ export default function AdminDashboardPage() {
     </div>
   )
 }
-

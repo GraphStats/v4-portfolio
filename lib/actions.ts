@@ -1,7 +1,7 @@
 "use server"
 
 import { getFirestoreServer } from "@/lib/firebase/server"
-import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy, where } from "firebase/firestore"
+import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy, where, getDoc, setDoc } from "firebase/firestore"
 import { revalidatePath } from "next/cache"
 
 export async function createProject(formData: FormData) {
@@ -133,6 +133,49 @@ export async function getAdmins() {
     return { success: true, data }
   } catch (error: any) {
     console.error("Error fetching admins:", error)
+
     return { success: false, error: error.message, data: [] }
+  }
+}
+
+export async function getMaintenanceMode() {
+  const db = await getFirestoreServer()
+  try {
+    const docRef = doc(db, "settings", "general")
+    const docSnap = await getDoc(docRef)
+
+    if (docSnap.exists()) {
+      const data = docSnap.data()
+      return {
+        success: true,
+        isMaintenance: data.maintenance_mode || false,
+        message: data.maintenance_message || "",
+        progress: data.maintenance_progress || 0
+      }
+    }
+    return { success: true, isMaintenance: false, message: "", progress: 0 }
+  } catch (error: any) {
+    console.error("Error fetching maintenance mode:", error)
+    return { success: false, error: error.message, isMaintenance: false, message: "", progress: 0 }
+  }
+}
+
+export async function updateMaintenanceMode(isMaintenance: boolean, message?: string, progress?: number) {
+  const db = await getFirestoreServer()
+  try {
+    const docRef = doc(db, "settings", "general")
+    // Use setDoc with merge to ensure document exists
+    const data: any = { maintenance_mode: isMaintenance }
+    if (message !== undefined) data.maintenance_message = message
+    if (progress !== undefined) data.maintenance_progress = progress
+
+    await setDoc(docRef, data, { merge: true })
+
+    revalidatePath("/")
+    revalidatePath("/admin/dashboard")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error updating maintenance mode:", error)
+    return { success: false, error: error.message }
   }
 }

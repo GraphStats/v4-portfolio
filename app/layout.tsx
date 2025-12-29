@@ -5,6 +5,9 @@ import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SpecialThemeHandler } from "@/components/special-theme-handler"
 import { CustomCursor } from "@/components/custom-cursor"
+import { headers } from "next/headers"
+import { getMaintenanceMode } from "@/lib/actions"
+import { redirect } from "next/navigation"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
@@ -16,11 +19,24 @@ export const metadata: Metadata = {
   generator: "v0.app",
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const headersList = await headers()
+  const pathname = headersList.get("x-pathname") || ""
+  const { isMaintenance } = await getMaintenanceMode()
+
+  // Protect all routes except admin and the maintenance page itself
+  if (isMaintenance && !pathname.startsWith("/admin") && pathname !== "/maintenance") {
+    redirect("/maintenance")
+  }
+
+  // If not in maintenance mode but trying to access maintenance page, redirect home
+  if (!isMaintenance && pathname === "/maintenance") {
+    redirect("/")
+  }
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${outfit.variable}`}>
       <body className="font-sans antialiased selection:bg-primary/30 selection:text-primary transition-colors duration-300" suppressHydrationWarning>
