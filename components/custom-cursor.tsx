@@ -86,32 +86,37 @@ export function CustomCursor() {
     return (
         <div
             ref={cursorRef}
-            className={cn(
-                "fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference text-primary transition-all duration-300 ease-out",
-                isClicking && "scale-90"
-            )}
+            className="fixed top-0 left-0 pointer-events-none z-[9999]"
             style={{
-                // Use negative margin to offset if necessary, but for a pointer, 
-                // usually top-left corner is the hotspot.
-                marginLeft: "-3px", // Slight adjustment to center visual weight if needed, or 0
-                marginTop: "-2px"
+                willChange: "transform",
             }}
         >
-            {/* Custom Mouse SVG */}
-            <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
+            <div
                 className={cn(
-                    "transition-all duration-300",
-                    isHovering ? "scale-100 opacity-100" : "scale-100 opacity-100"
+                    "mix-blend-difference text-primary transition-transform duration-150 ease-out origin-top-left",
+                    isClicking && "scale-90"
                 )}
+                style={{
+                    marginLeft: "-3px",
+                    marginTop: "-2px"
+                }}
             >
-                <path d="M5.5 3.21429C5.5 2.15575 6.74109 1.587 7.5459 2.27732L17.8016 11.0747C18.6676 11.8176 18.2393 13.2359 17.1199 13.3503L12.5699 13.8153C12.3789 13.8348 12.2033 13.9317 12.0833 14.0841L9.60098 17.2367C8.9419 18.0737 7.625 17.6534 7.625 16.5898V3.21429H5.5Z"
-                    fill="currentColor" />
-            </svg>
+                {/* Custom Mouse SVG */}
+                <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={cn(
+                        "transition-all duration-300",
+                        isHovering && "scale-100 opacity-100"
+                    )}
+                >
+                    <path d="M5.5 3.21429C5.5 2.15575 6.74109 1.587 7.5459 2.27732L17.8016 11.0747C18.6676 11.8176 18.2393 13.2359 17.1199 13.3503L12.5699 13.8153C12.3789 13.8348 12.2033 13.9317 12.0833 14.0841L9.60098 17.2367C8.9419 18.0737 7.625 17.6534 7.625 16.5898V3.21429H5.5Z"
+                        fill="currentColor" />
+                </svg>
+            </div>
         </div>
     )
 }
