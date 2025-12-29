@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter, Outfit } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import Script from "next/script"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SpecialThemeHandler } from "@/components/special-theme-handler"
 import { CustomCursor } from "@/components/custom-cursor"
@@ -17,6 +18,9 @@ export const metadata: Metadata = {
   title: "Drayko - Creative Developer",
   description: "Portfolio of Drayko, a Creative Developer & Designer specializing in high-performance digital experiences.",
   generator: "v0.app",
+  other: {
+    "google-adsense-account": "ca-pub-3145023750951462",
+  },
 }
 
 export default async function RootLayout({
@@ -48,6 +52,11 @@ export default async function RootLayout({
           </div>
         </ThemeProvider>
         <Analytics />
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3145023750951462"
+          crossOrigin="anonymous"
+        />
       </body>
     </html>
   )
