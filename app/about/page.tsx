@@ -1,7 +1,16 @@
 import Link from "next/link"
 import { ChevronLeft, User, Heart, Sparkles, Code2, Brain, Globe, Laptop } from "lucide-react"
+import { getMaintenanceMode } from "@/lib/actions"
+import { redirect } from "next/navigation"
 
-export default function AboutPage() {
+export const revalidate = 60
+
+export default async function AboutPage() {
+    // Maintenance check
+    const { isMaintenance } = await getMaintenanceMode()
+    if (isMaintenance) {
+        redirect("/maintenance")
+    }
     return (
         <div className="min-h-screen bg-background relative overflow-hidden font-sans selection:bg-primary/30 selection:text-primary">
             <div className="noise-overlay" />

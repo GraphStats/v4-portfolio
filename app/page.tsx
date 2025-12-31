@@ -9,10 +9,18 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { ScrollButton } from "@/components/scroll-button"
 import Link from "next/link"
 import { Lock, ArrowRight, Sparkles, Code2, Globe, Command, ChevronDown, Github, Gitlab, MessageSquare, Rocket, Timer } from "lucide-react"
+import { getMaintenanceMode } from "@/lib/actions"
+import { redirect } from "next/navigation"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 60
 
 export default async function HomePage() {
+  // Maintenance check
+  const { isMaintenance } = await getMaintenanceMode()
+  if (isMaintenance) {
+    redirect("/maintenance")
+  }
+
   let projects: Project[] = []
   let fetchError = false
   let updateData: SiteUpdate | null = null

@@ -6,9 +6,18 @@ import type { SiteUpdate } from "@/lib/types"
 import { Countdown } from "@/components/countdown"
 import { ChangelogList } from "@/components/changelog-list"
 
-export const dynamic = "force-dynamic"
+import { getMaintenanceMode } from "@/lib/actions"
+import { redirect } from "next/navigation"
+
+export const revalidate = 60
 
 export default async function UpdatePage() {
+    // Maintenance check
+    const { isMaintenance } = await getMaintenanceMode()
+    if (isMaintenance) {
+        redirect("/maintenance")
+    }
+
     const db = await getFirestoreServer()
     const docRef = doc(db, "update-p", "main")
     const docSnap = await getDoc(docRef)
