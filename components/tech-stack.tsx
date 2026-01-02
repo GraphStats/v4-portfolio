@@ -18,6 +18,13 @@ const techStack: TechItem[] = [
   { name: "Next.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
   { name: "React", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
   { name: "OVHcloud", logo: "https://help.ovhcloud.com/a2a82603cd444d10f0788c63c19c1a4e.iix" },
+  { name: "Figma", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" },
+  { name: "PM2", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pm2/pm2-original.svg" },
+  { name: "NPM", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/npm/npm-original-wordmark.svg" },
+  { name: "Pterodactyl", logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/pterodactyl.svg" },
+  { name: "Vercel", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vercel/vercel-original.svg" },
+  { name: "Cloudflare", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cloudflare/cloudflare-original.svg" },
+  { name: "AWS", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" },
 ]
 
 export function TechStack() {
@@ -46,7 +53,7 @@ export function TechStack() {
                   <img
                     src={tech.logo}
                     alt={tech.name}
-                    className="w-full h-full object-contain transition-all duration-500 group-hover:scale-110"
+                    className={`w-full h-full object-contain transition-all duration-500 group-hover:scale-110 ${["Vercel", "AWS"].includes(tech.name) ? "brightness-0 invert" : ""}`}
                   />
                 </div>
                 <span className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground group-hover:text-foreground transition-colors">
