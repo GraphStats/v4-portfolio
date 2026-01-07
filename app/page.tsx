@@ -264,7 +264,7 @@ export default async function HomePage() {
           </div>
 
           <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/5 text-sm text-muted-foreground font-medium gap-4">
-            <p>&copy; 2025 Drayko. All rights reserved.</p>
+            <p>&copy; 2025 - 2026 Drayko. All rights reserved.</p>
             <div className="flex gap-8">
               <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
               <Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>
