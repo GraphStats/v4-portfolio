@@ -4,7 +4,7 @@ import { useState } from "react"
 import type { Project } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Pencil, Trash2, Settings2 } from "lucide-react"
+import { Pencil, Trash2, Settings2, ImageOff } from "lucide-react"
 import Image from "next/image"
 import { ProjectDialog } from "@/components/project-dialog"
 import { DeleteProjectDialog } from "@/components/delete-project-dialog"
@@ -28,16 +28,39 @@ export function AdminProjectCard({ project, onDeleted, onUpdated }: AdminProject
           </div>
         </div>
 
-        {project.image_url && (
-          <div className="relative w-full aspect-video bg-muted/50 overflow-hidden">
-            <Image src={project.image_url || "/placeholder.svg"} alt={project.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-          </div>
-        )}
+        <div className="relative w-full aspect-video bg-muted/20 overflow-hidden border-b border-white/5">
+          {project.image_url ? (
+            <>
+              <Image src={project.image_url} alt={project.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+            </>
+          ) : (
+            <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 bg-white/[0.02] group-hover:bg-white/[0.04] transition-colors duration-500">
+              <div className="p-4 rounded-2xl border border-dashed border-white/10 bg-white/5 group-hover:border-primary/20 transition-all duration-500">
+                <ImageOff className="h-8 w-8 text-muted-foreground/40 group-hover:text-primary/40 transition-colors duration-500" />
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/30 group-hover:text-primary/40 transition-colors duration-500">
+                Projet sans visuel
+              </span>
+            </div>
+          )}
+        </div>
 
         <div className="p-6 space-y-4 flex-1 flex flex-col">
           <div className="space-y-2">
-            <h4 className="text-xl font-bold tracking-tight text-foreground/90">{project.title}</h4>
+            <div className="flex items-center gap-2">
+              <h4 className="text-xl font-bold tracking-tight text-foreground/90">{project.title}</h4>
+              {project.in_development && (
+                <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 text-[10px] animate-pulse">
+                  Dev Mode
+                </Badge>
+              )}
+              {project.is_completed && (
+                <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">
+                  Finished
+                </Badge>
+              )}
+            </div>
             <p className="text-sm text-muted-foreground line-clamp-2 font-medium">
               {project.description}
             </p>

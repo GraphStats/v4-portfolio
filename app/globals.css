@@ -136,6 +136,27 @@
   .text-glow {
     text-shadow: 0 0 20px rgba(var(--primary), 0.5);
   }
+
+  .construction-pattern {
+    background: repeating-linear-gradient(-45deg,
+        #4b5563,
+        #4b5563 10px,
+        #00000000 10px,
+        #000 20px);
+    opacity: 0.2;
+    background-size: 200% 200%;
+    animation: construction-move 20s linear infinite;
+  }
+}
+
+@keyframes construction-move {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 100% 100%;
+  }
 }
 
 /* Custom Keyframes */

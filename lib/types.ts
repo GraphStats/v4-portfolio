@@ -8,6 +8,9 @@ export interface Project {
   github_url: string | null
   created_at: string
   updated_at: string
+  in_development?: boolean
+  development_progress?: number
+  is_completed?: boolean
 }
 
 export interface Admin {

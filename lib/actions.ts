@@ -13,6 +13,9 @@ export async function createProject(formData: FormData) {
   const tags = (formData.get("tags") as string).split(",").map((tag) => tag.trim())
   const project_url = formData.get("project_url") as string
   const github_url = formData.get("github_url") as string
+  const in_development = formData.get("in_development") === "true"
+  const is_completed = formData.get("is_completed") === "true"
+  const development_progress = parseInt(formData.get("development_progress") as string) || 0
 
   try {
     await addDoc(collection(db, "portfolio"), {
@@ -22,6 +25,9 @@ export async function createProject(formData: FormData) {
       tags,
       project_url: project_url || null,
       github_url: github_url || null,
+      in_development: in_development,
+      is_completed: is_completed,
+      development_progress: development_progress,
       created_at: new Date().toISOString(),
     })
 
@@ -43,6 +49,9 @@ export async function updateProject(id: string, formData: FormData) {
   const tags = (formData.get("tags") as string).split(",").map((tag) => tag.trim())
   const project_url = formData.get("project_url") as string
   const github_url = formData.get("github_url") as string
+  const in_development = formData.get("in_development") === "true"
+  const is_completed = formData.get("is_completed") === "true"
+  const development_progress = parseInt(formData.get("development_progress") as string) || 0
 
   try {
     const projectRef = doc(db, "portfolio", id)
@@ -53,6 +62,9 @@ export async function updateProject(id: string, formData: FormData) {
       tags,
       project_url: project_url || null,
       github_url: github_url || null,
+      in_development: in_development,
+      is_completed: is_completed,
+      development_progress: development_progress,
     })
 
     revalidatePath("/")
