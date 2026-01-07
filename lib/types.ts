@@ -11,6 +11,7 @@ export interface Project {
   in_development?: boolean
   development_progress?: number
   is_completed?: boolean
+  is_archived?: boolean
 }
 
 export interface Admin {

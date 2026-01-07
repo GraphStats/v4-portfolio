@@ -22,6 +22,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [inDev, setInDev] = useState(project?.in_development || false)
   const [isCompleted, setIsCompleted] = useState(project?.is_completed || false)
+  const [isArchived, setIsArchived] = useState(project?.is_archived || false)
   const [progress, setProgress] = useState(project?.development_progress || 0)
   const router = useRouter()
 
@@ -141,7 +142,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
           <div className="space-y-0.5">
             <Label htmlFor="is_completed">Project Finished</Label>
             <p className="text-sm text-muted-foreground">
-              Adds a completion badge and checkmark to the project card.
+              Adds a completion badge, trophy icon, and vibrant colors.
             </p>
           </div>
           <Switch
@@ -150,6 +151,21 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
             onCheckedChange={(checked) => setIsCompleted(checked)}
           />
           <input type="hidden" name="is_completed" value={isCompleted.toString()} />
+        </div>
+
+        <div className="flex items-center justify-between pt-2 border-t border-white/5">
+          <div className="space-y-0.5">
+            <Label htmlFor="is_archived">Archive Project</Label>
+            <p className="text-sm text-muted-foreground">
+              Marks the project as stable/legacy with an indigo theme.
+            </p>
+          </div>
+          <Switch
+            id="is_archived_toggle"
+            defaultChecked={project?.is_archived}
+            onCheckedChange={(checked) => setIsArchived(checked)}
+          />
+          <input type="hidden" name="is_archived" value={isArchived.toString()} />
         </div>
       </div>
 

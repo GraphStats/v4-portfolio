@@ -15,6 +15,7 @@ export async function createProject(formData: FormData) {
   const github_url = formData.get("github_url") as string
   const in_development = formData.get("in_development") === "true"
   const is_completed = formData.get("is_completed") === "true"
+  const is_archived = formData.get("is_archived") === "true"
   const development_progress = parseInt(formData.get("development_progress") as string) || 0
 
   try {
@@ -27,6 +28,7 @@ export async function createProject(formData: FormData) {
       github_url: github_url || null,
       in_development: in_development,
       is_completed: is_completed,
+      is_archived: is_archived,
       development_progress: development_progress,
       created_at: new Date().toISOString(),
     })
@@ -51,6 +53,7 @@ export async function updateProject(id: string, formData: FormData) {
   const github_url = formData.get("github_url") as string
   const in_development = formData.get("in_development") === "true"
   const is_completed = formData.get("is_completed") === "true"
+  const is_archived = formData.get("is_archived") === "true"
   const development_progress = parseInt(formData.get("development_progress") as string) || 0
 
   try {
@@ -64,6 +67,7 @@ export async function updateProject(id: string, formData: FormData) {
       github_url: github_url || null,
       in_development: in_development,
       is_completed: is_completed,
+      is_archived: is_archived,
       development_progress: development_progress,
     })
 
