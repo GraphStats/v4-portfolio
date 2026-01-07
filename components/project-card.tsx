@@ -1,7 +1,7 @@
 import type { Project } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Github, ArrowUpRight, Hammer, Wrench, Construction, CheckCircle2, Archive, PackageCheck, ImageOff, Trophy } from "lucide-react"
+import { ExternalLink, Github, ArrowUpRight, Hammer, Wrench, Construction, CheckCircle2, Archive, PackageCheck, ImageOff, Trophy, History } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -178,38 +178,55 @@ export function ProjectCard({ project }: ProjectCardProps) {
           )}
         </div>
 
-        <div className="flex gap-4 pt-6 mt-auto">
-          {isInDev ? (
-            <Button disabled className="flex-1 rounded-full bg-white/5 text-muted-foreground border border-white/10 cursor-not-allowed">
-              <Construction className="mr-2 h-4 w-4" />
-              Coming Soon
-            </Button>
-          ) : (
-            project.project_url && (
-              <Button asChild size="sm" className={`flex-1 rounded-full font-bold tracking-tight transition-all duration-500 hover:scale-110 active:scale-95 shadow-lg
-                ${isFinished ? "bg-emerald-500 text-white hover:bg-emerald-400 hover:shadow-emerald-500/20" : isArchived ? "bg-indigo-500 text-white hover:bg-indigo-400 hover:shadow-indigo-500/20" : "bg-white text-black hover:bg-primary hover:text-white hover:shadow-primary/20"}
-              `}>
-                <Link href={project.project_url} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  Live Demo
+        <div className="flex flex-col gap-4 pt-6 mt-auto">
+          <div className="flex gap-4">
+            {isInDev ? (
+              <Button disabled className="flex-1 rounded-full bg-white/5 text-muted-foreground border border-white/10 cursor-not-allowed">
+                <Construction className="mr-2 h-4 w-4" />
+                Coming Soon
+              </Button>
+            ) : (
+              project.project_url && (
+                <Button asChild size="sm" className={`flex-1 rounded-full font-bold tracking-tight transition-all duration-500 hover:scale-110 active:scale-95 shadow-lg
+                  ${isFinished ? "bg-emerald-500 text-white hover:bg-emerald-400 hover:shadow-emerald-500/20" : isArchived ? "bg-indigo-500 text-white hover:bg-indigo-400 hover:shadow-indigo-500/20" : "bg-white text-black hover:bg-primary hover:text-white hover:shadow-primary/20"}
+                `}>
+                  <Link href={project.project_url} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    Live Demo
+                  </Link>
+                </Button>
+              )
+            )}
+
+            {project.github_url && (
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="flex-1 rounded-full border border-white/10 glass hover:bg-white/10 hover:text-foreground font-bold tracking-tight transition-all duration-500 hover:scale-110 active:scale-95"
+              >
+                <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
+                  <Github className="mr-2 h-4 w-4" />
+                  Code
                 </Link>
               </Button>
-            )
-          )}
+            )}
+          </div>
 
-          {project.github_url && (
-            <Button
-              asChild
-              variant="ghost"
-              size="sm"
-              className="flex-1 rounded-full border border-white/10 glass hover:bg-white/10 hover:text-foreground font-bold tracking-tight transition-all duration-500 hover:scale-110 active:scale-95"
-            >
-              <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
-                <Github className="mr-2 h-4 w-4" />
-                Code
-              </Link>
-            </Button>
-          )}
+          <Button
+            asChild
+            variant="outline"
+            className="w-full rounded-2xl border-white/5 bg-white/[0.02] hover:bg-white/5 hover:border-white/10 text-muted-foreground hover:text-foreground transition-all duration-500 font-bold uppercase tracking-widest text-[10px] h-11"
+          >
+            <Link href={
+              (project.slug === "my-portfolio-this-web-site" || project.title === "My portfolio (this web site)")
+                ? "/update"
+                : `/${project.slug || project.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}/update`
+            }>
+              <History className="mr-2 h-3.5 w-3.5" />
+              View Updates
+            </Link>
+          </Button>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import { getFirestoreServer } from "@/lib/firebase/server"
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy, where, getDoc, setDoc } from "firebase/firestore"
 import { revalidatePath } from "next/cache"
+import type { Project } from "@/lib/types"
 
 export async function createProject(formData: FormData) {
   const db = await getFirestoreServer()
@@ -18,9 +19,24 @@ export async function createProject(formData: FormData) {
   const is_archived = formData.get("is_archived") === "true"
   const development_progress = parseInt(formData.get("development_progress") as string) || 0
 
+  // Parse changelog if provided
+  let changelog = []
+  const changelogRaw = formData.get("changelog") as string
+  if (changelogRaw) {
+    try {
+      changelog = JSON.parse(changelogRaw)
+    } catch (e) {
+      console.error("Failed to parse changelog:", e)
+    }
+  }
+
+  // Create slug from title
+  const slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
+
   try {
     await addDoc(collection(db, "portfolio"), {
       title,
+      slug,
       description,
       image_url: image_url || null,
       tags,
@@ -30,6 +46,7 @@ export async function createProject(formData: FormData) {
       is_completed: is_completed,
       is_archived: is_archived,
       development_progress: development_progress,
+      changelog: changelog,
       created_at: new Date().toISOString(),
     })
 
@@ -56,10 +73,25 @@ export async function updateProject(id: string, formData: FormData) {
   const is_archived = formData.get("is_archived") === "true"
   const development_progress = parseInt(formData.get("development_progress") as string) || 0
 
+  // Parse changelog
+  let changelog = []
+  const changelogRaw = formData.get("changelog") as string
+  if (changelogRaw) {
+    try {
+      changelog = JSON.parse(changelogRaw)
+    } catch (e) {
+      console.error("Failed to parse changelog:", e)
+    }
+  }
+
+  // Create slug from title
+  const slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
+
   try {
     const projectRef = doc(db, "portfolio", id)
     await updateDoc(projectRef, {
       title,
+      slug,
       description,
       image_url: image_url || null,
       tags,
@@ -69,6 +101,7 @@ export async function updateProject(id: string, formData: FormData) {
       is_completed: is_completed,
       is_archived: is_archived,
       development_progress: development_progress,
+      changelog: changelog,
     })
 
     revalidatePath("/")
@@ -193,5 +226,38 @@ export async function updateMaintenanceMode(isMaintenance: boolean, message?: st
   } catch (error: any) {
     console.error("Error updating maintenance mode:", error)
     return { success: false, error: error.message }
+  }
+}
+
+export async function getProjectBySlug(slug: string) {
+  const db = await getFirestoreServer()
+  try {
+    // 1. Try to find by the real slug field
+    const q = query(collection(db, "portfolio"), where("slug", "==", slug))
+    const querySnapshot = await getDocs(q)
+
+    if (!querySnapshot.empty) {
+      const doc = querySnapshot.docs[0]
+      return { id: doc.id, ...doc.data() } as Project
+    }
+
+    // 2. Fallback for legacy projects (check if any project's title-based slug matches)
+    const allQuery = query(collection(db, "portfolio"))
+    const allSnapshot = await getDocs(allQuery)
+
+    for (const doc of allSnapshot.docs) {
+      const data = doc.data()
+      if (!data.title) continue;
+
+      const titleSlug = data.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
+      if (titleSlug === slug) {
+        return { id: doc.id, ...data } as Project
+      }
+    }
+
+    return null
+  } catch (error) {
+    console.error("Error fetching project by slug:", error)
+    return null
   }
 }

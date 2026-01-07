@@ -19,7 +19,7 @@ export function ProjectDialog({ open, onOpenChange, project, onSuccess }: Projec
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{project ? "Edit Project" : "Add New Project"}</DialogTitle>
           <DialogDescription>

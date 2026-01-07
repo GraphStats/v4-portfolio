@@ -1,6 +1,7 @@
 export interface Project {
   id: string
   title: string
+  slug: string
   description: string
   image_url: string | null
   tags: string[]
@@ -12,6 +13,7 @@ export interface Project {
   development_progress?: number
   is_completed?: boolean
   is_archived?: boolean
+  changelog?: ChangelogEntry[]
 }
 
 export interface Admin {
