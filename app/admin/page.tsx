@@ -11,11 +11,5 @@ export default async function AdminLoginPage() {
   }
 
   // User is not logged in, show login form
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/20 p-4">
-      <div className="w-full max-w-md">
-        <AdminLoginForm />
-      </div>
-    </div>
-  )
+  return <AdminLoginForm />
 }
