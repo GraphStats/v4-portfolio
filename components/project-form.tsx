@@ -11,7 +11,7 @@ import { createProject, updateProject } from "@/lib/actions"
 import { useRouter } from "next/navigation"
 import { Switch } from "@/components/ui/switch"
 import { Slider } from "@/components/ui/slider"
-import { Plus, Trash2, Calendar, GitBranch, ListPlus, Settings2, Sparkles, LayoutGrid, History, Save } from "lucide-react"
+import { Plus, Trash2, Calendar, GitBranch, ListPlus, Settings2, Sparkles, LayoutGrid, History, Save, ChevronUp, ChevronDown } from "lucide-react"
 
 interface ProjectFormProps {
   project?: Project
@@ -83,6 +83,16 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
     setChangelog(
       changelog.map((entry) => (entry.id === id ? { ...entry, [field]: value } : entry))
     )
+  }
+
+  const moveChangelogEntry = (index: number, direction: 'up' | 'down') => {
+    const newChangelog = [...changelog]
+    const targetIndex = direction === 'up' ? index - 1 : index + 1
+
+    if (targetIndex >= 0 && targetIndex < newChangelog.length) {
+      [newChangelog[index], newChangelog[targetIndex]] = [newChangelog[targetIndex], newChangelog[index]]
+      setChangelog(newChangelog)
+    }
   }
 
   const addChange = (entryId: string) => {
@@ -254,9 +264,32 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
                 <p className="text-xs font-bold uppercase tracking-widest">No release logs found</p>
               </div>
             ) : (
-              changelog.map((entry) => (
+              changelog.map((entry, index) => (
                 <div key={entry.id} className="glass p-6 rounded-3xl border-white/5 bg-white/[0.01] space-y-4 group">
                   <div className="flex items-start gap-4">
+                    <div className="flex flex-col gap-1 mt-6">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-muted-foreground/30 hover:text-primary hover:bg-primary/10 disabled:opacity-0"
+                        disabled={index === 0}
+                        onClick={() => moveChangelogEntry(index, 'up')}
+                      >
+                        <ChevronUp className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-muted-foreground/30 hover:text-primary hover:bg-primary/10 disabled:opacity-0"
+                        disabled={index === changelog.length - 1}
+                        onClick={() => moveChangelogEntry(index, 'down')}
+                      >
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </div>
+
                     <div className="flex-1 space-y-1.5">
                       <Label className="text-[9px] uppercase tracking-widest text-muted-foreground ml-1">Version</Label>
                       <Input
