@@ -267,26 +267,26 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
               changelog.map((entry, index) => (
                 <div key={entry.id} className="glass p-6 rounded-3xl border-white/5 bg-white/[0.01] space-y-4 group">
                   <div className="flex items-start gap-4">
-                    <div className="flex flex-col gap-1 mt-6">
+                    <div className="flex flex-col gap-2 mt-6 shrink-0">
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-7 w-7 text-muted-foreground/30 hover:text-primary hover:bg-primary/10 disabled:opacity-0"
+                        className="h-8 w-8 rounded-full bg-white/5 border border-white/10 text-muted-foreground/50 hover:text-primary hover:bg-primary/10 hover:border-primary/20 disabled:opacity-10 transition-all duration-300 shadow-sm"
                         disabled={index === 0}
                         onClick={() => moveChangelogEntry(index, 'up')}
                       >
-                        <ChevronUp className="h-4 w-4" />
+                        <ChevronUp className="h-4 w-4 transition-transform group-hover:scale-110" />
                       </Button>
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-7 w-7 text-muted-foreground/30 hover:text-primary hover:bg-primary/10 disabled:opacity-0"
+                        className="h-8 w-8 rounded-full bg-white/5 border border-white/10 text-muted-foreground/50 hover:text-primary hover:bg-primary/10 hover:border-primary/20 disabled:opacity-10 transition-all duration-300 shadow-sm"
                         disabled={index === changelog.length - 1}
                         onClick={() => moveChangelogEntry(index, 'down')}
                       >
-                        <ChevronDown className="h-4 w-4" />
+                        <ChevronDown className="h-4 w-4 transition-transform group-hover:scale-110" />
                       </Button>
                     </div>
 
