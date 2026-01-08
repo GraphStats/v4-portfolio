@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -27,10 +27,11 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
 
   // States for form fields
   const [inDev, setInDev] = useState(project?.in_development || false)
-  const [isCompleted, setIsLoadingCompleted] = useState(project?.is_completed || false)
+  const [isCompleted, setIsCompleted] = useState(project?.is_completed || false)
   const [isArchived, setIsArchived] = useState(project?.is_archived || false)
   const [progress, setProgress] = useState(project?.development_progress || 0)
   const [changelog, setChangelog] = useState<ChangelogEntry[]>(project?.changelog || [])
+  const formRef = useRef<HTMLFormElement>(null)
 
   const router = useRouter()
 
@@ -42,7 +43,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
     const formData = new FormData(e.currentTarget)
     formData.set("changelog", JSON.stringify(changelog))
     formData.set("in_development", inDev.toString())
-    formData.set("is_completed", setIsLoadingCompleted.toString())
+    formData.set("is_completed", isCompleted.toString())
     formData.set("is_archived", isArchived.toString())
     formData.set("development_progress", progress.toString())
 
@@ -148,193 +149,190 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto overflow-x-hidden pr-2 space-y-8 scrollbar-thin scrollbar-thumb-white/10">
+      <form ref={formRef} onSubmit={handleSubmit} className="flex-1 overflow-y-auto overflow-x-hidden pr-2 space-y-8 scrollbar-thin scrollbar-thumb-white/10">
         {/* TAB 1: DETAILS */}
-        {activeTab === "details" && (
-          <div className="space-y-8 animate-in slide-in-from-left-8 fade-in duration-500 fill-mode-both">
-            {/* Basic Info */}
-            <section className="space-y-4">
-              <div className="flex items-center gap-2 text-primary/80">
-                <Settings2 className="h-4 w-4" />
-                <h3 className="font-bold text-xs uppercase tracking-[0.2em]">Core Settings</h3>
+        <div className={`space-y-8 animate-in slide-in-from-left-8 fade-in duration-500 fill-mode-both ${activeTab !== "details" ? "hidden" : ""}`}>
+          {/* Basic Info */}
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-primary/80">
+              <Settings2 className="h-4 w-4" />
+              <h3 className="font-bold text-xs uppercase tracking-[0.2em]">Core Settings</h3>
+            </div>
+
+            <div className="space-y-4 glass p-6 rounded-3xl border-white/5 bg-white/[0.01]">
+              <div className="space-y-2">
+                <Label htmlFor="title" className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Title</Label>
+                <Input id="title" name="title" defaultValue={project?.title} required className="h-10 rounded-xl border-white/10 bg-white/5 font-bold" />
               </div>
 
-              <div className="space-y-4 glass p-6 rounded-3xl border-white/5 bg-white/[0.01]">
+              <div className="space-y-2">
+                <Label htmlFor="description" className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Description</Label>
+                <Textarea id="description" name="description" defaultValue={project?.description} required rows={2} className="rounded-xl border-white/10 bg-white/5 min-h-[80px] text-sm" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="title" className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Title</Label>
-                  <Input id="title" name="title" defaultValue={project?.title} required className="h-10 rounded-xl border-white/10 bg-white/5 font-bold" />
+                  <Label htmlFor="image_url" className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Image URL</Label>
+                  <Input id="image_url" name="image_url" type="url" defaultValue={project?.image_url || ""} className="h-10 rounded-xl border-white/10 bg-white/5" />
                 </div>
-
                 <div className="space-y-2">
-                  <Label htmlFor="description" className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Description</Label>
-                  <Textarea id="description" name="description" defaultValue={project?.description} required rows={2} className="rounded-xl border-white/10 bg-white/5 min-h-[80px] text-sm" />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="image_url" className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Image URL</Label>
-                    <Input id="image_url" name="image_url" type="url" defaultValue={project?.image_url || ""} className="h-10 rounded-xl border-white/10 bg-white/5" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="tags" className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Tags</Label>
-                    <Input id="tags" name="tags" defaultValue={project?.tags?.join(", ")} className="h-10 rounded-xl border-white/10 bg-white/5" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="project_url" className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Demo link</Label>
-                    <Input id="project_url" name="project_url" type="url" defaultValue={project?.project_url || ""} className="h-10 rounded-xl border-white/10 bg-white/5" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="github_url" className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">GitHub Repo</Label>
-                    <Input id="github_url" name="github_url" type="url" defaultValue={project?.github_url || ""} className="h-10 rounded-xl border-white/10 bg-white/5" />
-                  </div>
+                  <Label htmlFor="tags" className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Tags</Label>
+                  <Input id="tags" name="tags" defaultValue={project?.tags?.join(", ")} className="h-10 rounded-xl border-white/10 bg-white/5" />
                 </div>
               </div>
-            </section>
 
-            {/* Lifecycle Info */}
-            <section className="space-y-4 pb-4">
-              <div className="flex items-center gap-2 text-primary/80">
-                <Sparkles className="h-4 w-4" />
-                <h3 className="font-bold text-xs uppercase tracking-[0.2em]">Visibility Status</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="project_url" className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Demo link</Label>
+                  <Input id="project_url" name="project_url" type="url" defaultValue={project?.project_url || ""} className="h-10 rounded-xl border-white/10 bg-white/5" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="github_url" className="text-[10px] uppercase tracking-widest text-muted-foreground ml-1">GitHub Repo</Label>
+                  <Input id="github_url" name="github_url" type="url" defaultValue={project?.github_url || ""} className="h-10 rounded-xl border-white/10 bg-white/5" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Lifecycle Info */}
+          <section className="space-y-4 pb-4">
+            <div className="flex items-center gap-2 text-primary/80">
+              <Sparkles className="h-4 w-4" />
+              <h3 className="font-bold text-xs uppercase tracking-[0.2em]">Visibility Status</h3>
+            </div>
+
+            <div className="glass p-6 rounded-3xl border-white/5 bg-white/[0.01] space-y-4">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5">
+                <div className="space-y-0.5">
+                  <Label className="text-sm font-bold">In Development Mode</Label>
+                  <p className="text-[9px] text-muted-foreground uppercase">Show development progress</p>
+                </div>
+                <Switch checked={inDev} onCheckedChange={setInDev} className="scale-75" />
               </div>
 
-              <div className="glass p-6 rounded-3xl border-white/5 bg-white/[0.01] space-y-4">
+              {inDev && (
+                <div className="px-4 py-4 rounded-xl bg-white/5 border border-white/5 space-y-3 animate-in fade-in slide-in-from-top-2">
+                  <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    <span>Completion Percentage</span>
+                    <span className="text-primary">{progress}%</span>
+                  </div>
+                  <Slider value={[progress]} max={100} onValueChange={(val) => setProgress(val[0])} />
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5">
-                  <div className="space-y-0.5">
-                    <Label className="text-sm font-bold">In Development Mode</Label>
-                    <p className="text-[9px] text-muted-foreground uppercase">Show development progress</p>
-                  </div>
-                  <Switch checked={inDev} onCheckedChange={setInDev} className="scale-75" />
+                  <Label className="text-sm font-bold">Finished</Label>
+                  <Switch checked={isCompleted} onCheckedChange={setIsCompleted} className="scale-75" />
                 </div>
-
-                {inDev && (
-                  <div className="px-4 py-4 rounded-xl bg-white/5 border border-white/5 space-y-3 animate-in fade-in slide-in-from-top-2">
-                    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                      <span>Completion Percentage</span>
-                      <span className="text-primary">{progress}%</span>
-                    </div>
-                    <Slider value={[progress]} max={100} onValueChange={(val) => setProgress(val[0])} />
-                  </div>
-                )}
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5">
-                    <Label className="text-sm font-bold">Finished</Label>
-                    <Switch checked={isCompleted} onCheckedChange={setIsLoadingCompleted} className="scale-75" />
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5">
-                    <Label className="text-sm font-bold">Archived</Label>
-                    <Switch checked={isArchived} onCheckedChange={setIsArchived} className="scale-75" />
-                  </div>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5">
+                  <Label className="text-sm font-bold">Archived</Label>
+                  <Switch checked={isArchived} onCheckedChange={setIsArchived} className="scale-75" />
                 </div>
               </div>
-            </section>
-          </div>
-        )}
+            </div>
+          </section>
+        </div>
+
 
         {/* TAB 2: UPDATES */}
-        {activeTab === "updates" && (
-          <div className="space-y-6 animate-in slide-in-from-right-8 fade-in duration-500 fill-mode-both">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-primary/80">
-                <GitBranch className="h-4 w-4" />
-                <h3 className="font-bold text-xs uppercase tracking-[0.2em]">Change Registry</h3>
-              </div>
-              <Button type="button" variant="outline" size="sm" onClick={addChangelogEntry} className="h-8 rounded-lg border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest">
-                <Plus className="h-3 w-3 mr-1" /> New Log
-              </Button>
+        <div className={`space-y-6 animate-in slide-in-from-right-8 fade-in duration-500 fill-mode-both ${activeTab !== "updates" ? "hidden" : ""}`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-primary/80">
+              <GitBranch className="h-4 w-4" />
+              <h3 className="font-bold text-xs uppercase tracking-[0.2em]">Change Registry</h3>
             </div>
+            <Button type="button" variant="outline" size="sm" onClick={addChangelogEntry} className="h-8 rounded-lg border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest">
+              <Plus className="h-3 w-3 mr-1" /> New Log
+            </Button>
+          </div>
 
-            <div className="space-y-6 pb-4">
-              {changelog.length === 0 ? (
-                <div className="text-center p-12 glass rounded-3xl border-dashed border-white/10 text-muted-foreground/30">
-                  <History className="h-8 w-8 mx-auto mb-3 opacity-20" />
-                  <p className="text-xs font-bold uppercase tracking-widest">No release logs found</p>
-                </div>
-              ) : (
-                changelog.map((entry) => (
-                  <div key={entry.id} className="glass p-6 rounded-3xl border-white/5 bg-white/[0.01] space-y-4 group">
-                    <div className="flex items-start gap-4">
-                      <div className="flex-1 space-y-1.5">
-                        <Label className="text-[9px] uppercase tracking-widest text-muted-foreground ml-1">Version</Label>
-                        <Input
-                          placeholder="v1.0.0"
-                          value={entry.version}
-                          onChange={(e) => updateEntry(entry.id, "version", e.target.value)}
-                          className="h-9 rounded-lg border-white/10 bg-white/5 font-mono text-primary text-xs font-bold"
-                        />
-                      </div>
-                      <div className="flex-1 space-y-1.5">
-                        <Label className="text-[9px] uppercase tracking-widest text-muted-foreground ml-1">Date</Label>
-                        <Input
-                          type="date"
-                          value={entry.date}
-                          onChange={(e) => updateEntry(entry.id, "date", e.target.value)}
-                          className="h-9 rounded-lg border-white/10 bg-white/5 text-xs"
-                        />
-                      </div>
-                      <Button
+          <div className="space-y-6 pb-4">
+            {changelog.length === 0 ? (
+              <div className="text-center p-12 glass rounded-3xl border-dashed border-white/10 text-muted-foreground/30">
+                <History className="h-8 w-8 mx-auto mb-3 opacity-20" />
+                <p className="text-xs font-bold uppercase tracking-widest">No release logs found</p>
+              </div>
+            ) : (
+              changelog.map((entry) => (
+                <div key={entry.id} className="glass p-6 rounded-3xl border-white/5 bg-white/[0.01] space-y-4 group">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-1 space-y-1.5">
+                      <Label className="text-[9px] uppercase tracking-widest text-muted-foreground ml-1">Version</Label>
+                      <Input
+                        placeholder="v1.0.0"
+                        value={entry.version}
+                        onChange={(e) => updateEntry(entry.id, "version", e.target.value)}
+                        className="h-9 rounded-lg border-white/10 bg-white/5 font-mono text-primary text-xs font-bold"
+                      />
+                    </div>
+                    <div className="flex-1 space-y-1.5">
+                      <Label className="text-[9px] uppercase tracking-widest text-muted-foreground ml-1">Date</Label>
+                      <Input
+                        type="date"
+                        value={entry.date}
+                        onChange={(e) => updateEntry(entry.id, "date", e.target.value)}
+                        className="h-9 rounded-lg border-white/10 bg-white/5 text-xs"
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="mt-6 text-destructive/30 hover:text-destructive hover:bg-destructive/10 h-9 w-9"
+                      onClick={() => removeChangelogEntry(entry.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  <div className="space-y-3 pt-3 border-t border-white/5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[9px] uppercase tracking-widest font-bold text-muted-foreground ml-1">Modifications</span>
+                      <button
                         type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="mt-6 text-destructive/30 hover:text-destructive hover:bg-destructive/10 h-9 w-9"
-                        onClick={() => removeChangelogEntry(entry.id)}
+                        onClick={() => addChange(entry.id)}
+                        className="text-primary hover:underline text-[9px] font-bold uppercase tracking-widest"
                       >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                        + Add Line
+                      </button>
                     </div>
 
-                    <div className="space-y-3 pt-3 border-t border-white/5">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[9px] uppercase tracking-widest font-bold text-muted-foreground ml-1">Modifications</span>
-                        <button
-                          type="button"
-                          onClick={() => addChange(entry.id)}
-                          className="text-primary hover:underline text-[9px] font-bold uppercase tracking-widest"
-                        >
-                          + Add Line
-                        </button>
-                      </div>
-
-                      <div className="space-y-2">
-                        {entry.changes.map((change, index) => (
-                          <div key={index} className="flex gap-2 items-center group/line">
-                            <div className="w-1 h-1 rounded-full bg-primary/20" />
-                            <Input
-                              placeholder="New feature added..."
-                              value={change}
-                              onChange={(e) => updateChange(entry.id, index, e.target.value)}
-                              className="flex-1 h-8 border-none bg-transparent hover:bg-white/5 focus:bg-white/5 text-xs px-2"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => removeChange(entry.id, index)}
-                              className="opacity-0 group-hover/line:opacity-100 text-destructive/30 hover:text-destructive p-1"
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
+                    <div className="space-y-2">
+                      {entry.changes.map((change, index) => (
+                        <div key={index} className="flex gap-2 items-center group/line">
+                          <div className="w-1 h-1 rounded-full bg-primary/20" />
+                          <Input
+                            placeholder="New feature added..."
+                            value={change}
+                            onChange={(e) => updateChange(entry.id, index, e.target.value)}
+                            className="flex-1 h-8 border-none bg-transparent hover:bg-white/5 focus:bg-white/5 text-xs px-2"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeChange(entry.id, index)}
+                            className="opacity-0 group-hover/line:opacity-100 text-destructive/30 hover:text-destructive p-1"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                ))
-              )}
-            </div>
+                </div>
+              ))
+            )}
           </div>
-        )}
+        </div>
+
       </form>
 
       {/* Footer Save Area */}
       <div className="mt-4 pt-4 border-t border-white/5 bg-background">
         {error && <p className="text-xs text-destructive font-bold mb-3 text-center mb-4">{error}</p>}
         <Button
-          onClick={(e) => {
-            const form = (e.currentTarget as HTMLButtonElement).closest('div')?.parentElement?.querySelector('form');
-            if (form) form.requestSubmit();
+          onClick={() => {
+            if (formRef.current) formRef.current.requestSubmit();
           }}
           disabled={isLoading}
           className="w-full h-11 rounded-xl font-bold uppercase tracking-widest text-xs shadow-xl transition-all"

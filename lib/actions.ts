@@ -8,10 +8,11 @@ import type { Project } from "@/lib/types"
 export async function createProject(formData: FormData) {
   const db = await getFirestoreServer()
 
-  const title = formData.get("title") as string
-  const description = formData.get("description") as string
-  const image_url = formData.get("image_url") as string
-  const tags = (formData.get("tags") as string).split(",").map((tag) => tag.trim())
+  const title = (formData.get("title") as string) || ""
+  const description = (formData.get("description") as string) || ""
+  const image_url = (formData.get("image_url") as string) || ""
+  const tagsStr = (formData.get("tags") as string) || ""
+  const tags = tagsStr.split(",").map((tag) => tag.trim())
   const project_url = formData.get("project_url") as string
   const github_url = formData.get("github_url") as string
   const in_development = formData.get("in_development") === "true"
@@ -62,10 +63,11 @@ export async function createProject(formData: FormData) {
 export async function updateProject(id: string, formData: FormData) {
   const db = await getFirestoreServer()
 
-  const title = formData.get("title") as string
-  const description = formData.get("description") as string
-  const image_url = formData.get("image_url") as string
-  const tags = (formData.get("tags") as string).split(",").map((tag) => tag.trim())
+  const title = (formData.get("title") as string) || ""
+  const description = (formData.get("description") as string) || ""
+  const image_url = (formData.get("image_url") as string) || ""
+  const tagsStr = (formData.get("tags") as string) || ""
+  const tags = tagsStr.split(",").map((tag) => tag.trim())
   const project_url = formData.get("project_url") as string
   const github_url = formData.get("github_url") as string
   const in_development = formData.get("in_development") === "true"
