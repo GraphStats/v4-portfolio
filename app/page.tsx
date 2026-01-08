@@ -69,8 +69,8 @@ export default async function HomePage() {
           </div>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-            <ScrollButton targetId="projects" variant="link" className="p-0 h-auto hover:text-foreground transition-all hover:translate-y-[-2px]">Projects</ScrollButton>
-            <ScrollButton targetId="tech-stack" variant="link" className="p-0 h-auto hover:text-foreground transition-all hover:translate-y-[-2px]">Tech</ScrollButton>
+            <ScrollButton targetId="projects" variant="ghost" className="p-0 h-auto text-muted-foreground hover:bg-transparent hover:text-foreground transition-all hover:translate-y-[-2px]">Projects</ScrollButton>
+            <ScrollButton targetId="tech-stack" variant="ghost" className="p-0 h-auto text-muted-foreground hover:bg-transparent hover:text-foreground transition-all hover:translate-y-[-2px]">Tech</ScrollButton>
             <Link href="/about" className="hover:text-foreground transition-all hover:translate-y-[-2px]">About</Link>
             <Link href="#contact" className="hover:text-foreground transition-all hover:translate-y-[-2px]">Contact</Link>
           </nav>
