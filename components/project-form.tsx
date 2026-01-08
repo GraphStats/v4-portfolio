@@ -266,31 +266,31 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
             ) : (
               changelog.map((entry, index) => (
                 <div key={entry.id} className="glass p-6 rounded-3xl border-white/5 bg-white/[0.01] space-y-4 group">
-                  <div className="flex items-start gap-4">
-                    <div className="flex flex-col gap-2 mt-6 shrink-0">
+                  <div className="grid grid-cols-[auto_1fr_1fr_auto] gap-4 items-end">
+                    <div className="flex flex-col gap-1 shrink-0">
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 rounded-full bg-white/5 border border-white/10 text-muted-foreground/50 hover:text-primary hover:bg-primary/10 hover:border-primary/20 disabled:opacity-10 transition-all duration-300 shadow-sm"
+                        className="h-7 w-7 rounded-full bg-white/5 border border-white/10 text-muted-foreground/50 hover:text-primary hover:bg-primary/10 hover:border-primary/20 disabled:opacity-10 transition-all duration-300 shadow-sm"
                         disabled={index === 0}
                         onClick={() => moveChangelogEntry(index, 'up')}
                       >
-                        <ChevronUp className="h-4 w-4 transition-transform group-hover:scale-110" />
+                        <ChevronUp className="h-3.5 w-3.5 transition-transform group-hover:scale-110" />
                       </Button>
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 rounded-full bg-white/5 border border-white/10 text-muted-foreground/50 hover:text-primary hover:bg-primary/10 hover:border-primary/20 disabled:opacity-10 transition-all duration-300 shadow-sm"
+                        className="h-7 w-7 rounded-full bg-white/5 border border-white/10 text-muted-foreground/50 hover:text-primary hover:bg-primary/10 hover:border-primary/20 disabled:opacity-10 transition-all duration-300 shadow-sm"
                         disabled={index === changelog.length - 1}
                         onClick={() => moveChangelogEntry(index, 'down')}
                       >
-                        <ChevronDown className="h-4 w-4 transition-transform group-hover:scale-110" />
+                        <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:scale-110" />
                       </Button>
                     </div>
 
-                    <div className="flex-1 space-y-1.5">
+                    <div className="space-y-1.5">
                       <Label className="text-[9px] uppercase tracking-widest text-muted-foreground ml-1">Version</Label>
                       <Input
                         placeholder="v1.0.0"
@@ -299,7 +299,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
                         className="h-9 rounded-lg border-white/10 bg-white/5 font-mono text-primary text-xs font-bold"
                       />
                     </div>
-                    <div className="flex-1 space-y-1.5">
+                    <div className="space-y-1.5">
                       <Label className="text-[9px] uppercase tracking-widest text-muted-foreground ml-1">Date</Label>
                       <Input
                         type="date"
@@ -312,7 +312,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="mt-6 text-destructive/30 hover:text-destructive hover:bg-destructive/10 h-9 w-9"
+                      className="text-destructive/30 hover:text-destructive hover:bg-destructive/10 h-9 w-9"
                       onClick={() => removeChangelogEntry(entry.id)}
                     >
                       <Trash2 className="h-4 w-4" />
