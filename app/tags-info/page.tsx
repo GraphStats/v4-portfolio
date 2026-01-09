@@ -88,7 +88,7 @@ export default async function TagsInfoPage() {
             description: "Ce tag indique que le projet a été archivé et n'est plus maintenu.",
             details: [
                 "Le projet ne recevra plus aucune mise à jour",
-                "Le projet n'est pas terminé et être incomplet",
+                "Le projet n'est pas terminé et est incomplet",
                 "Certaines fonctionnalités peuvent ne pas être opérationnelles",
                 "Le code source reste disponible pour référence ou fork (si possible)"
             ]
