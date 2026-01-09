@@ -10,6 +10,7 @@ export interface Project {
   created_at: string
   updated_at: string
   in_development?: boolean
+  development_status?: 'active' | 'paused'
   development_progress?: number
   is_completed?: boolean
   is_archived?: boolean

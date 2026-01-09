@@ -27,7 +27,7 @@
 }
 
 .dark {
-  --background: oklch(0.08 0.02 240);
+  --background: #05080C;
   --foreground: oklch(0.98 0.01 240);
   --card: oklch(0.12 0.03 240);
   --card-foreground: oklch(0.98 0.01 240);
@@ -92,6 +92,36 @@
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
 
   }
+
+  /* Custom Scrollbar - Global Sleek Design */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.6 0.05 240 / 0.15);
+    border-radius: 20px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: all 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0.6 0.05 240 / 0.15) transparent;
+  }
 }
 
 
@@ -146,6 +176,10 @@
     opacity: 0.2;
     background-size: 200% 200%;
     animation: construction-move 20s linear infinite;
+  }
+
+  .construction-pattern.paused {
+    animation: none;
   }
 }
 

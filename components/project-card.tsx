@@ -1,7 +1,7 @@
 import type { Project } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Github, ArrowUpRight, Hammer, Wrench, Construction, CheckCircle2, Archive, PackageCheck, ImageOff, Trophy, History } from "lucide-react"
+import { ExternalLink, Github, ArrowUpRight, Hammer, Wrench, Construction, CheckCircle2, Archive, PackageCheck, ImageOff, Trophy, History, Play, Pause } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -13,6 +13,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const isFinished = project.is_completed;
   const isArchived = project.is_archived;
   const isInDev = project.in_development;
+  const isPaused = project.development_status === 'paused';
 
   return (
     <div className={`group relative rounded-3xl overflow-hidden glass h-full flex flex-col perspective-card reveal-up transition-all duration-500 
@@ -50,33 +51,52 @@ export function ProjectCard({ project }: ProjectCardProps) {
           {isInDev && (
             <>
               <div
-                className="absolute inset-x-0 top-0 h-[18%] construction-pattern"
+                className={`absolute inset-x-0 top-0 h-[18%] construction-pattern ${isPaused ? 'paused' : ''}`}
                 style={{
                   maskImage: 'linear-gradient(to bottom, black 30%, transparent 100%)',
                   WebkitMaskImage: 'linear-gradient(to bottom, black 30%, transparent 100%)'
                 }}
               />
               <div className="absolute top-3 inset-x-0 flex items-center justify-center">
-                <div className="bg-yellow-400 text-black px-4 py-1.5 rounded-full font-black text-[10px] uppercase tracking-widest shadow-2xl border-2 border-black rotate-[-1deg] animate-pulse">
-                  In Development
-                </div>
+                <Link href="/tags-info" className="hover:scale-110 transition-transform duration-300">
+                  <div className={`px-4 py-1.5 rounded-full font-black text-[10px] uppercase tracking-widest shadow-2xl border-2 rotate-[-1deg] cursor-pointer flex items-center gap-1.5 ${isPaused
+                    ? 'bg-orange-400 text-black border-black'
+                    : 'bg-yellow-400 text-black border-black animate-pulse'
+                    }`}>
+                    {isPaused ? (
+                      <>
+                        <Pause className="h-3 w-3" />
+                        Développement en pause
+                      </>
+                    ) : (
+                      <>
+                        <Play className="h-3 w-3" />
+                        Développement en cours
+                      </>
+                    )}
+                  </div>
+                </Link>
               </div>
             </>
           )}
 
           {isFinished && (
             <div className="absolute top-3 right-3">
-              <div className="bg-emerald-500 text-white p-1.5 rounded-lg shadow-lg border border-emerald-400/50 animate-bounce">
-                <Trophy className="h-4 w-4" />
-              </div>
+              <Link href="/tags-info" className="block hover:scale-110 transition-transform duration-300">
+                <div className="bg-emerald-500 text-white p-1.5 rounded-lg shadow-lg border border-emerald-400/50 animate-bounce cursor-pointer">
+                  <Trophy className="h-4 w-4" />
+                </div>
+              </Link>
             </div>
           )}
 
           {isArchived && !isFinished && (
             <div className="absolute top-3 right-3">
-              <div className="bg-indigo-500/20 text-indigo-300 p-1.5 rounded-lg shadow-lg border border-indigo-400/30 backdrop-blur-md">
-                <Archive className="h-4 w-4" />
-              </div>
+              <Link href="/tags-info" className="block hover:scale-110 transition-transform duration-300">
+                <div className="bg-indigo-500/20 text-indigo-300 p-1.5 rounded-lg shadow-lg border border-indigo-400/30 backdrop-blur-md cursor-pointer">
+                  <Archive className="h-4 w-4" />
+                </div>
+              </Link>
             </div>
           )}
         </div>
@@ -109,19 +129,32 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 {project.title}
               </h4>
               {isInDev && (
-                <div className="p-1.5 rounded-lg bg-yellow-400/10 border border-yellow-400/20">
-                  <Wrench className="h-3.5 w-3.5 text-yellow-400 animate-spin-slow" />
-                </div>
+                <Link href="/tags-info" className="hover:scale-110 transition-transform duration-300">
+                  <div className={`p-1.5 rounded-lg border cursor-pointer ${isPaused
+                    ? 'bg-orange-400/10 border-orange-400/20'
+                    : 'bg-yellow-400/10 border-yellow-400/20'
+                    }`}>
+                    {isPaused ? (
+                      <Pause className="h-3.5 w-3.5 text-orange-400" />
+                    ) : (
+                      <Wrench className="h-3.5 w-3.5 text-yellow-400 animate-spin-slow" />
+                    )}
+                  </div>
+                </Link>
               )}
               {isFinished && (
-                <div className="p-1 rounded-full bg-emerald-500/20 text-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                  <CheckCircle2 className="h-4 w-4" />
-                </div>
+                <Link href="/tags-info" className="hover:scale-110 transition-transform duration-300">
+                  <div className="p-1 rounded-full bg-emerald-500/20 text-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.2)] cursor-pointer">
+                    <CheckCircle2 className="h-4 w-4" />
+                  </div>
+                </Link>
               )}
               {isArchived && (
-                <div className="p-1 rounded-full bg-indigo-500/20 text-indigo-400 shadow-[0_0_10px_rgba(99,102,241,0.2)]">
-                  <PackageCheck className="h-4 w-4" />
-                </div>
+                <Link href="/tags-info" className="hover:scale-110 transition-transform duration-300">
+                  <div className="p-1 rounded-full bg-indigo-500/20 text-indigo-400 shadow-[0_0_10px_rgba(99,102,241,0.2)] cursor-pointer">
+                    <PackageCheck className="h-4 w-4" />
+                  </div>
+                </Link>
               )}
             </div>
             <div className={`p-2 rounded-full border transition-all duration-300 shadow-glow
@@ -152,26 +185,47 @@ export function ProjectCard({ project }: ProjectCardProps) {
               </Badge>
             ))}
             {isInDev && (
-              <Badge variant="secondary" className="rounded-full px-4 py-1 bg-primary/20 border-primary/30 text-primary font-bold text-[10px] uppercase tracking-widest animate-pulse">
-                WIP
-              </Badge>
+              <Link href="/tags-info" className="hover:scale-110 transition-transform duration-300">
+                <Badge variant="secondary" className={`rounded-full px-4 py-1 font-bold text-[10px] uppercase tracking-widest cursor-pointer flex items-center gap-1 ${isPaused
+                  ? 'bg-orange-500/20 border-orange-500/30 text-orange-400'
+                  : 'bg-primary/20 border-primary/30 text-primary animate-pulse'
+                  }`}>
+                  {isPaused ? (
+                    <>
+                      <Pause className="h-3 w-3" />
+                      En pause
+                    </>
+                  ) : (
+                    <>
+                      WIP
+                    </>
+                  )}
+                </Badge>
+              </Link>
             )}
             {isFinished && (
-              <Badge variant="secondary" className="rounded-full px-4 py-1 bg-emerald-500/20 border-emerald-500/30 text-emerald-400 font-bold text-[10px] uppercase tracking-widest shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                Finished
-              </Badge>
+              <Link href="/tags-info" className="hover:scale-110 transition-transform duration-300">
+                <Badge variant="secondary" className="rounded-full px-4 py-1 bg-emerald-500/20 border-emerald-500/30 text-emerald-400 font-bold text-[10px] uppercase tracking-widest shadow-[0_0_10px_rgba(16,185,129,0.2)] cursor-pointer">
+                  Finished
+                </Badge>
+              </Link>
             )}
             {isArchived && (
-              <Badge variant="secondary" className="rounded-full px-4 py-1 bg-indigo-500/20 border-indigo-500/30 text-indigo-400 font-bold text-[10px] uppercase tracking-widest">
-                Archived
-              </Badge>
+              <Link href="/tags-info" className="hover:scale-110 transition-transform duration-300">
+                <Badge variant="secondary" className="rounded-full px-4 py-1 bg-indigo-500/20 border-indigo-500/30 text-indigo-400 font-bold text-[10px] uppercase tracking-widest cursor-pointer">
+                  Archived
+                </Badge>
+              </Link>
             )}
           </div>
 
           {isInDev && (
             <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
               <div
-                className="h-full bg-yellow-400/40 animate-shimmer bg-[length:200%_100%] bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent transition-all duration-1000"
+                className={`h-full transition-all duration-1000 ${isPaused
+                  ? 'bg-orange-400/40'
+                  : 'bg-yellow-400/40 animate-shimmer bg-[length:200%_100%] bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent'
+                  }`}
                 style={{ width: `${project.development_progress || 0}%` }}
               />
             </div>

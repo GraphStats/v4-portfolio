@@ -50,29 +50,11 @@ export default async function ContactPage() {
                                 pour vous offrir la meilleure expérience possible.
                             </p>
                         </div>
-                    </div>
 
-                    <div className="p-10 rounded-[2.5rem] bg-white/5 border border-white/10 space-y-8">
-                        <div className="space-y-2">
-                            <p className="text-xs font-bold uppercase tracking-widest text-primary">Contact Direct</p>
-                            <h2 className="text-2xl font-bold font-display">PAR E-MAIL</h2>
-                        </div>
-
-                        <Button asChild size="lg" className="h-16 px-10 rounded-2xl bg-foreground text-background hover:bg-foreground/90 font-bold text-lg tracking-tight transition-all hover:scale-[1.05] active:scale-[0.95] shadow-xl">
-                            <a href="mailto:admin@drayko.xyz" className="flex items-center gap-3">
-                                <Mail className="h-6 w-6" />
-                                admin@drayko.xyz
-                            </a>
-                        </Button>
-
-                        <p className="text-sm text-muted-foreground font-medium">
-                            Réponse généralement en moins de 24h.
+                        <p className="text-xs text-muted-foreground font-medium italic">
+                            La messagerie directe sera disponible dans la version 4.0.
                         </p>
                     </div>
-
-                    <p className="text-xs text-muted-foreground font-medium italic">
-                        La messagerie directe sera disponible dans la version 4.0.
-                    </p>
                 </div>
             </main>
 
