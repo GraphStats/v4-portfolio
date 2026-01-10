@@ -326,6 +326,10 @@
   animation: float-alt 7s ease-in-out infinite;
 }
 
+.animate-shimmer {
+  animation: shimmer 3s linear infinite;
+}
+
 .animate-pulse-glow {
   animation: pulse-glow 6s ease-in-out infinite;
 }

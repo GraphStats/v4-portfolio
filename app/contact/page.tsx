@@ -46,13 +46,30 @@ export default async function ContactPage() {
                         <div className="space-y-4">
                             <h1 className="text-4xl md:text-5xl font-black tracking-tight font-display text-gradient">BIENTÔT DISPONIBLE</h1>
                             <p className="text-muted-foreground font-medium text-lg leading-relaxed">
-                                Mon système de messagerie directe est en cours de développement
+                                Mon système de messagerie web est en cours de développement
                                 pour vous offrir la meilleure expérience possible.
                             </p>
                         </div>
 
+                        <div className="pt-4">
+                            <div className="inline-block p-[1px] rounded-3xl bg-gradient-to-r from-primary/50 via-accent/50 to-primary/50 animate-shimmer bg-[length:200%_100%] shadow-lg shadow-primary/10">
+                                <a
+                                    href="mailto:info@drayko.xyz"
+                                    className="flex items-center gap-4 px-10 py-5 rounded-[calc(1.5rem-1px)] bg-background/80 backdrop-blur-xl hover:bg-background/40 transition-all group"
+                                >
+                                    <div className="p-3 rounded-2xl bg-primary/10 text-primary group-hover:scale-110 group-hover:rotate-6 transition-transform">
+                                        <Mail className="h-6 w-6" />
+                                    </div>
+                                    <div className="text-left">
+                                        <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground mb-0.5">Contact e-mail</div>
+                                        <div className="text-xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">info@drayko.xyz</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
                         <p className="text-xs text-muted-foreground font-medium italic">
-                            La messagerie directe sera disponible dans la version 4.0.
+                            La messagerie web sera disponible dans la version 3.2.0.
                         </p>
                     </div>
                 </div>
