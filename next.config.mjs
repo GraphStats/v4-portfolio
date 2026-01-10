@@ -17,6 +17,22 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'raw.githubusercontent.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.jsdelivr.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.svgrepo.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'help.ovhcloud.com',
+      },
     ],
   },
 }

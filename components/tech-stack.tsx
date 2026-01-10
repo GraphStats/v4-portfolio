@@ -1,5 +1,7 @@
 "use client"
 
+import Image from "next/image"
+
 interface TechItem {
   name: string
   logo: string // Changed from icon: LucideIcon
@@ -50,10 +52,12 @@ export function TechStack() {
               >
                 <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors duration-500" />
                 <div className="relative w-12 h-12 flex items-center justify-center p-1 group-hover:scale-125 transition-all duration-500">
-                  <img
+                  <Image
                     src={tech.logo}
                     alt={tech.name}
-                    className={`w-full h-full object-contain transition-all duration-500 group-hover:scale-110 ${["Vercel", "AWS"].includes(tech.name) ? "brightness-0 invert" : ""}`}
+                    width={48}
+                    height={48}
+                    className={`w-full h-full object-contain transition-all duration-500 group-hover:scale-110 ${["Vercel", "AWS"].includes(tech.name) ? "brightness-0 dark:invert" : ""}`}
                   />
                 </div>
                 <span className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground group-hover:text-foreground transition-colors">

@@ -41,6 +41,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             src={project.image_url || "/placeholder.svg"}
             alt={project.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className={`object-cover group-hover:scale-110 transition-transform duration-1000 ease-out 
               ${isInDev ? "grayscale brightness-50" : ""}
               ${isFinished ? "brightness-110 contrast-110" : isArchived ? "brightness-100" : ""}
