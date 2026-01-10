@@ -215,10 +215,6 @@ export default async function TagsInfoPage() {
                 </div>
 
             </main>
-
-            <footer className="py-12 border-t border-white/5 text-center text-sm text-muted-foreground font-medium relative z-10">
-                <p>&copy; 2025 - 2026 Drayko. All rights reserved.</p>
-            </footer>
         </div>
     )
 }

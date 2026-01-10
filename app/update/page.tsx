@@ -104,10 +104,6 @@ export default async function UpdatePage() {
                     <ChangelogList entries={updateData.changelog} />
                 </section>
             </main>
-
-            <footer className="py-12 border-t border-white/5 text-center text-sm text-muted-foreground font-medium">
-                <p>&copy; 2025 Drayko. Ecosystem Evolution.</p>
-            </footer>
         </div>
     )
 }

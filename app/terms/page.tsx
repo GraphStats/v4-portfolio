@@ -84,10 +84,6 @@ export default function TermsPage() {
                     </div>
                 </div>
             </main>
-
-            <footer className="py-12 border-t border-white/5 text-center text-sm text-muted-foreground font-medium">
-                <p>&copy; 2025 Drayko. Legal Framework & Terms.</p>
-            </footer>
         </div>
     )
 }

@@ -59,7 +59,7 @@ export default async function AboutPage() {
                                     <Sparkles className="h-5 w-5" />
                                     <span className="text-sm font-bold uppercase tracking-widest">My Journey</span>
                                 </div>
-                                <h2 className="text-3xl font-bold tracking-tight">From Pixels to Logic</h2>
+                                <h2 className="text-3xl font-bold tracking-tight">Crafting Digital Experiences</h2>
                                 <div className="space-y-4 text-muted-foreground font-medium leading-relaxed">
                                     <p>
                                         I’ve always been obsessed with building things. It started with game modding—messing around with config files and assets until I broke something, then figuring out how to fix it. That curiosity naturally led me to code.
@@ -94,7 +94,7 @@ export default async function AboutPage() {
                                     <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4">
                                         <Sparkles className="h-6 w-6" />
                                     </div>
-                                    <h3 className="text-xl font-bold mb-2">Pixel Perfect</h3>
+                                    <h3 className="text-xl font-bold mb-2">Refined Design</h3>
                                     <p className="text-sm text-muted-foreground">Obsessive attention to detail. Smooth animations, responsive layouts, and modern aesthetics.</p>
                                 </div>
                                 <div className="p-6 rounded-2xl bg-background/30 border border-white/5 hover:border-primary/30 transition-all hover:-translate-y-1 duration-300">
@@ -127,10 +127,6 @@ export default async function AboutPage() {
                     </div>
                 </div >
             </main >
-
-            <footer className="py-12 border-t border-white/5 text-center text-sm text-muted-foreground font-medium relative z-10">
-                <p>&copy; 2025 Drayko. All rights reserved.</p>
-            </footer>
         </div >
     )
 }

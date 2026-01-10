@@ -141,10 +141,6 @@ export default async function ProjectUpdatePage({ params }: ProjectUpdatePagePro
                     )}
                 </section>
             </main>
-
-            <footer className="py-12 border-t border-white/5 text-center text-sm text-muted-foreground font-medium">
-                <p>&copy; 2025 {project.title}. Evolution Trace.</p>
-            </footer>
         </div>
     )
 }

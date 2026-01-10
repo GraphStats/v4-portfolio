@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import Script from "next/script"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SpecialThemeHandler } from "@/components/special-theme-handler"
+import { Footer } from "@/components/footer"
 
 import "./globals.css"
 
@@ -34,6 +35,7 @@ export default async function RootLayout({
 
           <div className="relative flex min-h-screen flex-col">
             <main className="flex-1">{children}</main>
+            <Footer />
           </div>
         </ThemeProvider>
         <Analytics />
