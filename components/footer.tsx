@@ -44,6 +44,7 @@ export function Footer() {
                                         <Link href="/#tech-stack" className="hover:text-foreground">Tech Stack</Link>
                                     )}
                                 </li>
+                                <li className="transition-transform hover:translate-x-1"><Link href="/stats" className="hover:text-foreground">Analytics</Link></li>
                                 <li className="transition-transform hover:translate-x-1"><Link href="/tags-info" className="hover:text-foreground">Tags Info</Link></li>
                                 <li className="transition-transform hover:translate-x-1"><Link href="/about" className="hover:text-foreground">About Me</Link></li>
                                 <li className="transition-transform hover:translate-x-1"><Link href="/update" className="hover:text-foreground">Site Updates</Link></li>

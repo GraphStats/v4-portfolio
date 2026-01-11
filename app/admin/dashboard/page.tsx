@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon } from "lucide-react"
+import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon, Activity } from "lucide-react"
 import { AdminProjectCard } from "@/components/admin-project-card"
 import { ProjectDialog } from "@/components/project-dialog"
 import { AdminDialog } from "@/components/admin-dialog"
 import { AdminCard } from "@/components/admin-card"
+import { AdminStats } from "@/components/admin-stats"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { UpdateDialog } from "@/components/update-dialog"
 import { BadgeDialog } from "@/components/badge-dialog"
@@ -133,6 +134,24 @@ export default function AdminDashboardPage() {
 
       {/* Content */}
       <main className="relative z-10 pt-32 pb-24 container mx-auto px-6 space-y-20">
+
+        {/* Analytics Section */}
+        <section className="space-y-8">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+              <Activity className="h-4 w-4" />
+              Performance Overview
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">NETWORK PULSE</h2>
+            <p className="text-muted-foreground font-medium max-w-xl">
+              Real-time insights into traffic, security, and performance across the global edge network.
+            </p>
+          </div>
+          <AdminStats />
+        </section>
+
+        <Separator className="bg-white/5" />
+
         {/* Projects Section */}
         <section className="space-y-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">

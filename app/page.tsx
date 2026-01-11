@@ -11,6 +11,7 @@ import Link from "next/link"
 import { Lock, ArrowRight, Sparkles, Code2, Globe, Command, ChevronDown, Github, Gitlab, MessageSquare, Rocket, Timer } from "lucide-react"
 import { getMaintenanceMode } from "@/lib/actions"
 import { redirect } from "next/navigation"
+import { getCloudflareStats } from "@/lib/cloudflare"
 
 export const revalidate = 60
 
@@ -46,6 +47,24 @@ export default async function HomePage() {
     fetchError = true
   }
 
+  // Fetch Cloudflare stats for milestone celebration
+  let celebrationMessage = null
+  try {
+    const statsResult = await getCloudflareStats('all')
+    if (statsResult.success && statsResult.data) {
+      const total = statsResult.data.totals.uniques
+      const k = Math.floor(total / 1000)
+      const remainder = total % 1000
+
+      // Show milestone if we are within the first 200 visitors of a new "k" (e.g. 1000-1200)
+      if (k >= 1 && remainder < 200) {
+        celebrationMessage = `${k}k Visitors!`
+      }
+    }
+  } catch (e) {
+    console.error("Stats fetch error:", e)
+  }
+
   return (
     <div className="min-h-screen bg-background relative selection:bg-primary/30 selection:text-primary overflow-x-hidden font-sans">
       <div className="noise-overlay" />
@@ -71,6 +90,7 @@ export default async function HomePage() {
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
             <ScrollButton targetId="projects" variant="ghost" className="p-0 h-auto text-muted-foreground hover:bg-transparent hover:text-foreground transition-all hover:translate-y-[-2px]">Projects</ScrollButton>
             <ScrollButton targetId="tech-stack" variant="ghost" className="p-0 h-auto text-muted-foreground hover:bg-transparent hover:text-foreground transition-all hover:translate-y-[-2px]">Tech</ScrollButton>
+            <Link href="/stats" className="hover:text-foreground transition-all hover:translate-y-[-2px]">Stats</Link>
             <Link href="/tags-info" className="hover:text-foreground transition-all hover:translate-y-[-2px]">Tags</Link>
             <Link href="/about" className="hover:text-foreground transition-all hover:translate-y-[-2px]">About</Link>
             <Link href="#contact" className="hover:text-foreground transition-all hover:translate-y-[-2px]">Contact</Link>
@@ -92,12 +112,22 @@ export default async function HomePage() {
         <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
           <div className="container px-6 py-24 mx-auto text-center space-y-12">
             <div className="reveal-up stagger-1">
-              <Link
-                href="/update"
-                className="inline-flex items-center px-4 py-2 rounded-full glass border-white/10 text-sm font-medium text-muted-foreground hover:bg-white/5 hover:text-foreground transition-all group overflow-hidden whitespace-nowrap hover:shadow-[0_0_30px_rgba(var(--primary),0.1)]"
-              >
-                <style dangerouslySetInnerHTML={{
-                  __html: `
+              <div className="flex flex-col items-center gap-4 reveal-up stagger-1">
+                {celebrationMessage && (
+                  <Link href="/milestone">
+                    <div className="inline-flex items-center px-4 py-2 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-sm font-bold text-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.2)] animate-bounce-subtle hover:scale-110 transition-transform cursor-pointer">
+                      <span className="mr-2">🎉</span>
+                      {celebrationMessage}
+                    </div>
+                  </Link>
+                )}
+
+                <Link
+                  href="/update"
+                  className="inline-flex items-center px-4 py-2 rounded-full glass border-white/10 text-sm font-medium text-muted-foreground hover:bg-white/5 hover:text-foreground transition-all group overflow-hidden whitespace-nowrap hover:shadow-[0_0_30px_rgba(var(--primary),0.1)]"
+                >
+                  <style dangerouslySetInnerHTML={{
+                    __html: `
                   @keyframes draw-tip {
                     from { stroke-dashoffset: 20; }
                     to { stroke-dashoffset: 0; }
@@ -119,30 +149,31 @@ export default async function HomePage() {
                     transform: scaleX(1);
                   }
                 `}} />
-                <Sparkles className="h-4 w-4 text-primary animate-pulse mr-2 flex-none" />
-                <span className="transition-colors duration-300">
-                  Latest update: {(updateData?.latest_update_text || "Fix database bug and new interface (v3!)").trim()}
-                </span>
-                <div className="flex items-center w-0 group-hover:w-6 transition-all duration-300 ease-out overflow-hidden flex-none group-hover:ml-2">
-                  <svg width="18" height="12" viewBox="0 0 18 12" fill="none" className="flex-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <path
-                      d="M1 6H16"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      className="arrow-bar shadow-glow shadow-primary/20"
-                    />
-                    <path
-                      d="M11 1L16 6L11 11"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="arrow-tip shadow-glow shadow-primary/20"
-                    />
-                  </svg>
-                </div>
-              </Link>
+                  <Sparkles className="h-4 w-4 text-primary animate-pulse mr-2 flex-none" />
+                  <span className="transition-colors duration-300">
+                    Latest update: {(updateData?.latest_update_text || "Fix database bug and new interface (v3!)").trim()}
+                  </span>
+                  <div className="flex items-center w-0 group-hover:w-6 transition-all duration-300 ease-out overflow-hidden flex-none group-hover:ml-2">
+                    <svg width="18" height="12" viewBox="0 0 18 12" fill="none" className="flex-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <path
+                        d="M1 6H16"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        className="arrow-bar shadow-glow shadow-primary/20"
+                      />
+                      <path
+                        d="M11 1L16 6L11 11"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="arrow-tip shadow-glow shadow-primary/20"
+                      />
+                    </svg>
+                  </div>
+                </Link>
+              </div>
             </div>
 
             <div className="space-y-6">
