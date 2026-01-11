@@ -8,14 +8,16 @@ import { ProjectDialog } from "@/components/project-dialog"
 import { AdminDialog } from "@/components/admin-dialog"
 import { AdminCard } from "@/components/admin-card"
 import { AdminStats } from "@/components/admin-stats"
+import { AdminMessages } from "@/components/admin-messages"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { UpdateDialog } from "@/components/update-dialog"
 import { BadgeDialog } from "@/components/badge-dialog"
 import { Separator } from "@/components/ui/separator"
 import type { Project, Admin, SiteUpdate } from "@/lib/types"
 import { logoutAdmin } from "@/lib/auth"
-import { getAdmins, getMaintenanceMode } from "@/lib/actions"
+import { getAdmins, getMaintenanceMode, getAvailability } from "@/lib/actions"
 import { MaintenanceToggle } from "@/components/maintenance-toggle"
+import { AvailabilityToggle } from "@/components/availability-toggle"
 import { getFirestoreClient } from "@/lib/firebase/client"
 import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
 import Link from "next/link"
@@ -33,6 +35,7 @@ export default function AdminDashboardPage() {
   const [maintenanceMode, setMaintenanceMode] = useState(false)
   const [maintenanceMessage, setMaintenanceMessage] = useState("")
   const [maintenanceProgress, setMaintenanceProgress] = useState(0)
+  const [isAvailable, setIsAvailable] = useState(true)
 
   const fetchProjects = async () => {
     const db = getFirestoreClient()
@@ -73,11 +76,19 @@ export default function AdminDashboardPage() {
     }
   }
 
+  const fetchAvailability = async () => {
+    const result = await getAvailability()
+    if (result.success && result.isAvailable !== undefined) {
+      setIsAvailable(result.isAvailable)
+    }
+  }
+
   useEffect(() => {
     fetchProjects()
     fetchAdmins()
     fetchUpdateData()
     fetchMaintenanceMode()
+    fetchAvailability()
   }, [])
 
   const handleProjectDeleted = (projectId: string) => {
@@ -135,6 +146,7 @@ export default function AdminDashboardPage() {
       {/* Content */}
       <main className="relative z-10 pt-32 pb-24 container mx-auto px-6 space-y-20">
 
+
         {/* Analytics Section */}
         <section className="space-y-8">
           <div className="space-y-4">
@@ -150,7 +162,9 @@ export default function AdminDashboardPage() {
           <AdminStats />
         </section>
 
+
         <Separator className="bg-white/5" />
+
 
         {/* Projects Section */}
         <section className="space-y-12">
@@ -203,6 +217,31 @@ export default function AdminDashboardPage() {
               ))}
             </div>
           )}
+        </section>
+
+        <Separator className="bg-white/5" />
+
+        {/* Messages Section */}
+        <section className="space-y-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                <Activity className="h-4 w-4" />
+                Communications
+              </div>
+              <div className="flex items-baseline gap-4">
+                <h2 className="text-4xl md:text-5xl font-bold tracking-tight">MESSAGES</h2>
+              </div>
+              <p className="text-muted-foreground font-medium max-w-xl">
+                Gérez les demandes de contact entrantes et répondez aux opportunités.
+              </p>
+            </div>
+            <div className="w-full md:w-auto">
+              <AvailabilityToggle initialState={isAvailable} />
+            </div>
+          </div>
+
+          <AdminMessages />
         </section>
 
         <Separator className="bg-white/5" />

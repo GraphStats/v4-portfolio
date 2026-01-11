@@ -15,6 +15,7 @@ export interface Project {
   is_completed?: boolean
   is_archived?: boolean
   changelog?: ChangelogEntry[]
+  requires_auth?: boolean
 }
 
 export interface Admin {
@@ -40,3 +41,35 @@ export interface SiteUpdate {
   updated_at: string;
 }
 
+
+
+export interface ChatMessage {
+  id: string
+  content: string
+  sender: 'user' | 'admin'
+  createdAt: string
+}
+
+export interface Conversation {
+  id: string
+  userName: string
+  userEmail: string
+  subject: string
+  createdAt: string
+  updatedAt: string
+  status: 'active' | 'archived'
+  read: boolean // Read by admin
+  messages: ChatMessage[]
+  replied?: boolean
+}
+
+export interface ContactMessage {
+  id: string
+  name: string
+  email: string
+  subject: string
+  message: string
+  created_at: string
+  read: boolean
+  replied?: boolean
+}

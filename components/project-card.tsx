@@ -1,19 +1,25 @@
 import type { Project } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Github, ArrowUpRight, Hammer, Wrench, Construction, CheckCircle2, Archive, PackageCheck, ImageOff, Trophy, History, Play, Pause } from "lucide-react"
+import { ExternalLink, Github, ArrowUpRight, Hammer, Wrench, Construction, CheckCircle2, Archive, PackageCheck, ImageOff, Trophy, History, Play, Pause, Lock } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { useUser } from "@clerk/nextjs"
+import { SignInButton } from "@clerk/nextjs"
 
 interface ProjectCardProps {
   project: Project
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const { user } = useUser()
+  const isSignedIn = !!user
+
   const isFinished = project.is_completed;
   const isArchived = project.is_archived;
   const isInDev = project.in_development;
   const isPaused = project.development_status === 'paused';
+  const requiresAuth = project.requires_auth;
 
   return (
     <div className={`group relative rounded-3xl overflow-hidden glass h-full flex flex-col perspective-card reveal-up transition-all duration-500 
@@ -21,14 +27,28 @@ export function ProjectCard({ project }: ProjectCardProps) {
       ${isFinished ? "border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.1)]" : ""}
       ${isArchived ? "border-indigo-500/30 shadow-[0_0_20px_rgba(99,102,241,0.05)]" : ""}
     `}>
-      {/* Background Mesh (Appears on Hover) */}
-      {isFinished ? (
-        <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-      ) : isArchived ? (
-        <div className="absolute inset-0 bg-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-      ) : (
-        <div className="absolute inset-0 mesh-bg opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+      <div className="relative z-10 h-full">
+      {/* Auth Required Overlay */}
+      {requiresAuth && !isSignedIn && (
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center rounded-3xl z-20">
+          <div className="text-center space-y-4 p-6">
+            <Lock className="h-12 w-12 text-white mx-auto animate-pulse" />
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-white">Connexion requise</h3>
+              <p className="text-white/80 text-sm max-w-xs">
+                Ce projet nécessite une authentification pour être consulté.
+              </p>
+            </div>
+            <SignInButton mode="modal">
+              <button className="px-6 py-3 bg-primary text-primary-foreground rounded-full font-bold hover:bg-primary/90 transition-colors shadow-lg">
+                Se connecter
+              </button>
+            </SignInButton>
+          </div>
+        </div>
       )}
+
+      <div className={`${requiresAuth && !isSignedIn ? "blur-sm opacity-60" : ""}`}>
 
       {/* Glow Effect Overlay */}
       <div className={`absolute inset-0 transition-colors duration-500 
@@ -129,6 +149,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
               `}>
                 {project.title}
               </h4>
+              {requiresAuth && !isSignedIn && (
+                <Lock className="h-6 w-6 text-red-500 animate-pulse" />
+              )}
               {isInDev && (
                 <Link href="/tags-info" className="hover:scale-110 transition-transform duration-300">
                   <div className={`p-1.5 rounded-lg border cursor-pointer ${isPaused
@@ -242,7 +265,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
               </Button>
             ) : (
               project.project_url && (
-                <Button asChild size="sm" className={`flex-1 rounded-full font-bold tracking-tight transition-all duration-500 hover:scale-110 active:scale-95 shadow-lg
+                <Button asChild size="sm" disabled={requiresAuth && !isSignedIn} className={`flex-1 rounded-full font-bold tracking-tight transition-all duration-500 hover:scale-110 active:scale-95 shadow-lg
+                  ${requiresAuth && !isSignedIn ? "opacity-50 cursor-not-allowed" : ""}
                   ${isFinished ? "bg-emerald-500 text-white hover:bg-emerald-400 hover:shadow-emerald-500/20" : isArchived ? "bg-indigo-500 text-white hover:bg-indigo-400 hover:shadow-indigo-500/20" : "bg-white text-black hover:bg-primary hover:text-white hover:shadow-primary/20"}
                 `}>
                   <Link href={project.project_url} target="_blank" rel="noopener noreferrer">
@@ -258,7 +282,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 asChild
                 variant="ghost"
                 size="sm"
-                className="flex-1 rounded-full border border-white/10 glass hover:bg-white/10 hover:text-foreground font-bold tracking-tight transition-all duration-500 hover:scale-110 active:scale-95"
+                disabled={requiresAuth && !isSignedIn}
+                className={`flex-1 rounded-full border border-white/10 glass hover:bg-white/10 hover:text-foreground font-bold tracking-tight transition-all duration-500 hover:scale-110 active:scale-95
+                  ${requiresAuth && !isSignedIn ? "opacity-50 cursor-not-allowed" : ""}
+                `}
               >
                 <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
                   <Github className="mr-2 h-4 w-4" />
@@ -284,6 +311,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </Button>
         </div>
       </div>
+      </div>
+
+      </div>
     </div>
-  )
+  );
 }

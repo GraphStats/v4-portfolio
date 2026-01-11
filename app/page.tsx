@@ -12,6 +12,7 @@ import { Lock, ArrowRight, Sparkles, Code2, Globe, Command, ChevronDown, Github,
 import { getMaintenanceMode } from "@/lib/actions"
 import { redirect } from "next/navigation"
 import { getCloudflareStats } from "@/lib/cloudflare"
+import { AuthButtons } from "@/components/auth-buttons"
 
 export const revalidate = 60
 
@@ -98,6 +99,7 @@ export default async function HomePage() {
 
           <div className="flex items-center gap-4">
             <ThemeToggle />
+            <AuthButtons />
             <Button asChild variant="ghost" size="sm" className="hidden sm:flex rounded-full glass border border-white/10 hover:bg-primary hover:text-primary-foreground transition-all duration-500 hover:shadow-[0_0_20px_rgba(var(--primary),0.3)]">
               <Link href="/admin">
                 <Lock className="mr-2 h-4 w-4" />

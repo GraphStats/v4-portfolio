@@ -20,6 +20,7 @@ export async function createProject(formData: FormData) {
   const is_completed = formData.get("is_completed") === "true"
   const is_archived = formData.get("is_archived") === "true"
   const development_progress = parseInt(formData.get("development_progress") as string) || 0
+  const requires_auth = formData.get("requires_auth") === "true"
 
   // Parse changelog if provided
   let changelog = []
@@ -49,6 +50,7 @@ export async function createProject(formData: FormData) {
       is_completed: is_completed,
       is_archived: is_archived,
       development_progress: development_progress,
+      requires_auth: requires_auth,
       changelog: changelog,
       created_at: new Date().toISOString(),
     })
@@ -77,6 +79,7 @@ export async function updateProject(id: string, formData: FormData) {
   const is_completed = formData.get("is_completed") === "true"
   const is_archived = formData.get("is_archived") === "true"
   const development_progress = parseInt(formData.get("development_progress") as string) || 0
+  const requires_auth = formData.get("requires_auth") === "true"
 
   // Parse changelog
   let changelog = []
@@ -107,6 +110,7 @@ export async function updateProject(id: string, formData: FormData) {
       is_completed: is_completed,
       is_archived: is_archived,
       development_progress: development_progress,
+      requires_auth: requires_auth,
       changelog: changelog,
     })
 
@@ -235,6 +239,7 @@ export async function updateMaintenanceMode(isMaintenance: boolean, message?: st
   }
 }
 
+
 export async function getProjectBySlug(slug: string) {
   const db = await getFirestoreServer()
   try {
@@ -265,5 +270,231 @@ export async function getProjectBySlug(slug: string) {
   } catch (error) {
     console.error("Error fetching project by slug:", error)
     return null
+  }
+}
+
+
+// Chat / Conversation Actions
+
+export async function createConversation(formData: FormData) {
+  const db = await getFirestoreServer()
+
+  const name = formData.get("name") as string
+  const email = formData.get("email") as string
+  const subject = formData.get("subject") as string
+  const message = formData.get("message") as string
+
+  const initialMessage = {
+    id: crypto.randomUUID(),
+    content: message,
+    sender: 'user',
+    createdAt: new Date().toISOString()
+  }
+
+  try {
+    const docRef = await addDoc(collection(db, "conversations"), {
+      userName: name,
+      userEmail: email,
+      subject,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      status: 'active',
+      read: false,
+      messages: [initialMessage]
+    })
+
+    revalidatePath("/admin/dashboard")
+    return { success: true, conversationId: docRef.id }
+  } catch (error: any) {
+    console.error("Error creating conversation:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+
+export async function getConversation(id: string) {
+  const db = await getFirestoreServer()
+  try {
+    const docRef = doc(db, "conversations", id)
+    const docSnap = await getDoc(docRef)
+
+    if (docSnap.exists()) {
+      return { success: true, conversation: { id: docSnap.id, ...docSnap.data() } }
+    }
+    return { success: false, error: "Conversation not found" }
+  } catch (error: any) {
+    console.error("Error fetching conversation:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+export async function sendMessage(conversationId: string, content: string, sender: 'user' | 'admin') {
+  const db = await getFirestoreServer()
+
+  const newMessage = {
+    id: crypto.randomUUID(),
+    content,
+    sender,
+    createdAt: new Date().toISOString()
+  }
+
+  try {
+    const docRef = doc(db, "conversations", conversationId)
+    const docSnap = await getDoc(docRef)
+
+    if (!docSnap.exists()) {
+      return { success: false, error: "Conversation not found" }
+    }
+
+    const currentMessages = docSnap.data().messages || []
+
+    // Determine updates
+    const updates: any = {
+      messages: [...currentMessages, newMessage],
+      updatedAt: new Date().toISOString()
+    }
+
+    if (sender === 'admin') {
+      updates.read = true // Admin replied, so it's "read" / handled
+      // optional: updates.status = 'active'
+    } else {
+      updates.read = false // User replied, admin needs to read it
+    }
+
+    await updateDoc(docRef, updates)
+
+    revalidatePath("/admin/dashboard")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error sending message:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+// Availability System
+export async function getAvailability() {
+  const db = await getFirestoreServer()
+  try {
+    const docRef = doc(db, "settings", "availability")
+    const docSnap = await getDoc(docRef)
+
+    if (docSnap.exists()) {
+      return { success: true, isAvailable: docSnap.data().isAvailable }
+    }
+    // Default to true if not set
+    return { success: true, isAvailable: true }
+  } catch (error: any) {
+    console.error("Error fetching availability:", error)
+    return { success: false, isAvailable: true }
+  }
+}
+
+export async function updateAvailability(isAvailable: boolean) {
+  const db = await getFirestoreServer()
+  try {
+    const docRef = doc(db, "settings", "availability")
+    await setDoc(docRef, { isAvailable }, { merge: true })
+
+    revalidatePath("/")
+    revalidatePath("/contact") // Because contact page might show this
+    revalidatePath("/admin/dashboard")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error updating availability:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+export async function getConversations() {
+  const db = await getFirestoreServer()
+  try {
+    const q = query(collection(db, "conversations"), orderBy("updatedAt", "desc"))
+    const querySnapshot = await getDocs(q)
+
+    const data = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }))
+
+    return { success: true, data }
+  } catch (error: any) {
+    console.error("Error fetching conversations:", error)
+    return { success: false, error: error.message, data: [] }
+  }
+}
+
+export async function markConversationAsRead(id: string) {
+  const db = await getFirestoreServer()
+  try {
+    const docRef = doc(db, "conversations", id)
+    await updateDoc(docRef, {
+      read: true
+    })
+    revalidatePath("/admin/dashboard")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error marking conversation as read:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+export async function deleteConversation(id: string) {
+  const db = await getFirestoreServer()
+  try {
+    await deleteDoc(doc(db, "conversations", id))
+    revalidatePath("/admin/dashboard")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error deleting conversation:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+export async function submitContactMessage(formData: FormData) {
+  return createConversation(formData)
+}
+
+export async function getContactMessages() {
+  const result = await getConversations()
+  if (!result.success) {
+    return { success: false, error: result.error, data: [] }
+  }
+
+  // Map conversations to ContactMessage format
+  const messages = result.data.map((conv: any) => ({
+    id: conv.id,
+    name: conv.userName,
+    email: conv.userEmail,
+    subject: conv.subject,
+    message: conv.messages && conv.messages.length > 0 ? conv.messages[0].content : "",
+    created_at: conv.createdAt,
+    read: conv.read,
+    replied: conv.replied || false
+  }))
+
+  return { success: true, data: messages }
+}
+
+export async function markMessageAsRead(id: string) {
+  return markConversationAsRead(id)
+}
+
+export async function deleteMessage(id: string) {
+  return deleteConversation(id)
+}
+
+export async function markMessageAsReplied(id: string) {
+  const db = await getFirestoreServer()
+  try {
+    const docRef = doc(db, "conversations", id)
+    await updateDoc(docRef, {
+      replied: true,
+      read: true
+    })
+    revalidatePath("/admin/dashboard")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error marking message as replied:", error)
+    return { success: false, error: error.message }
   }
 }

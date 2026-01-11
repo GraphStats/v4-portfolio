@@ -1,10 +1,12 @@
 import Link from "next/link"
-import { ChevronLeft, Mail, MessageSquare, Clock } from "lucide-react"
+import { ChevronLeft, Mail, MessageSquare, Clock, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { getMaintenanceMode } from "@/lib/actions"
+import { getMaintenanceMode, getAvailability } from "@/lib/actions"
 import { redirect } from "next/navigation"
+import { ChatInterface } from "@/components/chat/chat-interface"
+import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs'
 
-export const revalidate = 60
+export const revalidate = 0
 
 export default async function ContactPage() {
     // Maintenance check
@@ -12,6 +14,9 @@ export default async function ContactPage() {
     if (isMaintenance) {
         redirect("/maintenance")
     }
+
+    const { isAvailable } = await getAvailability()
+
     return (
         <div className="min-h-screen bg-background relative overflow-hidden font-sans selection:bg-primary/30 selection:text-primary">
             <div className="noise-overlay" />
@@ -37,40 +42,80 @@ export default async function ContactPage() {
                 </div>
             </header>
 
-            <main className="relative z-10 pt-32 pb-24 container max-w-2xl mx-auto px-6 flex items-center justify-center min-h-[80vh]">
-                <div className="glass p-12 md:p-20 rounded-[3.5rem] border-white/5 text-center space-y-12 shadow-2xl animate-scale-in">
-                    <div className="space-y-6">
-                        <div className="mx-auto w-24 h-24 rounded-[2rem] bg-primary/10 flex items-center justify-center text-primary shadow-2xl shadow-primary/20 rotate-6 group-hover:rotate-0 transition-transform duration-500">
-                            <Clock className="h-12 w-12 animate-pulse" />
-                        </div>
-                        <div className="space-y-4">
-                            <h1 className="text-4xl md:text-5xl font-black tracking-tight font-display text-gradient">BIENTÔT DISPONIBLE</h1>
-                            <p className="text-muted-foreground font-medium text-lg leading-relaxed">
-                                Mon système de messagerie web est en cours de développement
-                                pour vous offrir la meilleure expérience possible.
-                            </p>
-                        </div>
 
-                        <div className="pt-4">
-                            <div className="inline-block p-[1px] rounded-3xl bg-gradient-to-r from-primary/50 via-accent/50 to-primary/50 animate-shimmer bg-[length:200%_100%] shadow-lg shadow-primary/10">
-                                <a
-                                    href="mailto:info@drayko.xyz"
-                                    className="flex items-center gap-4 px-10 py-5 rounded-[calc(1.5rem-1px)] bg-background/80 backdrop-blur-xl hover:bg-background/40 transition-all group"
-                                >
-                                    <div className="p-3 rounded-2xl bg-primary/10 text-primary group-hover:scale-110 group-hover:rotate-6 transition-transform">
-                                        <Mail className="h-6 w-6" />
-                                    </div>
-                                    <div className="text-left">
-                                        <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground mb-0.5">Contact e-mail</div>
-                                        <div className="text-xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">info@drayko.xyz</div>
-                                    </div>
-                                </a>
+            <main className="relative z-10 pt-32 pb-24 container max-w-4xl mx-auto px-6 flex items-center justify-center min-h-[80vh]">
+                <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-8 glass p-2 rounded-[3.5rem] border-white/5 shadow-2xl animate-scale-in">
+
+                    {/* Info Side */}
+                    <div className="bg-white/5 rounded-[3rem] p-8 md:p-12 flex flex-col justify-between relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+                        <div className="relative z-10 space-y-6">
+                            <div className="w-16 h-16 rounded-3xl bg-primary/20 flex items-center justify-center text-primary shadow-glow shadow-primary/20 mb-8">
+                                <Mail className="h-8 w-8" />
+                            </div>
+
+                            <div className="space-y-4">
+                                <h1 className="text-3xl md:text-4xl font-black tracking-tight font-display text-white">
+                                    Parlons de votre <span className="text-gradient">Projet</span>
+                                </h1>
+                                <p className="text-muted-foreground font-medium leading-relaxed">
+                                    Vous avez une idée en tête ? Je suis là pour vous aider à la réaliser.
+                                    Remplissez le formulaire et je vous répondrai sous 24h.
+                                </p>
                             </div>
                         </div>
 
-                        <p className="text-xs text-muted-foreground font-medium italic">
-                            La messagerie web sera disponible dans la version 3.2.0.
-                        </p>
+                        <div className="relative z-10 space-y-6 mt-12">
+                            <div className="space-y-1">
+                                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Email Direct</p>
+                                <a href="mailto:info@drayko.xyz" className="text-lg font-bold hover:text-primary transition-colors block">
+                                    info@drayko.xyz
+                                </a>
+                            </div>
+
+                            <div className="space-y-1">
+                                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Disponibilité</p>
+                                <div className="flex items-center gap-2">
+                                    <span className="relative flex h-3 w-3">
+                                        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isAvailable ? "bg-green-400" : "bg-red-400"}`}></span>
+                                        <span className={`relative inline-flex rounded-full h-3 w-3 ${isAvailable ? "bg-green-500" : "bg-red-500"}`}></span>
+                                    </span>
+                                    <span className={`font-bold ${isAvailable ? "text-white" : "text-red-200"}`}>
+                                        {isAvailable ? "Ouvert aux projets" : "Indisponible"}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {/* Form Side */}
+                    <div className="p-8 md:p-12">
+                        <SignedIn>
+                            <ChatInterface isAvailable={isAvailable} />
+                        </SignedIn>
+                        <SignedOut>
+                            <div className="relative">
+                                {/* Flou overlay */}
+                                <div className="absolute inset-0 bg-background/80 backdrop-blur-sm rounded-[2rem] z-10 flex items-center justify-center">
+                                    <div className="text-center space-y-4 p-8">
+                                        <div className="w-16 h-16 mx-auto rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4">
+                                            <Lock className="h-8 w-8" />
+                                        </div>
+                                        <h3 className="text-xl font-bold">Connexion requise</h3>
+                                        <p className="text-muted-foreground">Vous devez être connecté pour me contacter.</p>
+                                        <SignInButton mode="modal">
+                                            <Button className="rounded-full">Se connecter</Button>
+                                        </SignInButton>
+                                    </div>
+                                </div>
+                                {/* Contenu flouté */}
+                                <div className="blur-sm opacity-60 pointer-events-none">
+                                    <ChatInterface isAvailable={isAvailable} />
+                                </div>
+                            </div>
+                        </SignedOut>
                     </div>
                 </div>
             </main>
