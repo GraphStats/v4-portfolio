@@ -6,19 +6,19 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
-import { updateMaintenanceMode } from "@/lib/actions"
-import { Construction, Loader2, Save } from "lucide-react"
+import { updateV4Mode } from "@/lib/actions"
+import { Rocket, Loader2, Save, Sparkles } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 
-interface MaintenanceToggleProps {
+interface V4ToggleProps {
     initialState: boolean
     initialMessage: string
     initialProgress: number
     onUpdated?: () => void
 }
 
-export function MaintenanceToggle({ initialState, initialMessage, initialProgress, onUpdated }: MaintenanceToggleProps) {
-    const [isMaintenance, setIsMaintenance] = useState(initialState)
+export function V4Toggle({ initialState, initialMessage, initialProgress, onUpdated }: V4ToggleProps) {
+    const [isV4Mode, setIsV4Mode] = useState(initialState)
     const [message, setMessage] = useState(initialMessage)
     const [progress, setProgress] = useState(initialProgress)
     const [isPending, startTransition] = useTransition()
@@ -26,7 +26,7 @@ export function MaintenanceToggle({ initialState, initialMessage, initialProgres
 
     // Sync state with props if they change
     useEffect(() => {
-        setIsMaintenance(initialState)
+        setIsV4Mode(initialState)
     }, [initialState])
 
     useEffect(() => {
@@ -38,20 +38,20 @@ export function MaintenanceToggle({ initialState, initialMessage, initialProgres
     }, [initialProgress])
 
     const handleToggle = (checked: boolean) => {
-        setIsMaintenance(checked)
+        setIsV4Mode(checked)
         startTransition(async () => {
-            const result = await updateMaintenanceMode(checked, message, progress)
+            const result = await updateV4Mode(checked, message, progress)
             if (result.success) {
                 toast({
-                    title: checked ? "Maintenance Enabled" : "Maintenance Disabled",
-                    description: checked ? "The site is now in maintenance mode." : "The site is now live.",
+                    title: checked ? "V4 Mode Enabled" : "V4 Mode Disabled",
+                    description: checked ? "The site is now in V4 teaser mode." : "The site is now live.",
                 })
                 if (onUpdated) onUpdated()
             } else {
-                setIsMaintenance(!checked)
+                setIsV4Mode(!checked)
                 toast({
                     title: "Error",
-                    description: "Failed to update maintenance mode.",
+                    description: "Failed to update V4 mode.",
                     variant: "destructive",
                 })
             }
@@ -60,11 +60,11 @@ export function MaintenanceToggle({ initialState, initialMessage, initialProgres
 
     const handleSave = () => {
         startTransition(async () => {
-            const result = await updateMaintenanceMode(isMaintenance, message, progress)
+            const result = await updateV4Mode(isV4Mode, message, progress)
             if (result.success) {
                 toast({
                     title: "Settings Saved",
-                    description: "Maintenance settings updated successfully.",
+                    description: "V4 teaser settings updated successfully.",
                 })
                 if (onUpdated) onUpdated()
             } else {
@@ -81,30 +81,30 @@ export function MaintenanceToggle({ initialState, initialMessage, initialProgres
         <div className="glass p-6 rounded-3xl border-white/5 flex flex-col gap-6 w-full">
             <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <div className={`p-3 rounded-xl ${isMaintenance ? "bg-amber-500/20 text-amber-500" : "bg-emerald-500/20 text-emerald-500"} transition-colors`}>
-                        <Construction className="h-6 w-6" />
+                    <div className={`p-3 rounded-xl ${isV4Mode ? "bg-blue-500/20 text-blue-400" : "bg-muted/20 text-muted-foreground"} transition-colors`}>
+                        <Rocket className="h-6 w-6" />
                     </div>
                     <div>
-                        <Label className="text-base font-bold text-foreground">Maintenance Mode</Label>
+                        <Label className="text-base font-bold text-foreground">V4 Teaser Mode</Label>
                         <p className="text-sm text-muted-foreground">
-                            {isMaintenance ? "Site is locked." : "Site is live."}
+                            {isV4Mode ? "V4 announcement is live." : "Standard site is live."}
                         </p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
                     {isPending && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
-                    <Switch checked={isMaintenance} onCheckedChange={handleToggle} disabled={isPending} />
+                    <Switch checked={isV4Mode} onCheckedChange={handleToggle} disabled={isPending} />
                 </div>
             </div>
 
             <div className="space-y-4">
                 <div className="space-y-2">
-                    <Label>Custom Message</Label>
+                    <Label>Teaser Message</Label>
                     <div className="flex gap-2">
                         <Input
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
-                            placeholder="Enter maintenance message..."
+                            placeholder="Enter teaser message (e.g. Drayko v4 is coming...)"
                             className="bg-white/5 border-white/10 text-foreground"
                         />
                     </div>
@@ -112,7 +112,7 @@ export function MaintenanceToggle({ initialState, initialMessage, initialProgres
 
                 <div className="space-y-4">
                     <div className="flex justify-between">
-                        <Label>Progress Bar ({progress}%)</Label>
+                        <Label>Development Progress ({progress}%)</Label>
                     </div>
                     <Slider
                         value={[progress]}
@@ -123,9 +123,9 @@ export function MaintenanceToggle({ initialState, initialMessage, initialProgres
                     />
                 </div>
 
-                <Button onClick={handleSave} disabled={isPending} className="w-full">
+                <Button onClick={handleSave} disabled={isPending} className="w-full bg-blue-600 hover:bg-blue-500 text-white">
                     <Save className="mr-2 h-4 w-4" />
-                    Save Changes
+                    Save V4 Settings
                 </Button>
             </div>
         </div>

@@ -13,6 +13,11 @@ export function ClerkThemeProvider({ children }: { children: React.ReactNode }) 
     setMounted(true)
   }, [])
 
+  // During build/static generation, don't initialize Clerk
+  if (typeof window === 'undefined' && !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+    return <>{children}</>
+  }
+
   if (!mounted) {
     return (
       <ClerkProvider>

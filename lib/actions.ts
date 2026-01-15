@@ -219,6 +219,47 @@ export async function getMaintenanceMode() {
   }
 }
 
+export async function getV4Mode() {
+  const db = await getFirestoreServer()
+  try {
+    const docRef = doc(db, "settings", "general")
+    const docSnap = await getDoc(docRef)
+
+    if (docSnap.exists()) {
+      const data = docSnap.data()
+      return {
+        success: true,
+        isV4Mode: data.v4_mode || false,
+        message: data.v4_message || "Drayko v4 is coming.",
+        progress: data.v4_progress || 0
+      }
+    }
+    return { success: true, isV4Mode: false, message: "Drayko v4 is coming.", progress: 0 }
+  } catch (error: any) {
+    console.error("Error fetching v4 mode:", error)
+    return { success: false, error: error.message, isV4Mode: false, message: "Drayko v4 is coming.", progress: 0 }
+  }
+}
+
+export async function updateV4Mode(isV4Mode: boolean, message?: string, progress?: number) {
+  const db = await getFirestoreServer()
+  try {
+    const docRef = doc(db, "settings", "general")
+    const data: any = { v4_mode: isV4Mode }
+    if (message !== undefined) data.v4_message = message
+    if (progress !== undefined) data.v4_progress = progress
+
+    await setDoc(docRef, data, { merge: true })
+
+    revalidatePath("/")
+    revalidatePath("/admin/dashboard")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error updating v4 mode:", error)
+    return { success: false, error: error.message }
+  }
+}
+
 export async function updateMaintenanceMode(isMaintenance: boolean, message?: string, progress?: number) {
   const db = await getFirestoreServer()
   try {

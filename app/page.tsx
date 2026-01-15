@@ -9,18 +9,24 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { ScrollButton } from "@/components/scroll-button"
 import Link from "next/link"
 import { Lock, ArrowRight, Sparkles, Code2, Globe, Command, ChevronDown, Github, Gitlab, MessageSquare, Rocket, Timer } from "lucide-react"
-import { getMaintenanceMode } from "@/lib/actions"
+import { getMaintenanceMode, getV4Mode } from "@/lib/actions"
 import { redirect } from "next/navigation"
 import { getCloudflareStats } from "@/lib/cloudflare"
 import { AuthButtons } from "@/components/auth-buttons"
 
-export const revalidate = 60
+export const dynamic = "force-dynamic"
 
 export default async function HomePage() {
   // Maintenance check
   const { isMaintenance } = await getMaintenanceMode()
   if (isMaintenance) {
     redirect("/maintenance")
+  }
+
+  // V4 Mode check
+  const { isV4Mode } = await getV4Mode()
+  if (isV4Mode) {
+    redirect("/v4-is-coming")
   }
 
   let projects: Project[] = []

@@ -1,15 +1,21 @@
 import Link from "next/link"
 import { ChevronLeft, User, Heart, Sparkles, Code2, Brain, Globe, Laptop } from "lucide-react"
-import { getMaintenanceMode } from "@/lib/actions"
+import { getMaintenanceMode, getV4Mode } from "@/lib/actions"
 import { redirect } from "next/navigation"
 
-export const revalidate = 60
+export const dynamic = "force-dynamic"
 
 export default async function AboutPage() {
     // Maintenance check
     const { isMaintenance } = await getMaintenanceMode()
     if (isMaintenance) {
         redirect("/maintenance")
+    }
+
+    // V4 Mode check
+    const { isV4Mode } = await getV4Mode()
+    if (isV4Mode) {
+        redirect("/v4-is-coming")
     }
     return (
         <div className="min-h-screen bg-background relative overflow-hidden font-sans selection:bg-primary/30 selection:text-primary">

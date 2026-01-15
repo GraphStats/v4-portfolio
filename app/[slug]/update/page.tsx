@@ -3,9 +3,9 @@ import { ChevronLeft, History, Rocket, Calendar, Info, Package, Hammer, Archive 
 import { getProjectBySlug } from "@/lib/actions"
 import { notFound, redirect } from "next/navigation"
 import { ChangelogList } from "@/components/changelog-list"
-import { getMaintenanceMode } from "@/lib/actions"
+import { getMaintenanceMode, getV4Mode } from "@/lib/actions"
 
-export const revalidate = 60
+export const dynamic = "force-dynamic"
 
 interface ProjectUpdatePageProps {
     params: {
@@ -20,6 +20,12 @@ export default async function ProjectUpdatePage({ params }: ProjectUpdatePagePro
     const { isMaintenance } = await getMaintenanceMode()
     if (isMaintenance) {
         redirect("/maintenance")
+    }
+
+    // V4 Mode check
+    const { isV4Mode } = await getV4Mode()
+    if (isV4Mode) {
+        redirect("/v4-is-coming")
     }
 
     const project = await getProjectBySlug(slug)

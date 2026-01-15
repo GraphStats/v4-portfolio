@@ -1,10 +1,12 @@
 import Link from "next/link"
 import { ChevronLeft, Mail, MessageSquare, Clock, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { getMaintenanceMode, getAvailability } from "@/lib/actions"
+import { getMaintenanceMode, getAvailability, getV4Mode } from "@/lib/actions"
 import { redirect } from "next/navigation"
 import { ChatInterface } from "@/components/chat/chat-interface"
 import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs'
+
+export const dynamic = 'force-dynamic'
 
 export const revalidate = 0
 
@@ -13,6 +15,12 @@ export default async function ContactPage() {
     const { isMaintenance } = await getMaintenanceMode()
     if (isMaintenance) {
         redirect("/maintenance")
+    }
+
+    // V4 Mode check
+    const { isV4Mode } = await getV4Mode()
+    if (isV4Mode) {
+        redirect("/v4-is-coming")
     }
 
     const { isAvailable } = await getAvailability()

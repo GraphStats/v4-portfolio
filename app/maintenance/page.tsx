@@ -1,9 +1,16 @@
 import { Construction } from "lucide-react"
 import { getMaintenanceMode } from "@/lib/actions"
+import { redirect } from "next/navigation"
+
+export const dynamic = "force-dynamic"
 
 
 export default async function MaintenancePage() {
-    const { message, progress } = await getMaintenanceMode()
+    const { isMaintenance, message, progress } = await getMaintenanceMode()
+
+    if (!isMaintenance) {
+        redirect("/")
+    }
 
     return (
         <div className="min-h-screen relative flex items-center justify-center overflow-hidden">

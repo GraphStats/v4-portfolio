@@ -314,6 +314,26 @@ export function ProjectCard({ project }: ProjectCardProps) {
       </div>
 
       </div>
+
+      {/* Auth Required Overlay */}
+      {requiresAuth && !isSignedIn && (
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center rounded-3xl z-20">
+          <div className="text-center space-y-4 p-6">
+            <Lock className="h-12 w-12 text-white mx-auto animate-pulse" />
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-white">Connexion requise</h3>
+              <p className="text-white/80 text-sm max-w-xs">
+                Ce projet nécessite une authentification pour être consulté.
+              </p>
+            </div>
+            <SignInButton mode="modal">
+              <button className="px-6 py-3 bg-primary text-primary-foreground rounded-full font-bold hover:bg-primary/90 transition-colors shadow-lg">
+                Se connecter
+              </button>
+            </SignInButton>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

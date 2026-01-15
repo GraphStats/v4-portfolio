@@ -15,13 +15,14 @@ import { BadgeDialog } from "@/components/badge-dialog"
 import { Separator } from "@/components/ui/separator"
 import type { Project, Admin, SiteUpdate } from "@/lib/types"
 import { logoutAdmin } from "@/lib/auth"
-import { getAdmins, getMaintenanceMode, getAvailability } from "@/lib/actions"
+import { getAdmins, getMaintenanceMode, getAvailability, getV4Mode } from "@/lib/actions"
 import { MaintenanceToggle } from "@/components/maintenance-toggle"
+import { V4Toggle } from "@/components/v4-toggle"
 import { AvailabilityToggle } from "@/components/availability-toggle"
 import { getFirestoreClient } from "@/lib/firebase/client"
 import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
 import Link from "next/link"
-import { Sparkles } from "lucide-react"
+import { Sparkles, Rocket } from "lucide-react"
 
 export default function AdminDashboardPage() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -35,6 +36,9 @@ export default function AdminDashboardPage() {
   const [maintenanceMode, setMaintenanceMode] = useState(false)
   const [maintenanceMessage, setMaintenanceMessage] = useState("")
   const [maintenanceProgress, setMaintenanceProgress] = useState(0)
+  const [v4Mode, setV4Mode] = useState(false)
+  const [v4Message, setV4Message] = useState("")
+  const [v4Progress, setV4Progress] = useState(0)
   const [isAvailable, setIsAvailable] = useState(true)
 
   const fetchProjects = async () => {
@@ -76,6 +80,15 @@ export default function AdminDashboardPage() {
     }
   }
 
+  const fetchV4Mode = async () => {
+    const result = await getV4Mode()
+    if (result.success) {
+      setV4Mode(result.isV4Mode)
+      setV4Message(result.message || "")
+      setV4Progress(result.progress || 0)
+    }
+  }
+
   const fetchAvailability = async () => {
     const result = await getAvailability()
     if (result.success && result.isAvailable !== undefined) {
@@ -88,6 +101,7 @@ export default function AdminDashboardPage() {
     fetchAdmins()
     fetchUpdateData()
     fetchMaintenanceMode()
+    fetchV4Mode()
     fetchAvailability()
   }, [])
 
@@ -298,29 +312,49 @@ export default function AdminDashboardPage() {
                 Coordinate the release cycle, document breaking changes, and announce future capabilities.
               </p>
             </div>
-            <Button onClick={() => setUpdateDialogOpen(true)} variant="outline" className="rounded-2xl h-14 px-8 glass border-white/10 hover:bg-white/10 hover:text-foreground self-start md:self-auto transition-all">
+          </div>
+
+          <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex items-center gap-4">
+              <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
+                <HistoryIcon className="h-8 w-8" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Historical Records</p>
+                <p className="text-xl font-bold text-foreground/90 font-sans">
+                  Track the evolution of the platform with detailed version logs.
+                </p>
+              </div>
+            </div>
+            <Button onClick={() => setUpdateDialogOpen(true)} variant="outline" className="rounded-2xl h-14 px-8 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0">
               <HistoryIcon className="mr-2 h-5 w-5" />
               Manage Ecosystem Logs
             </Button>
           </div>
+        </section>
+
+        <Separator className="bg-white/5" />
+
+        {/* Site Status Section */}
+        <section className="space-y-12">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+              <Shield className="h-4 w-4" />
+              Availability Control
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">PLATFORM STATUS</h2>
+            <p className="text-muted-foreground font-medium max-w-xl">
+              Manage global site states. Activate maintenance mode or preview upcoming version announcements.
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02]">
-              <div className="flex items-center gap-4">
-                <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
-                  <HistoryIcon className="h-8 w-8" />
-                </div>
-                <div>
-                  <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Historical Records</p>
-                  <p className="text-xl font-bold text-foreground/90 font-sans">
-                    Track the evolution of the platform with detailed version logs.
-                  </p>
-                </div>
-              </div>
+            <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
+              <MaintenanceToggle initialState={maintenanceMode} initialMessage={maintenanceMessage} initialProgress={maintenanceProgress} onUpdated={fetchMaintenanceMode} />
             </div>
 
             <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
-              <MaintenanceToggle initialState={maintenanceMode} initialMessage={maintenanceMessage} initialProgress={maintenanceProgress} />
+              <V4Toggle initialState={v4Mode} initialMessage={v4Message} initialProgress={v4Progress} onUpdated={fetchV4Mode} />
             </div>
           </div>
         </section>
