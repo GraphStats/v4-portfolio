@@ -6,7 +6,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import Script from "next/script"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SpecialThemeHandler } from "@/components/special-theme-handler"
-import { Footer } from "@/components/footer"
 import { ClerkThemeProvider } from "@/components/clerk-theme-provider"
 
 import "./globals.css"
@@ -20,6 +19,7 @@ export const metadata: Metadata = {
   generator: "v0.app",
   other: {
     "google-adsense-account": "ca-pub-3145023750951462",
+    "monetag": "ad42aaa7976ba5b3bbe06af8ece11ba3"
   },
 }
 
@@ -29,19 +29,20 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange storageKey="theme">
-      <ClerkThemeProvider>
-        <html lang="en" suppressHydrationWarning className={`${inter.variable} ${outfit.variable}`}>
-          <body className="font-sans antialiased selection:bg-primary/30 selection:text-primary transition-colors duration-300" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${outfit.variable}`}>
+      <body className="font-sans antialiased selection:bg-primary/30 selection:text-primary transition-colors duration-300" suppressHydrationWarning>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange storageKey="theme">
+          <ClerkThemeProvider>
             <SpecialThemeHandler />
 
             <div className="relative flex min-h-screen flex-col">
               <main className="flex-1">{children}</main>
-              <Footer />
             </div>
-          </body>
-        </html>
-      </ClerkThemeProvider>
-    </ThemeProvider>
+            <Analytics />
+            <SpeedInsights />
+          </ClerkThemeProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   )
 }

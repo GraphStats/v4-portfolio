@@ -1,0 +1,210 @@
+"use client"
+
+import { motion } from "framer-motion"
+import { ExternalLink, Github, ArrowRight, Layers, Lock, History, Construction, Pause, Play } from "lucide-react"
+import { Project } from "@/lib/types"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import Image from "next/image"
+import Link from "next/link"
+import { useState } from "react"
+import { useUser, SignInButton } from "@clerk/nextjs"
+
+interface V4ProjectsProps {
+    projects: Project[]
+}
+
+export function V4Projects({ projects }: V4ProjectsProps) {
+    const [filter, setFilter] = useState<string>("all")
+    const { user } = useUser()
+    const isSignedIn = !!user
+
+    const filteredProjects = filter === "all"
+        ? projects
+        : projects.filter(p => p.tags?.includes(filter))
+
+    const allTags = Array.from(new Set(projects.flatMap(p => p.tags || [])))
+
+    return (
+        <section id="projects" className="py-32 relative overflow-hidden">
+            <div className="container mx-auto px-6">
+                <div className="flex flex-col md:flex-row justify-between items-end gap-10 mb-20">
+                    <div className="space-y-4 max-w-2xl">
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            className="text-primary font-black uppercase tracking-[0.3em] text-sm"
+                        >
+                            Selected Works
+                        </motion.div>
+                        <motion.h2
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            className="text-5xl md:text-7xl font-black tracking-tighter"
+                        >
+                            FEATURED <span className="text-muted-foreground/40 italic">PROJECTS</span>
+                        </motion.h2>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 lg:bg-white/5 lg:p-2 lg:rounded-2xl lg:border lg:border-white/10 lg:backdrop-blur-xl">
+                        <Button
+                            variant={filter === "all" ? "default" : "ghost"}
+                            size="sm"
+                            onClick={() => setFilter("all")}
+                            className="rounded-xl font-bold uppercase tracking-widest text-[10px]"
+                        >
+                            All
+                        </Button>
+                        {allTags.slice(0, 5).map(tag => (
+                            <Button
+                                key={tag}
+                                variant={filter === tag ? "default" : "ghost"}
+                                size="sm"
+                                onClick={() => setFilter(tag)}
+                                className="rounded-xl font-bold uppercase tracking-widest text-[10px]"
+                            >
+                                {tag}
+                            </Button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {filteredProjects.map((project, index) => (
+                        <ProjectCard key={project.id} project={project} index={index} isSignedIn={isSignedIn} />
+                    ))}
+                </div>
+            </div>
+        </section>
+    )
+}
+
+function ProjectCard({ project, index, isSignedIn }: { project: Project; index: number; isSignedIn: boolean }) {
+    const isLocked = project.requires_auth && !isSignedIn
+
+    const getStatusText = () => {
+        if (project.in_development) return project.development_status === 'paused' ? "Paused" : "In Development"
+        if (project.is_archived) return "Archived"
+        if (project.is_completed) return "Completed"
+        return "Active"
+    }
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            viewport={{ once: true }}
+            className={`group relative flex flex-col h-full v4-card p-4 hover:border-primary/50 transition-all duration-500 ${isLocked ? "scale-[0.98] opacity-90" : ""}`}
+        >
+            {/* Image Container */}
+            <div className="relative aspect-[16/10] rounded-xl overflow-hidden mb-6 bg-muted/20">
+                {project.image_url ? (
+                    <Image
+                        src={project.image_url}
+                        alt={project.title}
+                        fill
+                        className={`object-cover transition-transform duration-700 group-hover:scale-110 ${isLocked ? "blur-md grayscale scale-110" : ""}`}
+                    />
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center opacity-20">
+                        <Layers className="w-12 h-12" />
+                    </div>
+                )}
+
+                {/* Overlay Links */}
+                {!isLocked && (
+                    <div className="absolute inset-0 bg-background/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center gap-4 rounded-xl">
+                        {project.project_url && (
+                            <Button asChild size="icon" variant="secondary" className="rounded-full hover:scale-110 transition-transform">
+                                <Link href={project.project_url} target="_blank"><ExternalLink className="w-4 h-4" /></Link>
+                            </Button>
+                        )}
+                        {project.github_url && (
+                            <Button asChild size="icon" variant="secondary" className="rounded-full hover:scale-110 transition-transform">
+                                <Link href={project.github_url} target="_blank"><Github className="w-4 h-4" /></Link>
+                            </Button>
+                        )}
+                    </div>
+                )}
+
+                {/* Auth Overlay */}
+                {isLocked && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm rounded-xl">
+                        <Lock className="w-8 h-8 text-white/50 mb-4" />
+                        <SignInButton mode="modal">
+                            <Button size="sm" className="rounded-xl bg-white text-black font-black uppercase tracking-widest text-[9px]">Unlock</Button>
+                        </SignInButton>
+                    </div>
+                )}
+
+                {/* Status Badge */}
+                <div className="absolute top-4 left-4">
+                    <Badge className="bg-background/80 backdrop-blur-md text-foreground border-white/5 font-bold uppercase tracking-widest text-[9px] px-3 py-1 flex items-center gap-1.5">
+                        {project.in_development && (project.development_status === 'paused' ? <Pause className="w-2.5 h-2.5" /> : <Play className="w-2.5 h-2.5 animate-pulse" />)}
+                        {getStatusText()}
+                    </Badge>
+                </div>
+            </div>
+
+            {/* Content */}
+            <div className="flex flex-col flex-grow space-y-4">
+                <div className="flex justify-between items-start">
+                    <h3 className="text-2xl font-black tracking-tight group-hover:text-primary transition-colors">
+                        {project.title}
+                    </h3>
+                    {!isLocked && (
+                        <motion.div whileHover={{ rotate: 45 }}>
+                            <ArrowRight className="w-5 h-5 text-muted-foreground transition-colors group-hover:text-primary" />
+                        </motion.div>
+                    )}
+                </div>
+
+                <p className={`text-sm text-muted-foreground line-clamp-3 leading-relaxed ${isLocked ? "opacity-30" : ""}`}>
+                    {project.description}
+                </p>
+
+                {/* Progress Bar for WIP */}
+                {project.in_development && (
+                    <div className="space-y-2">
+                        <div className="flex justify-between text-[10px] uppercase font-black tracking-widest text-muted-foreground">
+                            <span>Progress</span>
+                            <span>{project.development_progress || 0}%</span>
+                        </div>
+                        <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                            <motion.div
+                                initial={{ width: 0 }}
+                                whileInView={{ width: `${project.development_progress || 0}%` }}
+                                className="h-full bg-primary"
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-x-3 gap-y-1 pt-2 mt-auto">
+                    {project.tags?.map(tag => (
+                        <span key={tag} className="text-[10px] uppercase tracking-wider font-extrabold text-primary/40">
+                            #{tag}
+                        </span>
+                    ))}
+                </div>
+
+                {/* Updates Button */}
+                <Button asChild variant="ghost" className="w-full h-10 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5 mt-4">
+                    <Link href={
+                        (project.slug === "my-portfolio-this-web-site" || project.title === "My portfolio (this web site)")
+                            ? "/update"
+                            : `/${project.slug || project.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}/update`
+                    }>
+                        <History className="w-3 h-3 mr-2" />
+                        View Updates
+                    </Link>
+                </Button>
+            </div>
+
+            {/* Hover Glow */}
+            {!isLocked && <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/2 to-primary/20 rounded-2xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity -z-10" />}
+        </motion.div>
+    )
+}

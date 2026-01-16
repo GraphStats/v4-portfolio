@@ -1,11 +1,14 @@
 import Link from "next/link"
-import { ChevronLeft, Mail, MessageSquare, Clock, Lock } from "lucide-react"
+import { ChevronLeft, Mail, MessageSquare, Clock, Lock, Sparkles, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { getMaintenanceMode, getAvailability, getV4Mode } from "@/lib/actions"
+import { getMaintenanceMode, getAvailability } from "@/lib/actions"
 import { redirect } from "next/navigation"
 import { ChatInterface } from "@/components/chat/chat-interface"
 import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs'
 import { isLocalRequest } from "@/lib/server-utils"
+import { V4Navbar } from "@/components/v4/V4Navbar"
+import { V4Dock } from "@/components/v4/V4Dock"
+import { V4Footer } from "@/components/v4/V4Footer"
 
 export const dynamic = 'force-dynamic'
 
@@ -20,111 +23,95 @@ export default async function ContactPage() {
         if (isMaintenance) {
             redirect("/maintenance")
         }
-
-        // V4 Mode check
-        const { isV4Mode } = await getV4Mode()
-        if (isV4Mode) {
-            redirect("/v4-is-coming")
-        }
     }
 
     const { isAvailable } = await getAvailability()
 
     return (
         <div className="min-h-screen bg-background relative overflow-hidden font-sans selection:bg-primary/30 selection:text-primary">
-            <div className="noise-overlay" />
+            <div className="noise-v4" />
+            <div className="mesh-v4 fixed inset-0 pointer-events-none" />
 
-            {/* Background Orbs */}
-            <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px] animate-pulse-glow" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/20 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: "-2s" }} />
-            </div>
+            <V4Navbar />
 
-            <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 backdrop-blur-md bg-background/60">
-                <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-foreground transition-all group">
-                        <div className="p-2 rounded-xl glass border-white/10 group-hover:border-primary/50 transition-all">
-                            <ChevronLeft className="h-4 w-4" />
-                        </div>
-                        Back to Home
-                    </Link>
-                    <div className="flex items-center gap-2">
-                        <MessageSquare className="h-5 w-5 text-primary" />
-                        <span className="font-bold tracking-tight">Contact</span>
+            <main className="relative z-10 pt-32 pb-24 container max-w-6xl mx-auto px-6 min-h-screen flex flex-col justify-center">
+                <div className="text-center mb-16 space-y-4">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full v4-glass border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-primary mx-auto">
+                        <Send className="w-3 h-3" />
+                        Direct Channel
                     </div>
+                    <h1 className="text-5xl md:text-8xl font-black tracking-tighter uppercase italic">
+                        CONTACT THE <span className="text-primary">ARCHITECT.</span>
+                    </h1>
                 </div>
-            </header>
 
-
-            <main className="relative z-10 pt-32 pb-24 container max-w-4xl mx-auto px-6 flex items-center justify-center min-h-[80vh]">
-                <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-8 glass p-2 rounded-[3.5rem] border-white/5 shadow-2xl animate-scale-in">
-
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-8 v4-glass p-4 rounded-[4rem] border-white/5 shadow-2xl">
                     {/* Info Side */}
-                    <div className="bg-white/5 rounded-[3rem] p-8 md:p-12 flex flex-col justify-between relative overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <div className="bg-white/5 rounded-[3.5rem] p-10 md:p-14 flex flex-col justify-between relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
 
-                        <div className="relative z-10 space-y-6">
-                            <div className="w-16 h-16 rounded-3xl bg-primary/20 flex items-center justify-center text-primary shadow-glow shadow-primary/20 mb-8">
-                                <Mail className="h-8 w-8" />
+                        <div className="relative z-10 space-y-8">
+                            <div className="w-20 h-20 rounded-[2rem] bg-primary/20 flex items-center justify-center text-primary shadow-2xl shadow-primary/20">
+                                <Mail className="h-10 w-10" />
                             </div>
 
-                            <div className="space-y-4">
-                                <h1 className="text-3xl md:text-4xl font-black tracking-tight font-display text-white">
-                                    Parlons de votre <span className="text-gradient">Projet</span>
-                                </h1>
-                                <p className="text-muted-foreground font-medium leading-relaxed">
-                                    Vous avez une idée en tête ? Je suis là pour vous aider à la réaliser.
-                                    Remplissez le formulaire et je vous répondrai sous 24h.
+                            <div className="space-y-6">
+                                <h2 className="text-4xl font-black tracking-tight text-white uppercase italic leading-none">
+                                    Let's Start <br /> <span className="text-primary">Something.</span>
+                                </h2>
+                                <p className="text-muted-foreground font-medium leading-relaxed text-lg">
+                                    High-performance digital products start with a conversation. Let's discuss your objectives.
                                 </p>
                             </div>
                         </div>
 
-                        <div className="relative z-10 space-y-6 mt-12">
+                        <div className="relative z-10 space-y-8 mt-12 bg-white/5 p-8 rounded-3xl border border-white/5">
                             <div className="space-y-1">
-                                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Email Direct</p>
-                                <a href="mailto:info@drayko.xyz" className="text-lg font-bold hover:text-primary transition-colors block">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-primary/60">Secure Protocol</p>
+                                <a href="mailto:info@drayko.xyz" className="text-xl font-bold hover:text-primary transition-colors block tracking-tight">
                                     info@drayko.xyz
                                 </a>
                             </div>
 
-                            <div className="space-y-1">
-                                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Disponibilité</p>
-                                <div className="flex items-center gap-2">
+                            <div className="space-y-4">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-primary/60">Status</p>
+                                <div className="flex items-center gap-3">
                                     <span className="relative flex h-3 w-3">
-                                        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isAvailable ? "bg-green-400" : "bg-red-400"}`}></span>
-                                        <span className={`relative inline-flex rounded-full h-3 w-3 ${isAvailable ? "bg-green-500" : "bg-red-500"}`}></span>
+                                        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isAvailable ? "bg-cyan-400" : "bg-red-400"}`}></span>
+                                        <span className={`relative inline-flex rounded-full h-3 w-3 ${isAvailable ? "bg-cyan-500" : "bg-red-500"}`}></span>
                                     </span>
-                                    <span className={`font-bold ${isAvailable ? "text-white" : "text-red-200"}`}>
-                                        {isAvailable ? "Ouvert aux projets" : "Indisponible"}
+                                    <span className={`font-black uppercase tracking-widest text-xs ${isAvailable ? "text-white" : "text-red-400"}`}>
+                                        {isAvailable ? "Operational" : "Busy Processing"}
                                     </span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-
                     {/* Form Side */}
-                    <div className="p-8 md:p-12">
+                    <div className="p-8 md:p-12 self-center">
                         <SignedIn>
                             <ChatInterface isAvailable={isAvailable} />
                         </SignedIn>
                         <SignedOut>
-                            <div className="relative">
+                            <div className="relative py-12">
                                 {/* Flou overlay */}
-                                <div className="absolute inset-0 bg-background/80 backdrop-blur-sm rounded-[2rem] z-10 flex items-center justify-center">
-                                    <div className="text-center space-y-4 p-8">
-                                        <div className="w-16 h-16 mx-auto rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4">
+                                <div className="absolute inset-0 bg-background/40 backdrop-blur-xl rounded-[3rem] z-10 flex items-center justify-center border border-white/10">
+                                    <div className="text-center space-y-6 p-8 max-w-xs">
+                                        <div className="w-16 h-16 mx-auto rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4 border border-primary/20">
                                             <Lock className="h-8 w-8" />
                                         </div>
-                                        <h3 className="text-xl font-bold">Connexion requise</h3>
-                                        <p className="text-muted-foreground">Vous devez être connecté pour me contacter.</p>
+                                        <h3 className="text-2xl font-black uppercase italic">Access Denied</h3>
+                                        <p className="text-muted-foreground font-medium text-sm">Authentication is required to initialize the direct communication channel.</p>
                                         <SignInButton mode="modal">
-                                            <Button className="rounded-full">Se connecter</Button>
+                                            <Button className="w-full h-14 rounded-2xl bg-white text-black font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-xl">
+                                                Login / Register
+                                            </Button>
                                         </SignInButton>
                                     </div>
                                 </div>
                                 {/* Contenu flouté */}
-                                <div className="blur-sm opacity-60 pointer-events-none">
+                                <div className="blur-xl opacity-30 pointer-events-none scale-95">
                                     <ChatInterface isAvailable={isAvailable} />
                                 </div>
                             </div>
@@ -132,6 +119,9 @@ export default async function ContactPage() {
                     </div>
                 </div>
             </main>
+
+            <V4Footer />
+            <V4Dock />
         </div>
     )
 }

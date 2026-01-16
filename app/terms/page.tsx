@@ -1,89 +1,123 @@
-import Link from "next/link"
-import { ChevronLeft, Scale } from "lucide-react"
+import { FileText, Scale, UserCheck, AlertTriangle, Ban } from "lucide-react"
+import { V4Navbar } from "@/components/v4/V4Navbar"
+import { V4Footer } from "@/components/v4/V4Footer"
+import { V4Dock } from "@/components/v4/V4Dock"
+
+export const metadata = {
+    title: "Terms of Service - Drayko",
+    description: "Read our terms and conditions for using our services."
+}
 
 export default function TermsPage() {
+    const sections = [
+        {
+            icon: UserCheck,
+            title: "Acceptance of Terms",
+            content: [
+                "By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement.",
+                "If you do not agree to abide by the above, please do not use this service.",
+                "We reserve the right to modify these terms at any time. Your continued use of the website following any changes constitutes acceptance of those changes."
+            ]
+        },
+        {
+            icon: Scale,
+            title: "Use License",
+            content: [
+                "Permission is granted to temporarily download one copy of the materials on Drayko's website for personal, non-commercial transitory viewing only.",
+                "This is the grant of a license, not a transfer of title, and under this license you may not: modify or copy the materials, use the materials for any commercial purpose, or attempt to decompile or reverse engineer any software contained on the website.",
+                "This license shall automatically terminate if you violate any of these restrictions and may be terminated by Drayko at any time."
+            ]
+        },
+        {
+            icon: AlertTriangle,
+            title: "Disclaimer",
+            content: [
+                "The materials on Drayko's website are provided on an 'as is' basis. Drayko makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.",
+                "Further, Drayko does not warrant or make any representations concerning the accuracy, likely results, or reliability of the use of the materials on its website or otherwise relating to such materials or on any sites linked to this site."
+            ]
+        },
+        {
+            icon: Ban,
+            title: "Limitations",
+            content: [
+                "In no event shall Drayko or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on Drayko's website.",
+                "Because some jurisdictions do not allow limitations on implied warranties, or limitations of liability for consequential or incidental damages, these limitations may not apply to you."
+            ]
+        }
+    ]
+
     return (
-        <div className="min-h-screen bg-background relative overflow-hidden font-sans selection:bg-primary/30 selection:text-primary">
-            <div className="noise-overlay" />
+        <div className="min-h-screen bg-background relative overflow-x-hidden font-sans selection:bg-primary/30 selection:text-primary">
+            <div className="noise-v4" />
+            <div className="mesh-v4 fixed inset-0 pointer-events-none" />
 
-            {/* Background Orbs */}
-            <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px] animate-pulse-glow" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/20 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: "-2s" }} />
-            </div>
+            <V4Navbar />
 
-            <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 backdrop-blur-md bg-background/60">
-                <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-foreground transition-all group">
-                        <div className="p-2 rounded-xl glass border-white/10 group-hover:border-primary/50 transition-all">
-                            <ChevronLeft className="h-4 w-4" />
-                        </div>
-                        Back to Home
-                    </Link>
-                    <div className="flex items-center gap-2">
-                        <Scale className="h-5 w-5 text-primary" />
-                        <span className="font-bold tracking-tight">Terms of Service</span>
+            <main className="relative z-10 pt-40 pb-32 container mx-auto px-6">
+                {/* Hero Section */}
+                <div className="max-w-4xl mx-auto text-center space-y-8 mb-24">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full v4-glass border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-primary mx-auto">
+                        <FileText className="w-3 h-3" />
+                        Legal
+                    </div>
+                    <h1 className="text-5xl md:text-8xl font-black tracking-tighter uppercase italic">
+                        TERMS OF <span className="text-primary">SERVICE.</span>
+                    </h1>
+                    <p className="text-lg text-muted-foreground/70 font-medium max-w-2xl mx-auto leading-relaxed">
+                        Last updated: <span className="text-primary font-bold">January 16, 2026</span>
+                    </p>
+                </div>
+
+                {/* Introduction */}
+                <div className="max-w-4xl mx-auto mb-16">
+                    <div className="v4-glass p-8 rounded-[2rem] border-white/5">
+                        <p className="text-muted-foreground/70 leading-relaxed">
+                            Please read these Terms of Service carefully before using our website. These terms govern your access to and use of Drayko's services. By using our services, you agree to be bound by these terms.
+                        </p>
                     </div>
                 </div>
-            </header>
 
-            <main className="relative z-10 pt-32 pb-24 container max-w-4xl mx-auto px-6">
-                <div className="glass p-10 md:p-16 rounded-[2.5rem] border-white/5 space-y-12 shadow-2xl">
-                    <section className="space-y-4">
-                        <h1 className="text-4xl md:text-5xl font-black tracking-tight font-display text-gradient">TERMS OF SERVICE</h1>
-                        <p className="text-muted-foreground font-medium">Last updated: December 21, 2025</p>
-                    </section>
+                {/* Sections */}
+                <div className="max-w-4xl mx-auto space-y-8">
+                    {sections.map((section, index) => {
+                        const IconComponent = section.icon
+                        return (
+                            <div key={index} className="v4-glass p-8 rounded-[2rem] border-white/5 group hover:border-primary/30 transition-all duration-500">
+                                <div className="flex items-start gap-6 mb-6">
+                                    <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0 backdrop-blur-xl">
+                                        <IconComponent className="h-7 w-7 text-primary" />
+                                    </div>
+                                    <h2 className="text-3xl font-black tracking-tight uppercase italic pt-2">{section.title}</h2>
+                                </div>
+                                <ul className="space-y-4 pl-20">
+                                    {section.content.map((item, idx) => (
+                                        <li key={idx} className="flex items-start gap-3">
+                                            <div className="w-2 h-2 rounded-full bg-primary/20 border border-primary/30 mt-2 flex-shrink-0" />
+                                            <p className="text-muted-foreground/60 leading-relaxed">{item}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )
+                    })}
+                </div>
 
-                    <div className="prose prose-invert max-w-none space-y-8 font-medium text-muted-foreground leading-relaxed">
-                        <section className="space-y-4">
-                            <h2 className="text-2xl font-bold text-foreground tracking-tight">1. Agreement to Terms</h2>
-                            <p>
-                                By accessing or using our website, you agree to be bound by these Terms of Service. If you disagree with any
-                                part of the terms, then you may not access the service.
-                            </p>
-                        </section>
-
-                        <section className="space-y-4">
-                            <h2 className="text-2xl font-bold text-foreground tracking-tight">2. Intellectual Property</h2>
-                            <p>
-                                The website and its original content (excluding project code linked to external repositories), features,
-                                and functionality are and will remain the exclusive property of Drayko. All designs, layouts, and logos
-                                are protected by copyright.
-                            </p>
-                        </section>
-
-                        <section className="space-y-4">
-                            <h2 className="text-2xl font-bold text-foreground tracking-tight">3. Use License</h2>
-                            <p>
-                                Permission is granted to temporarily view the materials on this website for personal, non-commercial
-                                transitory viewing only. You may not:
-                            </p>
-                            <ul className="list-disc pl-6 space-y-2">
-                                <li>Modify or copy the materials for commercial purposes.</li>
-                                <li>Attempt to decompile or reverse engineer any software contained on the website.</li>
-                                <li>Remove any copyright or other proprietary notations from the materials.</li>
-                            </ul>
-                        </section>
-
-                        <section className="space-y-4">
-                            <h2 className="text-2xl font-bold text-foreground tracking-tight">4. Disclaimer</h2>
-                            <p>
-                                The materials on this website are provided on an 'as is' basis. Drayko makes no warranties, expressed
-                                or implied, and hereby disclaims and negates all other warranties including, without limitation,
-                                implied warranties or conditions of merchantability.
-                            </p>
-                        </section>
-
-                        <section className="space-y-4">
-                            <h2 className="text-2xl font-bold text-foreground tracking-tight">5. Governing Law</h2>
-                            <p>
-                                These terms and conditions are governed by and construed in accordance with the laws of your jurisdiction
-                                and you irrevocably submit to the exclusive jurisdiction of the courts in that State or location.
-                            </p>
-                        </section>
+                {/* Contact Section */}
+                <div className="max-w-4xl mx-auto mt-16">
+                    <div className="v4-glass p-8 rounded-[2rem] border-white/5 bg-primary/5 text-center">
+                        <h3 className="text-2xl font-black uppercase tracking-tight mb-4">Questions About These Terms?</h3>
+                        <p className="text-muted-foreground/70 mb-6">
+                            If you have any questions about these Terms of Service, please contact us at{" "}
+                            <a href="mailto:admin@drayko.xyz" className="text-primary hover:underline font-bold">
+                                admin@drayko.xyz
+                            </a>
+                        </p>
                     </div>
                 </div>
             </main>
+
+            <V4Footer />
+            <V4Dock />
         </div>
     )
 }

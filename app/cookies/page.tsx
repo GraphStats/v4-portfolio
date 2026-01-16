@@ -1,52 +1,52 @@
-import { Shield, Lock, Eye, Database, Mail } from "lucide-react"
+import { Cookie, Settings, Info, ToggleLeft, Trash2 } from "lucide-react"
 import { V4Navbar } from "@/components/v4/V4Navbar"
 import { V4Footer } from "@/components/v4/V4Footer"
 import { V4Dock } from "@/components/v4/V4Dock"
 
 export const metadata = {
-    title: "Privacy Policy - Drayko",
-    description: "Learn how we collect, use, and protect your personal information."
+    title: "Cookie Policy - Drayko",
+    description: "Learn about how we use cookies and similar technologies."
 }
 
-export default function PrivacyPolicyPage() {
+export default function CookiePolicyPage() {
     const sections = [
         {
-            icon: Database,
-            title: "Information We Collect",
+            icon: Info,
+            title: "What Are Cookies",
             content: [
-                "We collect information you provide directly to us, such as when you create an account, fill out a form, or communicate with us.",
-                "We automatically collect certain information about your device when you use our services, including IP address, browser type, and usage data.",
-                "We use cookies and similar tracking technologies to collect information about your browsing activities."
+                "Cookies are small text files that are placed on your computer or mobile device when you visit a website.",
+                "They are widely used to make websites work more efficiently and provide information to the owners of the site.",
+                "Cookies help us understand how you use our website and improve your experience."
             ]
         },
         {
-            icon: Eye,
-            title: "How We Use Your Information",
+            icon: Settings,
+            title: "How We Use Cookies",
             content: [
-                "To provide, maintain, and improve our services",
-                "To communicate with you about updates, security alerts, and support messages",
-                "To monitor and analyze trends, usage, and activities in connection with our services",
-                "To detect, prevent, and address technical issues and security threats"
+                "Essential cookies: Required for the website to function properly",
+                "Performance cookies: Help us understand how visitors interact with our website",
+                "Functionality cookies: Remember your preferences and settings",
+                "Analytics cookies: Collect information about how you use our website to help us improve it"
             ]
         },
         {
-            icon: Lock,
-            title: "Data Security",
+            icon: ToggleLeft,
+            title: "Managing Cookies",
             content: [
-                "We implement appropriate technical and organizational measures to protect your personal information.",
-                "We use encryption for data transmission and storage where appropriate.",
-                "Access to personal information is restricted to authorized personnel only.",
-                "We regularly review and update our security practices to ensure data protection."
+                "Most web browsers allow you to control cookies through their settings preferences.",
+                "You can set your browser to refuse cookies or delete certain cookies.",
+                "Please note that if you disable cookies, some features of our website may not function properly.",
+                "You can find more information about how to manage cookies in your browser's help section."
             ]
         },
         {
-            icon: Mail,
-            title: "Your Rights",
+            icon: Trash2,
+            title: "Third-Party Cookies",
             content: [
-                "You have the right to access, update, or delete your personal information.",
-                "You can opt-out of receiving promotional communications from us.",
-                "You can request a copy of the personal data we hold about you.",
-                "You can object to the processing of your personal information in certain circumstances."
+                "We may use third-party services that also set cookies on your device.",
+                "These cookies are used for analytics, advertising, and other purposes.",
+                "We do not have control over these third-party cookies.",
+                "Please refer to the privacy policies of these third-party services for more information."
             ]
         }
     ]
@@ -62,11 +62,11 @@ export default function PrivacyPolicyPage() {
                 {/* Hero Section */}
                 <div className="max-w-4xl mx-auto text-center space-y-8 mb-24">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full v4-glass border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-primary mx-auto">
-                        <Shield className="w-3 h-3" />
+                        <Cookie className="w-3 h-3" />
                         Legal
                     </div>
                     <h1 className="text-5xl md:text-8xl font-black tracking-tighter uppercase italic">
-                        PRIVACY <span className="text-primary">POLICY.</span>
+                        COOKIE <span className="text-primary">POLICY.</span>
                     </h1>
                     <p className="text-lg text-muted-foreground/70 font-medium max-w-2xl mx-auto leading-relaxed">
                         Last updated: <span className="text-primary font-bold">January 16, 2026</span>
@@ -77,7 +77,7 @@ export default function PrivacyPolicyPage() {
                 <div className="max-w-4xl mx-auto mb-16">
                     <div className="v4-glass p-8 rounded-[2rem] border-white/5">
                         <p className="text-muted-foreground/70 leading-relaxed">
-                            This Privacy Policy describes how Drayko ("we", "us", or "our") collects, uses, and shares your personal information when you use our website and services. We are committed to protecting your privacy and ensuring the security of your personal data.
+                            This Cookie Policy explains how Drayko uses cookies and similar technologies to recognize you when you visit our website. It explains what these technologies are and why we use them, as well as your rights to control our use of them.
                         </p>
                     </div>
                 </div>
@@ -110,9 +110,9 @@ export default function PrivacyPolicyPage() {
                 {/* Contact Section */}
                 <div className="max-w-4xl mx-auto mt-16">
                     <div className="v4-glass p-8 rounded-[2rem] border-white/5 bg-primary/5 text-center">
-                        <h3 className="text-2xl font-black uppercase tracking-tight mb-4">Questions About Privacy?</h3>
+                        <h3 className="text-2xl font-black uppercase tracking-tight mb-4">Questions About Cookies?</h3>
                         <p className="text-muted-foreground/70 mb-6">
-                            If you have any questions about this Privacy Policy, please contact us at{" "}
+                            If you have any questions about our use of cookies, please contact us at{" "}
                             <a href="mailto:admin@drayko.xyz" className="text-primary hover:underline font-bold">
                                 admin@drayko.xyz
                             </a>

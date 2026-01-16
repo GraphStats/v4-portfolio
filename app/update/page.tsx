@@ -1,14 +1,15 @@
-import Link from "next/link"
-import { ChevronLeft, History, Rocket, Calendar } from "lucide-react"
+import { History, Rocket, Calendar } from "lucide-react"
 import { getFirestoreServer } from "@/lib/firebase/server"
 import { doc, getDoc } from "firebase/firestore"
 import type { SiteUpdate } from "@/lib/types"
 import { Countdown } from "@/components/countdown"
 import { ChangelogList } from "@/components/changelog-list"
-
-import { getMaintenanceMode, getV4Mode } from "@/lib/actions"
+import { getMaintenanceMode } from "@/lib/actions"
 import { redirect } from "next/navigation"
 import { isLocalRequest } from "@/lib/server-utils"
+import { V4Navbar } from "@/components/v4/V4Navbar"
+import { V4Footer } from "@/components/v4/V4Footer"
+import { V4Dock } from "@/components/v4/V4Dock"
 
 export const dynamic = "force-dynamic"
 
@@ -20,12 +21,6 @@ export default async function UpdatePage() {
         const { isMaintenance } = await getMaintenanceMode()
         if (isMaintenance) {
             redirect("/maintenance")
-        }
-
-        // V4 Mode check
-        const { isV4Mode } = await getV4Mode()
-        if (isV4Mode) {
-            redirect("/v4-is-coming")
         }
     }
 
@@ -43,46 +38,39 @@ export default async function UpdatePage() {
         }
 
     return (
-        <div className="min-h-screen bg-background relative overflow-hidden font-sans selection:bg-primary/30 selection:text-primary">
-            <div className="noise-overlay" />
+        <div className="min-h-screen bg-background relative overflow-x-hidden font-sans selection:bg-primary/30 selection:text-primary">
+            <div className="noise-v4" />
+            <div className="mesh-v4 fixed inset-0 pointer-events-none" />
 
-            {/* Background Orbs */}
-            <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px] animate-pulse-glow" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/20 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: "-2s" }} />
-            </div>
+            <V4Navbar />
 
-            <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 backdrop-blur-md bg-background/60 reveal-down">
-                <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-foreground transition-all group reveal-left">
-                        <div className="p-2 rounded-xl glass border-white/10 group-hover:border-primary/50 transition-all">
-                            <ChevronLeft className="h-4 w-4" />
-                        </div>
-                        Back to Home
-                    </Link>
-                    <div className="flex items-center gap-2 reveal-right">
-                        <History className="h-5 w-5 text-primary" />
-                        <span className="font-bold tracking-tight uppercase">System Roadmap</span>
+            <main className="relative z-10 pt-40 pb-32 container max-w-4xl mx-auto px-6 space-y-12">
+                {/* Hero Section */}
+                <div className="text-center space-y-8">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full v4-glass border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-primary mx-auto">
+                        <History className="w-3 h-3" />
+                        Roadmap
                     </div>
+                    <h1 className="text-5xl md:text-8xl font-black tracking-tighter uppercase italic">
+                        SYSTEM <span className="text-primary">ROADMAP.</span>
+                    </h1>
                 </div>
-            </header>
 
-            <main className="relative z-10 pt-32 pb-24 container max-w-4xl mx-auto px-6 space-y-12">
                 {/* Next Update Card */}
-                <section className="reveal-up opacity-0 stagger-1">
-                    <div className="glass p-10 md:p-16 rounded-[3rem] border-white/5 relative overflow-hidden mesh-bg perspective-card">
+                <section>
+                    <div className="v4-glass p-10 md:p-16 rounded-[3rem] border-white/5 relative overflow-hidden">
                         <div className="relative z-10 flex flex-col items-center text-center space-y-8">
-                            <div className="p-4 rounded-3xl bg-primary/10 text-primary animate-bounce">
+                            <div className="p-4 rounded-3xl bg-primary/10 text-primary">
                                 <Rocket className="h-10 w-10" />
                             </div>
                             <div className="space-y-2">
-                                <h1 className="text-4xl md:text-6xl font-black tracking-tight font-display text-gradient reveal-up stagger-1">NEXT EVOLUTION</h1>
-                                <p className="text-muted-foreground font-medium text-lg reveal-up stagger-2">Predicting the future of the digital ecosystem.</p>
+                                <h2 className="text-4xl md:text-6xl font-black tracking-tight uppercase italic">NEXT EVOLUTION</h2>
+                                <p className="text-muted-foreground/70 font-medium text-lg">Predicting the future of the digital ecosystem.</p>
                             </div>
 
-                            <div className="pt-4 w-full reveal-up stagger-3">
+                            <div className="pt-4 w-full">
                                 {updateData.no_update_planned || !updateData.next_update_date ? (
-                                    <div className="glass bg-white/5 border-white/10 p-8 rounded-[2.5rem] max-w-md mx-auto">
+                                    <div className="v4-glass bg-white/5 border-white/10 p-8 rounded-[2.5rem] max-w-md mx-auto">
                                         <div className="flex items-center justify-center gap-3 text-muted-foreground mb-2">
                                             <Calendar className="h-5 w-5" />
                                             <span className="font-bold tracking-widest uppercase text-xs">Status</span>
@@ -106,15 +94,18 @@ export default async function UpdatePage() {
                 </section>
 
                 {/* Changelog Section */}
-                <section className="space-y-12 reveal-up opacity-0 stagger-2">
+                <section className="space-y-12">
                     <div className="flex flex-col items-center text-center space-y-4">
                         <div className="text-primary font-bold tracking-widest text-xs uppercase">History</div>
-                        <h2 className="text-4xl md:text-5xl font-bold tracking-tight">VERSION LOGS</h2>
+                        <h2 className="text-4xl md:text-5xl font-black tracking-tight uppercase italic">VERSION LOGS</h2>
                     </div>
 
                     <ChangelogList entries={updateData.changelog} />
                 </section>
             </main>
+
+            <V4Footer />
+            <V4Dock />
         </div>
     )
 }
