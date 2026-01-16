@@ -24,7 +24,7 @@ export default async function V4ComingPage() {
     }
 
     return (
-        <div className="min-h-screen relative flex items-center justify-center overflow-hidden bg-[#030712] font-sans">
+        <div className="dark min-h-screen relative flex items-center justify-center overflow-hidden bg-[#030712] font-sans text-foreground">
             {/* Background Effects */}
             <div className="noise-overlay" />
 
@@ -67,19 +67,19 @@ export default async function V4ComingPage() {
                                 <div className="p-4 rounded-2xl bg-white/5 text-blue-400">
                                     <Cpu className="h-6 w-6" />
                                 </div>
-                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">Core Rewrite</span>
+                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">Code Rewrite</span>
                             </div>
                             <div className="flex flex-col items-center gap-3">
                                 <div className="p-4 rounded-2xl bg-white/5 text-indigo-400">
                                     <Globe className="h-6 w-6" />
                                 </div>
-                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">Global Edge</span>
+                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">Optimizing</span>
                             </div>
                             <div className="flex flex-col items-center gap-3">
                                 <div className="p-4 rounded-2xl bg-white/5 text-cyan-400">
                                     <Code2 className="h-6 w-6" />
                                 </div>
-                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">Next-Gen UI</span>
+                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">New UI</span>
                             </div>
                         </div>
 

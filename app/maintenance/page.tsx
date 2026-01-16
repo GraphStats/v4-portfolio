@@ -13,7 +13,7 @@ export default async function MaintenancePage() {
     }
 
     return (
-        <div className="min-h-screen relative flex items-center justify-center overflow-hidden">
+        <div className="dark min-h-screen relative flex items-center justify-center overflow-hidden bg-[#030712] text-foreground">
             <div className="mesh-bg absolute inset-0 opacity-30 pointer-events-none" />
 
             {/* Background Orbs */}
