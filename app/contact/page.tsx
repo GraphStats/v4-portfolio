@@ -5,22 +5,27 @@ import { getMaintenanceMode, getAvailability, getV4Mode } from "@/lib/actions"
 import { redirect } from "next/navigation"
 import { ChatInterface } from "@/components/chat/chat-interface"
 import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs'
+import { isLocalRequest } from "@/lib/server-utils"
 
 export const dynamic = 'force-dynamic'
 
 export const revalidate = 0
 
 export default async function ContactPage() {
-    // Maintenance check
-    const { isMaintenance } = await getMaintenanceMode()
-    if (isMaintenance) {
-        redirect("/maintenance")
-    }
+    // Platform Status check (Skipped if local)
+    const isLocal = await isLocalRequest()
+    if (!isLocal) {
+        // Maintenance check
+        const { isMaintenance } = await getMaintenanceMode()
+        if (isMaintenance) {
+            redirect("/maintenance")
+        }
 
-    // V4 Mode check
-    const { isV4Mode } = await getV4Mode()
-    if (isV4Mode) {
-        redirect("/v4-is-coming")
+        // V4 Mode check
+        const { isV4Mode } = await getV4Mode()
+        if (isV4Mode) {
+            redirect("/v4-is-coming")
+        }
     }
 
     const { isAvailable } = await getAvailability()

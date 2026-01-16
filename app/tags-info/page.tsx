@@ -2,20 +2,25 @@ import Link from "next/link"
 import { ChevronLeft, Tags, Rocket, CheckCircle2, Archive, Timer, Code2, AlertCircle } from "lucide-react"
 import { getMaintenanceMode, getV4Mode } from "@/lib/actions"
 import { redirect } from "next/navigation"
+import { isLocalRequest } from "@/lib/server-utils"
 
 export const dynamic = "force-dynamic"
 
 export default async function TagsInfoPage() {
-    // Maintenance check
-    const { isMaintenance } = await getMaintenanceMode()
-    if (isMaintenance) {
-        redirect("/maintenance")
-    }
+    // Platform Status check (Skipped if local)
+    const isLocal = await isLocalRequest()
+    if (!isLocal) {
+        // Maintenance check
+        const { isMaintenance } = await getMaintenanceMode()
+        if (isMaintenance) {
+            redirect("/maintenance")
+        }
 
-    // V4 Mode check
-    const { isV4Mode } = await getV4Mode()
-    if (isV4Mode) {
-        redirect("/v4-is-coming")
+        // V4 Mode check
+        const { isV4Mode } = await getV4Mode()
+        if (isV4Mode) {
+            redirect("/v4-is-coming")
+        }
     }
 
     const tagCategories = [

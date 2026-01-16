@@ -13,20 +13,25 @@ import { getMaintenanceMode, getV4Mode } from "@/lib/actions"
 import { redirect } from "next/navigation"
 import { getCloudflareStats } from "@/lib/cloudflare"
 import { AuthButtons } from "@/components/auth-buttons"
+import { isLocalRequest } from "@/lib/server-utils"
 
 export const dynamic = "force-dynamic"
 
 export default async function HomePage() {
-  // Maintenance check
-  const { isMaintenance } = await getMaintenanceMode()
-  if (isMaintenance) {
-    redirect("/maintenance")
-  }
+  // Platform Status check (Skipped if local)
+  const isLocal = await isLocalRequest()
+  if (!isLocal) {
+    // Maintenance check
+    const { isMaintenance } = await getMaintenanceMode()
+    if (isMaintenance) {
+      redirect("/maintenance")
+    }
 
-  // V4 Mode check
-  const { isV4Mode } = await getV4Mode()
-  if (isV4Mode) {
-    redirect("/v4-is-coming")
+    // V4 Mode check
+    const { isV4Mode } = await getV4Mode()
+    if (isV4Mode) {
+      redirect("/v4-is-coming")
+    }
   }
 
   let projects: Project[] = []

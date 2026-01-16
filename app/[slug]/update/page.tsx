@@ -4,6 +4,7 @@ import { getProjectBySlug } from "@/lib/actions"
 import { notFound, redirect } from "next/navigation"
 import { ChangelogList } from "@/components/changelog-list"
 import { getMaintenanceMode, getV4Mode } from "@/lib/actions"
+import { isLocalRequest } from "@/lib/server-utils"
 
 export const dynamic = "force-dynamic"
 
@@ -16,16 +17,20 @@ interface ProjectUpdatePageProps {
 export default async function ProjectUpdatePage({ params }: ProjectUpdatePageProps) {
     const { slug } = await params
 
-    // Maintenance check
-    const { isMaintenance } = await getMaintenanceMode()
-    if (isMaintenance) {
-        redirect("/maintenance")
-    }
+    // Platform Status check (Skipped if local)
+    const isLocal = await isLocalRequest()
+    if (!isLocal) {
+        // Maintenance check
+        const { isMaintenance } = await getMaintenanceMode()
+        if (isMaintenance) {
+            redirect("/maintenance")
+        }
 
-    // V4 Mode check
-    const { isV4Mode } = await getV4Mode()
-    if (isV4Mode) {
-        redirect("/v4-is-coming")
+        // V4 Mode check
+        const { isV4Mode } = await getV4Mode()
+        if (isV4Mode) {
+            redirect("/v4-is-coming")
+        }
     }
 
     const project = await getProjectBySlug(slug)
