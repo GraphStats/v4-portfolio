@@ -10,8 +10,6 @@ import { ClerkThemeProvider } from "@/components/clerk-theme-provider"
 
 import "./globals.css"
 
-<script src="https://quge5.com/88/tag.min.js" data-zone="202767" async data-cfasync="false"></script>
-
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" })
 
@@ -42,6 +40,12 @@ export default async function RootLayout({
             </div>
             <Analytics />
             <SpeedInsights />
+            <Script
+              src="https://quge5.com/88/tag.min.js"
+              data-zone="202767"
+              strategy="afterInteractive"
+              data-cfasync="false"
+            />
           </ClerkThemeProvider>
         </ThemeProvider>
       </body>
