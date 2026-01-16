@@ -30,6 +30,9 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${outfit.variable}`}>
+      <head>
+        <script src="https://quge5.com/88/tag.min.js" data-zone="202767" async data-cfasync="false"></script>
+      </head>
       <body className="font-sans antialiased selection:bg-primary/30 selection:text-primary transition-colors duration-300" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange storageKey="theme">
           <ClerkThemeProvider>
@@ -40,12 +43,6 @@ export default async function RootLayout({
             </div>
             <Analytics />
             <SpeedInsights />
-            <Script
-              src="https://quge5.com/88/tag.min.js"
-              data-zone="202767"
-              strategy="afterInteractive"
-              data-cfasync="false"
-            />
           </ClerkThemeProvider>
         </ThemeProvider>
       </body>
