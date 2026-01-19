@@ -4,6 +4,8 @@ import { motion } from "framer-motion"
 import { Github, Twitter, Mail, ArrowUp, Command } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { FaDiscord } from 'react-icons/fa';
+
 
 export function V4Footer() {
     const scrollToTop = () => {
@@ -28,6 +30,11 @@ export function V4Footer() {
                             <Button asChild variant="outline" size="icon" className="rounded-xl glass border-white/5 hover:bg-primary hover:text-primary-foreground transition-all">
                                 <a href="https://github.com/graphstats" target="_blank" rel="noopener noreferrer">
                                     <Github className="w-5 h-5" />
+                                </a>
+                            </Button>
+                            <Button asChild variant="outline" size="icon" className="rounded-xl glass border-white/5 hover:bg-primary hover:text-primary-foreground transition-all">
+                                <a href="https://discord.gg/nZwFrnEW">
+                                    <FaDiscord className="w-5 h-5" />
                                 </a>
                             </Button>
                             <Button asChild variant="outline" size="icon" className="rounded-xl glass border-white/5 hover:bg-primary hover:text-primary-foreground transition-all">
@@ -67,6 +74,14 @@ export function V4Footer() {
                             <li>
                                 <Link href="/cookies" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                                     Cookie Policy
+                                </Link>
+                            </li>
+                        </ul>
+                        <h4 className="text-xs font-black uppercase tracking-widest text-primary">Social</h4>
+                        <ul className="space-y-4">
+                            <li>
+                                <Link href="https://discord.gg/nZwFrnEW" className="text-muted-foreground hover:text-primary transition-colors font-medium">
+                                    Discord
                                 </Link>
                             </li>
                         </ul>

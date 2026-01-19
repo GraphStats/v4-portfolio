@@ -27,7 +27,6 @@ export default async function HomePage() {
     if (isMaintenance) {
       redirect("/maintenance")
     }
-    // We removed the V4 teaser redirect because we ARE in V4 now.
   }
 
   let projects: Project[] = []
@@ -66,13 +65,12 @@ export default async function HomePage() {
       <main className="relative z-10">
         <V4Hero badgeText={badgeText} />
 
-        <V4TechStack />
-
         <div className="relative">
           {/* Subtle separator glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
           <V4Projects projects={projects} />
         </div>
+        <V4TechStack />
 
         <V4Contact />
 

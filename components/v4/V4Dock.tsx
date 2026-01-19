@@ -6,6 +6,7 @@ import { useState, useEffect } from "react"
 import { useTheme } from "next-themes"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { FaDiscord } from 'react-icons/fa';
 
 const items = [
     { icon: Home, label: "Home", href: "/" },
@@ -13,6 +14,8 @@ const items = [
     { icon: BarChart3, label: "Stats", href: "/stats" },
     { icon: User, label: "About", href: "/about" },
     { icon: Mail, label: "Contact", href: "/contact" },
+    { icon: FaDiscord, label: "Discord", href: "https://discord.gg/nZwFrnEW" },
+    { icon: Settings, label: "Admin", href: "/admin" },
 ]
 
 export function V4Dock() {
@@ -27,9 +30,9 @@ export function V4Dock() {
     return (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
             <motion.div
-                initial={{ y: 100, opacity: 0 }}
+                initial={{ y: 100, opacity: 0.5 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="flex items-center gap-2 p-2 rounded-3xl glass border-white/10 backdrop-blur-2xl shadow-2xl"
+                className="flex items-center gap-2 p-2 rounded-3xl backdrop-blur-2xl background-color-black"
             >
                 {items.map((item, i) => (
                     <Link key={i} href={item.href}>
@@ -70,15 +73,6 @@ export function V4Dock() {
                     className="p-4 rounded-2xl text-muted-foreground hover:text-foreground transition-colors"
                 >
                     {theme === "dark" ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
-                </motion.button>
-
-                {/* Command Bar Button */}
-                <motion.button
-                    whileHover={{ y: -10, scale: 1.2 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="p-4 rounded-2xl text-muted-foreground hover:text-foreground transition-colors"
-                >
-                    <Command className="w-6 h-6" />
                 </motion.button>
             </motion.div>
         </div>

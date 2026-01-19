@@ -6,6 +6,7 @@ import { isLocalRequest } from "@/lib/server-utils"
 import { V4Navbar } from "@/components/v4/V4Navbar"
 import { V4Dock } from "@/components/v4/V4Dock"
 import { V4Footer } from "@/components/v4/V4Footer"
+import { Github } from 'lucide-react';
 
 export const dynamic = "force-dynamic"
 
@@ -88,7 +89,7 @@ export default async function AboutPage() {
                                 <a href="https://github.com/GraphStats" target="_blank" className="flex items-center justify-between p-4 rounded-2xl bg-white/5 hover:bg-primary/20 transition-all group">
                                     <span className="font-bold uppercase tracking-widest text-xs">GitHub</span>
                                     <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                                        <Command className="w-4 h-4" />
+                                        <Github className="w-4 h-4" />
                                     </div>
                                 </a>
                                 <Link href="/contact" className="flex items-center justify-center w-full h-16 rounded-2xl bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs hover:scale-105 transition-transform">

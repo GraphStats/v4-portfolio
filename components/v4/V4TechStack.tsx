@@ -14,6 +14,17 @@ const tech = [
     { name: "Node.js", icon: Terminal, color: "text-green-500" },
     { name: "Prisma", icon: Database, color: "text-blue-500" },
     { name: "Stripe", icon: Database, color: "text-blue-500" },
+    { name: "Vercel", icon: Database, color: "text-blue-500" },
+    { name: "Framer Motion", icon: Database, color: "text-blue-500" },
+    { name: "Pterodactyl", icon: Database, color: "text-blue-500" },
+    { name: "Docker", icon: Database, color: "text-blue-500" },
+    { name: "Python", icon: Database, color: "text-blue-500" },
+    { name: "Electron", icon: Database, color: "text-blue-500" },
+    { name: "Express", icon: Database, color: "text-blue-500" },
+    { name: "MongoDB", icon: Database, color: "text-blue-500" },
+    { name: "Redis", icon: Database, color: "text-blue-500" },
+    { name: "Ubuntu", icon: Database, color: "text-blue-500" },
+    { name: "Debian", icon: Database, color: "text-blue-500" },
 ]
 
 export function V4TechStack() {
@@ -27,14 +38,14 @@ export function V4TechStack() {
                     whileInView={{ opacity: 1 }}
                     className="text-xs font-black uppercase tracking-[0.4em] text-muted-foreground"
                 >
-                    Modern Technology Stack
+                    What Tech I Use
                 </motion.h3>
             </div>
 
             <div className="flex overflow-hidden group">
                 <motion.div
-                    animate={{ x: [0, -1000] }}
-                    transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                    animate={{ x: [0, -2000] }}
+                    transition={{ repeat: Infinity, ease: "linear" }}
                     className="flex gap-12 whitespace-nowrap px-6"
                 >
                     {[...tech, ...tech, ...tech].map((item, i) => (

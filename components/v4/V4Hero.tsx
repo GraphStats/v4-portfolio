@@ -5,6 +5,7 @@ import { useRef, useEffect, useState } from "react"
 import { Sparkles, ArrowRight, Code2, Cpu, Globe, Zap, MousePointer2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { FaDiscord } from 'react-icons/fa';
 
 interface V4HeroProps {
     badgeText?: string
@@ -88,21 +89,6 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                             <span className="block text-white/90 drop-shadow-sm uppercase">DRAYKO</span>
                             <span className="relative inline-block">
                                 <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent italic">VERSION 4.</span>
-                                {/* Animated Underline Bar */}
-                                <div className="absolute left-0 right-0 h-[2px] bottom-0 overflow-hidden">
-                                    <motion.div
-                                        className="h-full w-full bg-gradient-to-r from-blue-400/30 via-primary to-cyan-400/30"
-                                        animate={{
-                                            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
-                                        }}
-                                        transition={{
-                                            duration: 3,
-                                            repeat: Infinity,
-                                            ease: "linear"
-                                        }}
-                                        style={{ backgroundSize: "200% 100%" }}
-                                    />
-                                </div>
                             </span>
                         </motion.h1>
 
@@ -134,6 +120,12 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                         <Button variant="outline" size="lg" className="h-16 px-10 rounded-2xl border-white/10 glass hover:bg-white/5 text-md font-bold uppercase tracking-widest transition-all">
                             <Link href="/contact">
                                 Get in touch
+                            </Link>
+                        </Button>
+                        <Button variant="outline" size="lg" className="h-16 px 10 rounded-2xl border-white/10 glass hover:bg-white/5 text-md font-bold uppercase tracking-widest transition-all">
+                            <Link href="https://discord.gg/nZwFrnEW" className="flex items-center justify-center">
+                                <FaDiscord className="w-10 h-10 mr-2" />
+                                <span>Discord</span>
                             </Link>
                         </Button>
                     </motion.div>

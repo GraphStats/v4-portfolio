@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { Send, Mail, MapPin, Phone, ArrowRight, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { FaDiscord } from 'react-icons/fa';
 
 export function V4Contact() {
     return (
@@ -38,7 +39,7 @@ export function V4Contact() {
 
                             <div className="space-y-6">
                                 {[
-                                    { icon: Mail, label: "Email Me", value: "hello@drayko.xyz" },
+                                    { icon: Mail, label: "Email Me", value: "projet@drayko.xyz" },
                                     { icon: MapPin, label: "Location", value: "Earth, Remote" },
                                 ].map((item, i) => (
                                     <div key={i} className="flex items-center gap-6 group/item">
@@ -68,6 +69,12 @@ export function V4Contact() {
                                         <Link href="/contact">
                                             Open Contact Form
                                             <ArrowRight className="ml-2 w-5 h-5" />
+                                        </Link>
+                                    </Button>
+                                    <Button asChild className="w-full h-16 rounded-2xl bg-primary text-primary-foreground hover:scale-105 transition-transform shadow-2xl shadow-primary/20 text-sm font-black uppercase tracking-widest">
+                                        <Link href="https://discord.gg/nZwFrnEW">
+                                            <FaDiscord className="w-3.5 h-3.5 mr-2" />
+                                            Discord
                                         </Link>
                                     </Button>
                                     <p className="text-[10px] text-center text-muted-foreground uppercase font-black tracking-widest">

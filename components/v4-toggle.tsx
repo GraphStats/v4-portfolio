@@ -43,15 +43,15 @@ export function V4Toggle({ initialState, initialMessage, initialProgress, onUpda
             const result = await updateV4Mode(checked, message, progress)
             if (result.success) {
                 toast({
-                    title: checked ? "V4 Mode Enabled" : "V4 Mode Disabled",
-                    description: checked ? "The site is now in V4 teaser mode." : "The site is now live.",
+                    title: checked ? "V5 Mode Enabled" : "V5 Mode Disabled",
+                    description: checked ? "The site is now in V5 teaser mode." : "The site is now live.",
                 })
                 if (onUpdated) onUpdated()
             } else {
                 setIsV4Mode(!checked)
                 toast({
                     title: "Error",
-                    description: "Failed to update V4 mode.",
+                    description: "Failed to update V5 mode.",
                     variant: "destructive",
                 })
             }
@@ -64,7 +64,7 @@ export function V4Toggle({ initialState, initialMessage, initialProgress, onUpda
             if (result.success) {
                 toast({
                     title: "Settings Saved",
-                    description: "V4 teaser settings updated successfully.",
+                    description: "V5 teaser settings updated successfully.",
                 })
                 if (onUpdated) onUpdated()
             } else {
@@ -85,9 +85,9 @@ export function V4Toggle({ initialState, initialMessage, initialProgress, onUpda
                         <Rocket className="h-6 w-6" />
                     </div>
                     <div>
-                        <Label className="text-base font-bold text-foreground">V4 Teaser Mode</Label>
+                        <Label className="text-base font-bold text-foreground">V5 Teaser Mode</Label>
                         <p className="text-sm text-muted-foreground">
-                            {isV4Mode ? "V4 announcement is live." : "Standard site is live."}
+                            {isV4Mode ? "V5 announcement is live." : "Standard site is live."}
                         </p>
                     </div>
                 </div>
@@ -104,7 +104,7 @@ export function V4Toggle({ initialState, initialMessage, initialProgress, onUpda
                         <Input
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
-                            placeholder="Enter teaser message (e.g. Drayko v4 is coming...)"
+                            placeholder="Enter teaser message (e.g. Drayko v5 is coming...)"
                             className="bg-white/5 border-white/10 text-foreground"
                         />
                     </div>
@@ -125,7 +125,7 @@ export function V4Toggle({ initialState, initialMessage, initialProgress, onUpda
 
                 <Button onClick={handleSave} disabled={isPending} className="w-full bg-blue-600 hover:bg-blue-500 text-white">
                     <Save className="mr-2 h-4 w-4" />
-                    Save V4 Settings
+                    Save V5 Settings
                 </Button>
             </div>
         </div>
