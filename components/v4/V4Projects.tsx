@@ -26,8 +26,8 @@ export function V4Projects({ projects }: V4ProjectsProps) {
     const allTags = Array.from(new Set(projects.flatMap(p => p.tags || [])))
 
     return (
-        <section id="projects" className="py-32 relative overflow-hidden">
-            <div className="container mx-auto px-6">
+        <section id="projects" className="py-16 md:py-32 relative overflow-hidden">
+            <div className="container mx-auto px-4 sm:px-6">
                 <div className="flex flex-col md:flex-row justify-between items-end gap-10 mb-20">
                     <div className="space-y-4 max-w-2xl">
                         <motion.div
@@ -69,7 +69,7 @@ export function V4Projects({ projects }: V4ProjectsProps) {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 gap-8">
                     {filteredProjects.map((project, index) => (
                         <ProjectCard key={project.id} project={project} index={index} isSignedIn={isSignedIn} />
                     ))}
@@ -95,10 +95,10 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
             viewport={{ once: true }}
-            className={`group relative flex flex-col h-full v4-card p-4 hover:border-primary/50 transition-all duration-500 ${isLocked ? "scale-[0.98] opacity-90" : ""}`}
+            className={`group relative flex flex-col md:flex-row h-full v4-card p-4 md:p-6 hover:border-primary/50 transition-all duration-500 overflow-hidden ${isLocked ? "scale-[0.98] opacity-90" : ""}`}
         >
             {/* Image Container */}
-            <div className="relative aspect-[16/10] rounded-xl overflow-hidden mb-6 bg-muted/20">
+            <div className="relative w-full md:w-2/5 md:min-w-[280px] lg:min-w-[320px] aspect-[16/10] md:aspect-square rounded-xl overflow-hidden mb-4 md:mb-0 md:mr-6 bg-muted/20 flex-shrink-0">
                 {project.image_url ? (
                     <Image
                         src={project.image_url}
@@ -112,21 +112,6 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
                     </div>
                 )}
 
-                {/* Overlay Links */}
-                {!isLocked && (
-                    <div className="absolute inset-0 bg-background/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center gap-4 rounded-xl">
-                        {project.project_url && (
-                            <Button asChild size="icon" variant="secondary" className="rounded-full hover:scale-110 transition-transform">
-                                <Link href={project.project_url} target="_blank"><ExternalLink className="w-4 h-4" /></Link>
-                            </Button>
-                        )}
-                        {project.github_url && (
-                            <Button asChild size="icon" variant="secondary" className="rounded-full hover:scale-110 transition-transform">
-                                <Link href={project.github_url} target="_blank"><Github className="w-4 h-4" /></Link>
-                            </Button>
-                        )}
-                    </div>
-                )}
 
                 {/* Auth Overlay */}
                 {isLocked && (
@@ -148,19 +133,19 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
             </div>
 
             {/* Content */}
-            <div className="flex flex-col flex-grow space-y-4">
-                <div className="flex justify-between items-start">
-                    <h3 className="text-2xl font-black tracking-tight group-hover:text-primary transition-colors">
+            <div className="flex flex-col flex-grow min-w-0 space-y-4 md:space-y-6">
+                <div className="flex justify-between items-start gap-4">
+                    <h3 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight group-hover:text-primary transition-colors flex-1 min-w-0">
                         {project.title}
                     </h3>
                     {!isLocked && (
-                        <motion.div whileHover={{ rotate: 45 }}>
+                        <motion.div whileHover={{ rotate: 45 }} className="flex-shrink-0">
                             <ArrowRight className="w-5 h-5 text-muted-foreground transition-colors group-hover:text-primary" />
                         </motion.div>
                     )}
                 </div>
 
-                <p className={`text-sm text-muted-foreground line-clamp-3 leading-relaxed ${isLocked ? "opacity-30" : ""}`}>
+                <p className={`text-sm md:text-base text-muted-foreground line-clamp-3 md:line-clamp-4 leading-relaxed ${isLocked ? "opacity-30" : ""}`}>
                     {project.description}
                 </p>
 
@@ -182,7 +167,7 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
                 )}
 
                 {/* Tags */}
-                <div className="flex flex-wrap gap-x-3 gap-y-1 pt-2 mt-auto">
+                <div className="flex flex-wrap gap-x-3 gap-y-1 pt-2">
                     {project.tags?.map(tag => (
                         <span key={tag} className="text-[10px] uppercase tracking-wider font-extrabold text-primary/40">
                             #{tag}
@@ -190,17 +175,56 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
                     ))}
                 </div>
 
-                {/* Updates Button */}
-                <Button asChild variant="ghost" className="w-full h-10 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5 mt-4">
-                    <Link href={
-                        (project.slug === "my-portfolio-this-web-site" || project.title === "My portfolio (this web site)")
-                            ? "/update"
-                            : `/${project.slug || project.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}/update`
-                    }>
-                        <History className="w-3 h-3 mr-2" />
-                        View Updates
-                    </Link>
-                </Button>
+                {/* Action Buttons */}
+                <div className="flex flex-col gap-3 mt-auto pt-2">
+                    {/* Project Links - Mobile: stacked, Desktop: side by side */}
+                    {!isLocked && (project.project_url || project.github_url) && (
+                        <div className="flex flex-col sm:flex-row gap-3 w-full">
+                            {project.project_url && (
+                                <Button 
+                                    asChild 
+                                    size="sm" 
+                                    variant="secondary"
+                                    className="w-full sm:flex-1 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5 h-10"
+                                >
+                                    <Link href={project.project_url} target="_blank" rel="noopener noreferrer">
+                                        <ExternalLink className="w-3 h-3 mr-2" />
+                                        Live Demo
+                                    </Link>
+                                </Button>
+                            )}
+                            {project.github_url && (
+                                <Button 
+                                    asChild 
+                                    size="sm" 
+                                    variant="secondary"
+                                    className="w-full sm:flex-1 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5 h-10"
+                                >
+                                    <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
+                                        <Github className="w-3 h-3 mr-2" />
+                                        GitHub
+                                    </Link>
+                                </Button>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Updates Button - Full width on mobile */}
+                    <Button 
+                        asChild 
+                        variant="ghost" 
+                        className="w-full h-10 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5"
+                    >
+                        <Link href={
+                            (project.slug === "my-portfolio-this-web-site" || project.title === "My portfolio (this web site)")
+                                ? "/update"
+                                : `/${project.slug || project.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}/update`
+                        }>
+                            <History className="w-3 h-3 mr-2" />
+                            View Updates
+                        </Link>
+                    </Button>
+                </div>
             </div>
 
             {/* Hover Glow */}
