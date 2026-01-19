@@ -6,6 +6,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 import { AuthButtons } from "@/components/auth-buttons"
+import { VersionSelector } from "@/components/version-selector"
 import { FaDiscord } from 'react-icons/fa';
 
 export function V4Navbar() {
@@ -46,6 +47,7 @@ export function V4Navbar() {
                     </div>
 
                     <div className="flex items-center gap-4">
+                        <VersionSelector />
                         <AuthButtons />
                         <Button asChild variant="outline" size="sm" className="hidden sm:flex rounded-xl glass border-white/5 text-[10px] font-black uppercase tracking-widest px-6 hover:bg-primary hover:text-primary-foreground transition-all">
                             <Link href="https://discord.gg/nZwFrnEW">
