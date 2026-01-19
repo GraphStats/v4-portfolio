@@ -12,6 +12,8 @@ const tech = [
     { name: "Framer Motion", icon: Zap, color: "text-purple-500" },
     { name: "PostgreSQL", icon: Database, color: "text-indigo-400" },
     { name: "Node.js", icon: Terminal, color: "text-green-500" },
+    { name: "Prisma", icon: Database, color: "text-blue-500" },
+    { name: "Stripe", icon: Database, color: "text-blue-500" },
 ]
 
 export function V4TechStack() {
