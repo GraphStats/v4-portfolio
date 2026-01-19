@@ -1,19 +1,22 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { clerkMiddleware } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
-const isVersionRoute = createRouteMatcher(['/v1(.*)', '/v2(.*)', '/v3(.*)', '/v4(.*)'])
-
 export default clerkMiddleware((auth, req) => {
-  // Skip middleware for version routes and static HTML files
+  const pathname = req.nextUrl.pathname
+  
+  // Skip middleware for version routes and static HTML files - let them pass through
   if (
-    isVersionRoute(req) ||
-    req.nextUrl.pathname.endsWith(".html")
+    pathname.startsWith("/v1") ||
+    pathname.startsWith("/v2") ||
+    pathname.startsWith("/v3") ||
+    pathname.startsWith("/v4") ||
+    pathname.endsWith(".html")
   ) {
     return NextResponse.next()
   }
 
   // Check if the request is for the admin dashboard
-  if (req.nextUrl.pathname.startsWith("/admin/dashboard")) {
+  if (pathname.startsWith("/admin/dashboard")) {
     const adminSession = req.cookies.get("admin_session")
 
     // If no admin session, redirect to admin login
@@ -22,6 +25,7 @@ export default clerkMiddleware((auth, req) => {
     }
   }
 
+  // Let all other requests pass through
   return NextResponse.next()
 })
 

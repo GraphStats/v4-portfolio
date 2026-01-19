@@ -64,9 +64,14 @@ export function VersionSelector() {
     useEffect(() => {
         setMounted(true)
         // Récupérer la version sauvegardée depuis localStorage
-        const savedVersion = localStorage.getItem(VERSION_STORAGE_KEY) as Version | null
-        if (savedVersion && VERSIONS.find(v => v.id === savedVersion)?.available) {
-            setCurrentVersion(savedVersion)
+        try {
+            const savedVersion = localStorage.getItem(VERSION_STORAGE_KEY) as Version | null
+            if (savedVersion && VERSIONS.find(v => v.id === savedVersion)?.available) {
+                setCurrentVersion(savedVersion)
+            }
+        } catch (error) {
+            // localStorage peut ne pas être disponible dans certains contextes
+            console.error("Error accessing localStorage:", error)
         }
     }, [])
 
@@ -91,7 +96,11 @@ export function VersionSelector() {
         }
 
         setCurrentVersion(version)
-        localStorage.setItem(VERSION_STORAGE_KEY, version)
+        try {
+            localStorage.setItem(VERSION_STORAGE_KEY, version)
+        } catch (error) {
+            console.error("Error saving to localStorage:", error)
+        }
 
         // Rediriger vers la version appropriée
         switch (version) {
