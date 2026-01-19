@@ -96,7 +96,8 @@ export function VersionSelector() {
         // Rediriger vers la version appropriée
         switch (version) {
             case "v1":
-                // v1.html est dans le dossier public
+                // Pour v1, utiliser window.location.href car c'est un fichier HTML statique
+                // Cela évite les problèmes de routing Next.js
                 window.location.href = "/v1.html"
                 break
             case "v2":
