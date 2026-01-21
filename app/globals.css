@@ -4,13 +4,13 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.98 0.01 240); /* Light Gray */
-  --foreground: oklch(0.1 0.02 240); /* Very Dark Gray */
-  --card: oklch(1 0 0); /* White */
+  --background: oklch(0.98 0.01 240);
+  --foreground: oklch(0.1 0.02 240);
+  --card: oklch(1 0 0);
   --card-foreground: oklch(0.1 0.02 240);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.1 0.02 240);
-  --primary: oklch(0.6 0.25 265); /* Slightly deeper blue */
+  --primary: oklch(0.6 0.25 265);
   --primary-foreground: oklch(0.99 0.01 220);
   --secondary: oklch(0.7 0.2 300);
   --secondary-foreground: oklch(0.1 0.02 240);
@@ -25,14 +25,12 @@
   --ring: oklch(0.6 0.25 265);
   --radius: 1.5rem;
 
-  /* V4 Special Colors */
   --v4-blue: #3b82f6;
   --v4-purple: #8b5cf6;
   --v4-cyan: #06b6d4;
   --v4-pink: #ec4899;
 }
 
-/* Overrides for V4 components in light mode */
 .light .v4-card, .light .v4-glass {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.5) 100%);
   @apply border-black/10 backdrop-blur-md shadow-none;
@@ -49,10 +47,8 @@
 
 .dark {
   --background: #020617;
-  /* Deeper black */
   --foreground: oklch(0.98 0.01 240);
   --card: oklch(0.08 0.02 240);
-  /* Subtly darker cards */
   --card-foreground: oklch(0.98 0.01 240);
   --popover: oklch(0.1 0.03 240);
   --popover-foreground: oklch(0.98 0.01 240);
@@ -115,7 +111,6 @@
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   }
 
-  /* Custom Scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;

@@ -102,7 +102,7 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
                 <div className="absolute top-4 left-4">
                     <Badge className="bg-background/80 backdrop-blur-md text-foreground border-white/5 font-bold uppercase tracking-widest text-[9px] px-3 py-1 flex items-center gap-1.5">
                         {project.in_development && (project.development_status === 'paused' ? <Pause className="w-2.5 h-2.5" /> : <Play className="w-2.5 h-2.5 animate-pulse" />)}
-                        {getStatusText()}
+                        getStatusText()
                     </Badge>
                 </div>
             </div>

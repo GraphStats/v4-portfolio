@@ -11,7 +11,6 @@ export function V4Contact() {
         <section id="contact" className="py-32 relative">
             <div className="container mx-auto px-6">
                 <div className="v4-glass rounded-[3rem] p-12 md:p-24 overflow-hidden relative group">
-                    {/* Animated pattern background */}
                     <div className="absolute inset-0 opacity-10 [background-image:radial-gradient(#fff_1px,transparent_1px)] [background-size:40px_40px]" />
 
                     <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-20">
@@ -82,7 +81,6 @@ export function V4Contact() {
                                     </p>
                                 </div>
 
-                                {/* Decorative elements */}
                                 <div className="absolute -top-6 -right-6 w-20 h-20 bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/40 transition-colors" />
                                 <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-secondary/20 rounded-full blur-2xl group-hover:bg-secondary/40 transition-colors" />
                             </motion.div>

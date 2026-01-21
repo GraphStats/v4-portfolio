@@ -31,12 +31,10 @@ export function V4TechStack() {
 
     useLayoutEffect(() => {
         if (marqueeRef.current) {
-            // We have two sets of the tech array, so we divide by 2 to get the width of one set
             setMarqueeWidth(marqueeRef.current.scrollWidth / 2);
         }
     }, []);
 
-    // Adjust this value to control the speed. Higher value = slower scroll.
     const speedFactor = 80; 
     const duration = marqueeWidth / speedFactor;
 
@@ -65,9 +63,8 @@ export function V4TechStack() {
                     }}
                     className="flex gap-12 whitespace-nowrap px-6"
                 >
-                    {/* We duplicate the content to create a seamless loop */}
                     {[...tech, ...tech].map((item, i) => (
-                        <div key={i} className="flex items-center gap-4 group/item cursor-default">
+                        <div key={i} className="flex items-center gap-4 group/item">
                             <div className="p-4 rounded-2xl v4-glass border-white/5 group-hover/item:border-primary/50 transition-colors">
                                 <item.icon className={`w-8 h-8 ${item.color} group-hover/item:scale-110 transition-transform`} />
                             </div>

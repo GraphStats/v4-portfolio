@@ -30,12 +30,10 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
 
     return (
         <section ref={containerRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background py-20 px-6">
-            {/* Background Neural Grid */}
             <div className="absolute inset-0 opacity-[0.15] pointer-events-none">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
             </div>
 
-            {/* Interactive Glow */}
             <div
                 className="absolute inset-0 pointer-events-none transition-opacity duration-1000"
                 style={{
@@ -43,7 +41,6 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                 }}
             />
 
-            {/* Flying Orbs */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
                 <motion.div
                     animate={{
@@ -67,7 +64,6 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
 
             <div className="container relative z-10 mx-auto">
                 <div className="flex flex-col items-center text-center space-y-10">
-                    {/* Chip/Badge */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -78,7 +74,6 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                         </Link>
                     </motion.div>
 
-                    {/* Main Title */}
                     <div className="space-y-4 max-w-5xl">
                         <motion.h1
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -104,7 +99,6 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                         </motion.p>
                     </div>
 
-                    {/* Actions */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -130,7 +124,6 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                         </Button>
                     </motion.div>
 
-                    {/* Quick Stats/Features */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}

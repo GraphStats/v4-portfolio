@@ -7,7 +7,6 @@ import { redirect } from "next/navigation"
 import { getCloudflareStats } from "@/lib/cloudflare"
 import { isLocalRequest } from "@/lib/server-utils"
 
-// V4 Components
 import { V4Navbar } from "@/components/v4/V4Navbar"
 import { V4Hero } from "@/components/v4/V4Hero"
 import { V4Projects } from "@/components/v4/V4Projects"
@@ -19,10 +18,8 @@ import { V4Dock } from "@/components/v4/V4Dock"
 export const dynamic = "force-dynamic"
 
 export default async function HomePage() {
-  // Platform Status check (Skipped if local)
   const isLocal = await isLocalRequest()
   if (!isLocal) {
-    // Maintenance check
     const { isMaintenance } = await getMaintenanceMode()
     if (isMaintenance) {
       redirect("/maintenance")
@@ -43,7 +40,6 @@ export default async function HomePage() {
       ...doc.data()
     })) as Project[]
 
-    // Fetch badge text
     const updateDocRef = doc(db, "update-p", "main")
     const updateDocSnap = await getDoc(updateDocRef)
     if (updateDocSnap.exists()) {
@@ -66,7 +62,6 @@ export default async function HomePage() {
         <V4Hero badgeText={badgeText} />
 
         <div className="relative">
-          {/* Subtle separator glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
           <V4Projects projects={projects} />
         </div>
