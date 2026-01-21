@@ -11,26 +11,26 @@ interface HorizontalScrollSectionProps {
 export const HorizontalScrollSection = ({ children, header }: HorizontalScrollSectionProps) => {
   const targetRef = useRef<HTMLDivElement | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null); // Ref for the direct viewport of the carousel
 
   const { scrollYProgress } = useScroll({
     target: targetRef,
   });
 
   const [carouselWidth, setCarouselWidth] = useState(0);
-  const [containerWidth, setContainerWidth] = useState(0);
+  const [viewportWidth, setViewportWidth] = useState(0);
 
   useLayoutEffect(() => {
     const updateWidths = () => {
       if (carouselRef.current) {
         setCarouselWidth(carouselRef.current.scrollWidth);
       }
-      if (targetRef.current) {
-        setContainerWidth(targetRef.current.offsetWidth);
+      if (viewportRef.current) {
+        // Measure the actual container of the motion.div
+        setViewportWidth(viewportRef.current.offsetWidth);
       }
     };
 
-    // A slight delay can sometimes help ensure all children have rendered
-    // before we take measurements, especially if they are image-heavy.
     const timeoutId = setTimeout(updateWidths, 100);
 
     window.addEventListener("resize", updateWidths);
@@ -38,18 +38,15 @@ export const HorizontalScrollSection = ({ children, header }: HorizontalScrollSe
       clearTimeout(timeoutId);
       window.removeEventListener("resize", updateWidths);
     }
-  }, [children]); // Rerun if children change
+  }, [children]);
 
+  // The transform now uses the more precise viewportWidth
   const x = useTransform(
     scrollYProgress,
     [0, 1],
-    // We add a small buffer (e.g., 50px) to ensure the last card can be fully seen
-    [0, -(carouselWidth - containerWidth + 50)]
+    [0, -(carouselWidth - viewportWidth)]
   );
 
-  // The height is the key. Making it equal to the carousel's scrollable distance
-  // is what creates the "lock" effect. We add a small amount of extra height
-  // to ensure the animation can complete smoothly.
   const height = carouselWidth ? `${carouselWidth}px` : "100vh";
 
   return (
@@ -57,7 +54,8 @@ export const HorizontalScrollSection = ({ children, header }: HorizontalScrollSe
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 h-full flex flex-col">
           {header}
-          <div className="flex items-center flex-grow mt-[-8rem]">
+          {/* Add the ref to the direct parent of the motion.div */}
+          <div ref={viewportRef} className="flex items-center flex-grow mt-[-4rem]">
             <motion.div ref={carouselRef} style={{ x }} className="flex gap-8">
               {children}
             </motion.div>

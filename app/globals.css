@@ -35,7 +35,7 @@
 /* Overrides for V4 components in light mode */
 .light .v4-card, .light .v4-glass {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.5) 100%);
-  @apply border-black/10 backdrop-blur-md;
+  @apply border-black/10 backdrop-blur-md shadow-none;
 }
 .light .v4-card:hover {
   @apply border-black/20;
