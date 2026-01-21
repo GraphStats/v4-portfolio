@@ -63,14 +63,12 @@ export function VersionSelector() {
 
     useEffect(() => {
         setMounted(true)
-        // Récupérer la version sauvegardée depuis localStorage
         try {
             const savedVersion = localStorage.getItem(VERSION_STORAGE_KEY) as Version | null
             if (savedVersion && VERSIONS.find(v => v.id === savedVersion)?.available) {
                 setCurrentVersion(savedVersion)
             }
         } catch (error) {
-            // localStorage peut ne pas être disponible dans certains contextes
             console.error("Error accessing localStorage:", error)
         }
     }, [])
@@ -78,7 +76,6 @@ export function VersionSelector() {
     useEffect(() => {
         if (!mounted) return
 
-        // Déterminer la version actuelle basée sur le pathname
         if (pathname === "/v1.html" || pathname.startsWith("/v1")) {
             setCurrentVersion("v1")
         } else if (pathname.startsWith("/v2")) {
@@ -102,19 +99,14 @@ export function VersionSelector() {
             console.error("Error saving to localStorage:", error)
         }
 
-        // Rediriger vers la version appropriée
         switch (version) {
             case "v1":
-                // Pour v1, utiliser window.location.href car c'est un fichier HTML statique
-                // Cela évite les problèmes de routing Next.js
                 window.location.href = "/v1.html"
                 break
             case "v2":
-                // v2 est un projet séparé, rediriger vers la page d'information
                 router.push("/v2")
                 break
             case "v3":
-                // v3 indisponible, rediriger vers la page d'information
                 router.push("/v3")
                 break
             case "v4":
