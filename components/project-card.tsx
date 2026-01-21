@@ -28,7 +28,6 @@ export function ProjectCard({ project }: ProjectCardProps) {
       ${isArchived ? "border-indigo-500/30 shadow-[0_0_20px_rgba(99,102,241,0.05)]" : ""}
     `}>
       <div className="relative z-10 h-full">
-      {/* Auth Required Overlay */}
       {requiresAuth && !isSignedIn && (
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center rounded-3xl z-20">
           <div className="text-center space-y-4 p-6">
@@ -50,7 +49,6 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
       <div className={`${requiresAuth && !isSignedIn ? "blur-sm opacity-60" : ""}`}>
 
-      {/* Glow Effect Overlay */}
       <div className={`absolute inset-0 transition-colors duration-500 
         ${isFinished ? "group-hover:bg-emerald-500/5" : isArchived ? "group-hover:bg-indigo-500/5" : "group-hover:bg-primary/5"}
       `} />
@@ -312,10 +310,6 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </div>
       </div>
       </div>
-
-      </div>
-
-      {/* Auth Required Overlay */}
       {requiresAuth && !isSignedIn && (
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center rounded-3xl z-20">
           <div className="text-center space-y-4 p-6">
@@ -334,6 +328,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
