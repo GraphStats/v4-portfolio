@@ -65,4 +65,3 @@ export const HorizontalScrollSection = ({ children, header }: HorizontalScrollSe
     </section>
   );
 };
-
