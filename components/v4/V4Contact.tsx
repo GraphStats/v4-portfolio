@@ -48,7 +48,7 @@ export function V4Contact() {
                                         </div>
                                         <div>
                                             <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">{item.label}</p>
-                                            <p className="text-xl font-bold text-white">{item.value}</p>
+                                            <p className="text-xl font-bold text-foreground">{item.value}</p>
                                         </div>
                                     </div>
                                 ))}

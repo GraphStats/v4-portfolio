@@ -86,7 +86,7 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                             className="text-7xl md:text-9xl font-black tracking-tighter leading-[0.8] font-display"
                         >
-                            <span className="block text-white/90 drop-shadow-sm uppercase">DRAYKO</span>
+                            <span className="block text-foreground drop-shadow-sm uppercase">DRAYKO</span>
                             <span className="relative inline-block">
                                 <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent italic">VERSION 4.</span>
                             </span>
@@ -99,7 +99,7 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                             className="text-lg md:text-2xl text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed"
                         >
                             Crafting high-fidelity digital experiences with
-                            <span className="text-white"> precision </span> and
+                            <span className="text-foreground"> precision </span> and
                             <span className="text-primary italic"> artistic vision</span>.
                         </motion.p>
                     </div>
@@ -145,7 +145,7 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                         ].map((stat, i) => (
                             <div key={i} className="flex flex-col items-center gap-2">
                                 <stat.icon className="w-5 h-5 text-primary/60" />
-                                <span className="text-xl font-black text-white">{stat.value}</span>
+                                <span className="text-xl font-black text-foreground">{stat.value}</span>
                                 <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground">{stat.label}</span>
                             </div>
                         ))}
