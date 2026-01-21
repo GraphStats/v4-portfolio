@@ -56,7 +56,7 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background relative selection:bg-primary/30 selection:text-primary overflow-x-hidden font-sans scroll-smooth">
+    <div className="min-h-screen bg-background relative selection:bg-primary/30 selection:text-primary font-sans scroll-smooth">
       <div className="noise-v4" />
       <div className="mesh-v4 fixed inset-0 pointer-events-none" />
 
