@@ -11,10 +11,8 @@ import { Github } from 'lucide-react';
 export const dynamic = "force-dynamic"
 
 export default async function AboutPage() {
-    // Platform Status check (Skipped if local)
     const isLocal = await isLocalRequest()
     if (!isLocal) {
-        // Maintenance check
         const { isMaintenance } = await getMaintenanceMode()
         if (isMaintenance) {
             redirect("/maintenance")
@@ -28,7 +26,6 @@ export default async function AboutPage() {
             <V4Navbar />
 
             <main className="relative z-10 pt-40 pb-24 container mx-auto px-6">
-                {/* Hero Section */}
                 <div className="max-w-4xl mx-auto text-center space-y-8 mb-24">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full v4-glass border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-primary">
                         <User className="w-3 h-3" />
@@ -44,10 +41,8 @@ export default async function AboutPage() {
                     </p>
                 </div>
 
-                {/* Main Content Card */}
                 <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
                     <div className="lg:col-span-8 v4-glass p-8 md:p-16 rounded-[2.5rem] border-white/10 space-y-16 shadow-2xl relative overflow-hidden">
-                        {/* Story Section */}
                         <section className="space-y-8">
                             <div className="flex items-center gap-3 text-primary">
                                 <Sparkles className="h-5 w-5" />
@@ -64,7 +59,6 @@ export default async function AboutPage() {
                             </div>
                         </section>
 
-                        {/* Philosophy Grid */}
                         <section className="grid md:grid-cols-2 gap-8 pt-12 border-t border-white/5">
                             {[
                                 { title: "User Experience", desc: "If it's not intuitive, it's not complete.", icon: Laptop },
@@ -82,7 +76,6 @@ export default async function AboutPage() {
                     </div>
 
                     <div className="lg:col-span-4 space-y-8">
-                        {/* Status Card */}
                         <div className="v4-glass p-10 rounded-[2.5rem] border-white/10 space-y-8">
                             <h4 className="text-xs font-black uppercase tracking-[0.3em] text-primary">Connectivity</h4>
                             <div className="space-y-6">
@@ -98,7 +91,6 @@ export default async function AboutPage() {
                             </div>
                         </div>
 
-                        {/* Quote */}
                         <div className="p-10 rounded-[2.5rem] border border-white/5 italic text-xl text-muted-foreground font-medium bg-gradient-to-br from-white/5 to-transparent">
                             "Innovation is the child of curiosity and the sibling of obsession."
                         </div>

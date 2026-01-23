@@ -23,7 +23,7 @@ export default function AdminLoginForm() {
     const result = await loginAdmin(email, password)
 
     if (result && !result.success) {
-      setError(result.error || "Invalid credentials")
+      setError(result.error || "Failed to create admin")
       setIsLoading(false)
     }
   }
@@ -32,7 +32,6 @@ export default function AdminLoginForm() {
     <div className="min-h-screen flex items-center justify-center bg-background relative selection:bg-primary/30 selection:text-primary overflow-hidden font-sans">
       <div className="noise-overlay" />
 
-      {/* Background Orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full blur-[120px] animate-pulse-glow" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/20 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: "-3s" }} />
@@ -114,4 +113,3 @@ export default function AdminLoginForm() {
     </div>
   )
 }
-

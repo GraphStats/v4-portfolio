@@ -35,7 +35,7 @@ export function V4Navbar() {
                     </Link>
 
                     <div className="hidden md:flex items-center gap-8">
-                        {["Projects", "Stats", "About"].map((item) => (
+                        {["Projects", "News", "Stats", "About"].map((item) => (
                             <Link
                                 key={item}
                                 href={`/${item.toLowerCase() === 'projects' ? '#projects' : item.toLowerCase()}`}

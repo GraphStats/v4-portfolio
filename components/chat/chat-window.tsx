@@ -19,7 +19,7 @@ interface ChatWindowProps {
 export function ChatWindow({ conversation, currentUserType, onRefresh }: ChatWindowProps) {
     const [inputValue, setInputValue] = useState("")
     const [isSending, setIsSending] = useState(false)
-    const messagesEndRef = useRef<HTMLDivElement>(null)
+    const messagesEndRef = useRef<HTMLDivLement>(null)
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -44,7 +44,6 @@ export function ChatWindow({ conversation, currentUserType, onRefresh }: ChatWin
 
     return (
         <div className="flex flex-col h-[600px] w-full bg-white/5 border border-white/5 rounded-[2rem] overflow-hidden">
-            {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
                 {conversation.messages.length === 0 && (
                     <div className="text-center text-muted-foreground text-sm italic pt-10">Start the discussion...</div>
@@ -76,7 +75,6 @@ export function ChatWindow({ conversation, currentUserType, onRefresh }: ChatWin
                 <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Area */}
             <div className="p-4 bg-white/[0.02] border-t border-white/5">
                 <form onSubmit={handleSend} className="flex gap-3">
                     <Input

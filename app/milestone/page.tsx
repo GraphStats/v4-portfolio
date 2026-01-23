@@ -34,7 +34,6 @@ export default function MilestonePage() {
         <div className="min-h-screen bg-background relative selection:bg-primary/30 selection:text-primary overflow-hidden font-sans flex items-center justify-center">
             <div className="noise-overlay" />
 
-            {/* Background Effects */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-20%] left-[-20%] w-[70%] h-[70%] bg-primary/20 rounded-full blur-[120px] animate-pulse-glow" />
                 <div className="absolute bottom-[-20%] right-[-20%] w-[70%] h-[70%] bg-yellow-500/10 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: "-2s" }} />

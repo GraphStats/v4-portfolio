@@ -86,9 +86,7 @@ export function PublicStats() {
                 <div className="text-center py-20 text-muted-foreground">Stats unavailable</div>
             ) : (
                 <div className="space-y-6">
-                    {/* Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {/* Requests */}
                         <div className="glass p-6 rounded-3xl border-white/5 relative overflow-hidden group">
                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                 <Globe className="h-16 w-16" />
@@ -107,7 +105,6 @@ export function PublicStats() {
                             </div>
                         </div>
 
-                        {/* Uniques */}
                         <div className="glass p-6 rounded-3xl border-white/5 relative overflow-hidden group">
                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                 <UserIcon className="h-16 w-16" />
@@ -126,7 +123,6 @@ export function PublicStats() {
                             </div>
                         </div>
 
-                        {/* Bandwidth */}
                         <div className="glass p-6 rounded-3xl border-white/5 relative overflow-hidden group">
                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                 <HardDrive className="h-16 w-16" />
@@ -146,14 +142,12 @@ export function PublicStats() {
                         </div>
                     </div>
 
-                    {/* Graphs */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {/* Requests Graph */}
                         <div className="glass p-6 rounded-3xl border-white/5">
                             <div className="flex items-center justify-between mb-6">
                                 <div className="flex items-center gap-2 text-muted-foreground text-sm uppercase font-bold tracking-wider">
                                     <TrendingUp className="h-4 w-4" />
-                                    Requests
+                                    Requests Trend
                                 </div>
                             </div>
                             <div className="h-[250px] w-full">
@@ -191,7 +185,6 @@ export function PublicStats() {
                             </div>
                         </div>
 
-                        {/* Visitors Graph */}
                         <div className="glass p-6 rounded-3xl border-white/5">
                             <div className="flex items-center justify-between mb-6">
                                 <div className="flex items-center gap-2 text-muted-foreground text-sm uppercase font-bold tracking-wider">
@@ -235,7 +228,6 @@ export function PublicStats() {
                         </div>
                     </div>
 
-                    {/* Bandwidth Graph */}
                     <div className="glass p-6 rounded-3xl border-white/5">
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center gap-2 text-muted-foreground text-sm uppercase font-bold tracking-wider">

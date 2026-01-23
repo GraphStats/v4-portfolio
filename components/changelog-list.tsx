@@ -39,7 +39,6 @@ export function ChangelogList({ entries }: ChangelogListProps) {
 
                     return (
                         <div key={entry.id} className={`relative flex items-center justify-center group ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-                            {/* Timeline Dot */}
                             <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-primary border-4 border-background z-20 group-hover:scale-150 transition-transform duration-500 shadow-[0_0_15px_rgba(var(--primary),0.5)]" />
 
                             <div className="w-full md:w-1/2 pl-16 md:pl-0 md:px-12">

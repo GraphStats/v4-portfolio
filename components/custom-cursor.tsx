@@ -10,12 +10,10 @@ export function CustomCursor() {
 
     const cursorRef = useRef<HTMLDivElement>(null)
 
-    // Use refs for mutable values to avoid re-renders on every frame
     const mouse = useRef({ x: 0, y: 0 })
     const cursor = useRef({ x: 0, y: 0 })
 
     useEffect(() => {
-        // Check if device is touch-capable (usually disable custom cursor on touch)
         const isTouch = window.matchMedia("(pointer: coarse)").matches
         if (isTouch) return
 
@@ -29,10 +27,8 @@ export function CustomCursor() {
         const onMouseDown = () => setIsClicking(true)
         const onMouseUp = () => setIsClicking(false)
 
-        // Handle hover states for interactive elements
         const handleMouseOver = (e: MouseEvent) => {
             const target = e.target as HTMLElement
-            // Check if target or its parents are interactive
             const isInteractive =
                 target.matches("a, button, input, textarea, [role='button'], .interactive") ||
                 target.closest("a, button, input, textarea, [role='button'], .interactive")
@@ -45,24 +41,17 @@ export function CustomCursor() {
         window.addEventListener("mouseup", onMouseUp)
         document.addEventListener("mouseover", handleMouseOver)
 
-        // Hide default cursor
         document.body.style.cursor = "none"
 
-        // Animation Loop for fluid lag effect
         let animationFrameId: number
 
         const animate = () => {
-            // Configurable lag factors (0 = no movement, 1 = instant)
-            // Lower = more lag/fluidity
             const lag = 0.15
 
-            // Lerp (Linear Interpolation)
             cursor.current.x += (mouse.current.x - cursor.current.x) * lag
             cursor.current.y += (mouse.current.y - cursor.current.y) * lag
 
             if (cursorRef.current) {
-                // We translate by 0,0 typically, or offset slightly if needed.
-                // For a mouse pointer, usually the tip is at 0,0 relative to the position
                 cursorRef.current.style.transform = `translate3d(${cursor.current.x}px, ${cursor.current.y}px, 0)`
             }
 
@@ -101,7 +90,6 @@ export function CustomCursor() {
                     marginTop: "-2px"
                 }}
             >
-                {/* Custom Mouse SVG */}
                 <svg
                     width="24"
                     height="24"

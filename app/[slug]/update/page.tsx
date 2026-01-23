@@ -19,10 +19,8 @@ interface ProjectUpdatePageProps {
 export default async function ProjectUpdatePage({ params }: ProjectUpdatePageProps) {
     const { slug } = await params
 
-    // Platform Status check (Skipped if local)
     const isLocal = await isLocalRequest()
     if (!isLocal) {
-        // Maintenance check
         const { isMaintenance } = await getMaintenanceMode()
         if (isMaintenance) {
             redirect("/maintenance")
@@ -35,7 +33,6 @@ export default async function ProjectUpdatePage({ params }: ProjectUpdatePagePro
         notFound()
     }
 
-    // Redirect to main update page if it's the portfolio itself
     if (project.slug === "my-portfolio-this-web-site" || project.title === "My portfolio (this web site)") {
         redirect("/update")
     }
@@ -50,7 +47,6 @@ export default async function ProjectUpdatePage({ params }: ProjectUpdatePagePro
             <V4Navbar />
 
             <main className="relative z-10 pt-40 pb-32 container max-w-4xl mx-auto px-6 space-y-12">
-                {/* Hero Section */}
                 <div className="text-center space-y-8">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full v4-glass border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-primary mx-auto">
                         <History className="w-3 h-3" />
@@ -61,7 +57,6 @@ export default async function ProjectUpdatePage({ params }: ProjectUpdatePagePro
                     </h1>
                 </div>
 
-                {/* Archived Status Banner */}
                 {project.is_archived && (
                     <div className="v4-glass p-8 rounded-[2rem] border-indigo-500/20 bg-indigo-500/5 flex items-center gap-6">
                         <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center flex-shrink-0">
@@ -74,7 +69,6 @@ export default async function ProjectUpdatePage({ params }: ProjectUpdatePagePro
                     </div>
                 )}
 
-                {/* Project Context Card */}
                 <section>
                     <div className="v4-glass p-10 md:p-16 rounded-[3rem] border-white/5 relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-8 opacity-5">
@@ -111,7 +105,6 @@ export default async function ProjectUpdatePage({ params }: ProjectUpdatePagePro
                     </div>
                 </section>
 
-                {/* Changelog Section */}
                 <section className="space-y-12">
                     <div className="flex flex-col items-center text-center space-y-4">
                         <div className="text-primary font-bold tracking-widest text-xs uppercase">Lifecycle</div>

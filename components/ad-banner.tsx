@@ -7,7 +7,6 @@ export function AdBanner() {
     const [adId] = useState(() => `ad-${Math.random().toString(36).substring(2, 11)}`)
 
     useEffect(() => {
-        // Only run on client
         if (typeof window === "undefined") return
 
         if (containerRef.current && !containerRef.current.firstChild) {

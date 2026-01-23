@@ -18,10 +18,6 @@ export function AdminMessages() {
     const [dialogOpen, setDialogOpen] = useState(false)
     const [filter, setFilter] = useState("")
 
-    // Use polling or just load once? 
-    // Load once for now, but provide refresh or rely on parent.
-    // Parent "AdminDashboardPage" already has useEffect, but easier to keep state here.
-
     const fetchMessages = async () => {
         setIsLoading(true)
         const result = await getContactMessages()

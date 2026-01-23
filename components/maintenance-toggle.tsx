@@ -24,7 +24,6 @@ export function MaintenanceToggle({ initialState, initialMessage, initialProgres
     const [isPending, startTransition] = useTransition()
     const { toast } = useToast()
 
-    // Sync state with props if they change
     useEffect(() => {
         setIsMaintenance(initialState)
     }, [initialState])

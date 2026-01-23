@@ -7,7 +7,6 @@ export default function V1Page() {
     const router = useRouter()
     
     useEffect(() => {
-        // Redirection côté client vers le fichier HTML statique
         window.location.href = "/v1.html"
     }, [])
     

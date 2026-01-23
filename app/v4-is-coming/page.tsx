@@ -25,10 +25,8 @@ export default async function V4ComingPage() {
 
     return (
         <div className="dark min-h-screen relative flex items-center justify-center overflow-hidden bg-[#030712] font-sans text-foreground">
-            {/* Background Effects */}
             <div className="noise-overlay" />
 
-            {/* Background Orbs */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
                 <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-600/20 rounded-full blur-[140px] animate-pulse-glow" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-indigo-600/20 rounded-full blur-[140px] animate-pulse-glow" style={{ animationDelay: "-3s" }} />
@@ -37,7 +35,6 @@ export default async function V4ComingPage() {
 
             <div className="relative z-10 p-6 w-full max-w-4xl">
                 <div className="text-center space-y-12">
-                    {/* Badge */}
                     <div className="reveal-up">
                         <div className="inline-flex items-center px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 text-xs font-black uppercase tracking-[0.2em] text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.2)] animate-pulse">
                             <Sparkles className="h-4 w-4 mr-2" />
@@ -45,7 +42,6 @@ export default async function V4ComingPage() {
                         </div>
                     </div>
 
-                    {/* Hero Title */}
                     <div className="space-y-6">
                         <h1 className="text-7xl md:text-9xl font-black tracking-tighter leading-none font-display">
                             <span className="block text-white/90">DRAYKO</span>
@@ -58,7 +54,6 @@ export default async function V4ComingPage() {
                         </p>
                     </div>
 
-                    {/* Progress Card */}
                     <div className="glass p-10 md:p-14 rounded-[3.5rem] border-white/5 backdrop-blur-3xl shadow-2xl space-y-10 relative overflow-hidden group">
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50" />
 

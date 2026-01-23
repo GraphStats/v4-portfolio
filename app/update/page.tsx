@@ -14,10 +14,8 @@ import { V4Dock } from "@/components/v4/V4Dock"
 export const dynamic = "force-dynamic"
 
 export default async function UpdatePage() {
-    // Platform Status check (Skipped if local)
     const isLocal = await isLocalRequest()
     if (!isLocal) {
-        // Maintenance check
         const { isMaintenance } = await getMaintenanceMode()
         if (isMaintenance) {
             redirect("/maintenance")
@@ -45,7 +43,6 @@ export default async function UpdatePage() {
             <V4Navbar />
 
             <main className="relative z-10 pt-40 pb-32 container max-w-4xl mx-auto px-6 space-y-12">
-                {/* Hero Section */}
                 <div className="text-center space-y-8">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full v4-glass border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-primary mx-auto">
                         <History className="w-3 h-3" />
@@ -56,7 +53,6 @@ export default async function UpdatePage() {
                     </h1>
                 </div>
 
-                {/* Next Update Card */}
                 <section>
                     <div className="v4-glass p-10 md:p-16 rounded-[3rem] border-white/5 relative overflow-hidden">
                         <div className="relative z-10 flex flex-col items-center text-center space-y-8">
@@ -93,7 +89,6 @@ export default async function UpdatePage() {
                     </div>
                 </section>
 
-                {/* Changelog Section */}
                 <section className="space-y-12">
                     <div className="flex flex-col items-center text-center space-y-4">
                         <div className="text-primary font-bold tracking-widest text-xs uppercase">History</div>

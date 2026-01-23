@@ -73,3 +73,25 @@ export interface ContactMessage {
   read: boolean
   replied?: boolean
 }
+
+export interface News {
+  id: string
+  title: string
+  content: string
+  image_url: string | null
+  created_at: string
+  updated_at: string
+  likes: string[] // User IDs (Clerk IDs)
+  author_id: string
+}
+
+export interface NewsComment {
+  id: string
+  news_id: string
+  user_id: string
+  user_name: string
+  user_image?: string
+  content: string
+  created_at: string
+}
+

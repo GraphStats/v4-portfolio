@@ -110,4 +110,3 @@ export function AdminProjectCard({ project, onDeleted, onUpdated }: AdminProject
     </>
   )
 }
-

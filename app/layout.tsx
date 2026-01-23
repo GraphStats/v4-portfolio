@@ -7,6 +7,7 @@ import Script from "next/script"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SpecialThemeHandler } from "@/components/special-theme-handler"
 import { ClerkThemeProvider } from "@/components/clerk-theme-provider"
+import { Toaster } from "sonner"
 
 import "./globals.css"
 
@@ -37,7 +38,7 @@ export default async function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange storageKey="theme">
           <ClerkThemeProvider>
             <SpecialThemeHandler />
-
+            <Toaster position="top-right" richColors />
             <div className="relative flex min-h-screen flex-col">
               <main className="flex-1">{children}</main>
             </div>

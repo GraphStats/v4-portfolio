@@ -24,7 +24,6 @@ export function ChatInterface({ isAvailable = true }: { isAvailable?: boolean })
             if (result.success && result.conversation) {
                 setConversation(result.conversation as Conversation)
             } else {
-                // Invalid ID or error, verify if we should clear it
                 if (result.error === "Conversation not found") {
                     localStorage.removeItem("portfolio_chat_id")
                 }
@@ -35,7 +34,6 @@ export function ChatInterface({ isAvailable = true }: { isAvailable?: boolean })
 
     useEffect(() => {
         checkExistingChat()
-        // Simple polling every 10 sec to get new messages
         const interval = setInterval(() => {
             const storedId = localStorage.getItem("portfolio_chat_id")
             if (storedId) {
@@ -59,7 +57,7 @@ export function ChatInterface({ isAvailable = true }: { isAvailable?: boolean })
 
         if (result.success && result.conversationId) {
             localStorage.setItem("portfolio_chat_id", result.conversationId)
-            await checkExistingChat() // Load the new conversation
+            await checkExistingChat()
             toast.success("Discussion démarrée !")
         } else {
             toast.error("Erreur lors de la création de la discussion.")

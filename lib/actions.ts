@@ -3,7 +3,8 @@
 import { getFirestoreServer } from "@/lib/firebase/server"
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy, where, getDoc, setDoc } from "firebase/firestore"
 import { revalidatePath } from "next/cache"
-import type { Project } from "@/lib/types"
+import { auth as clerkAuth, currentUser } from "@clerk/nextjs/server"
+import type { Project, News, NewsComment } from "@/lib/types"
 
 export async function createProject(formData: FormData) {
   const db = await getFirestoreServer()
@@ -539,3 +540,221 @@ export async function markMessageAsReplied(id: string) {
     return { success: false, error: error.message }
   }
 }
+
+// News Actions
+
+export async function createNews(formData: FormData) {
+  const db = await getFirestoreServer()
+
+  const title = (formData.get("title") as string) || ""
+  const content = (formData.get("content") as string) || ""
+  const image_url = (formData.get("image_url") as string) || ""
+
+  try {
+    await addDoc(collection(db, "news"), {
+      title,
+      content,
+      image_url: image_url || null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      likes: [],
+      author_id: "admin",
+    })
+
+    revalidatePath("/news")
+    revalidatePath("/admin/dashboard")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error creating news:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+export async function updateNews(id: string, formData: FormData) {
+  const db = await getFirestoreServer()
+
+  const title = (formData.get("title") as string) || ""
+  const content = (formData.get("content") as string) || ""
+  const image_url = (formData.get("image_url") as string) || ""
+
+  try {
+    const newsRef = doc(db, "news", id)
+    await updateDoc(newsRef, {
+      title,
+      content,
+      image_url: image_url || null,
+      updated_at: new Date().toISOString(),
+    })
+
+    revalidatePath("/news")
+    revalidatePath(`/news/${id}`)
+    revalidatePath("/admin/dashboard")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error updating news:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+export async function deleteNews(id: string) {
+  const db = await getFirestoreServer()
+
+  try {
+    // Delete the news document
+    await deleteDoc(doc(db, "news", id))
+
+    // Optional: Delete all comments associated with this news
+    const commentsQuery = query(collection(db, "news_comments"), where("news_id", "==", id))
+    const commentsSnapshot = await getDocs(commentsQuery)
+    for (const commentDoc of commentsSnapshot.docs) {
+      await deleteDoc(doc(db, "news_comments", commentDoc.id))
+    }
+
+    revalidatePath("/news")
+    revalidatePath("/admin/dashboard")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error deleting news:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+export async function getNews() {
+  const db = await getFirestoreServer()
+  try {
+    const q = query(collection(db, "news"), orderBy("created_at", "desc"))
+    const querySnapshot = await getDocs(q)
+    const data = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as News[]
+    return { success: true, data }
+  } catch (error: any) {
+    console.error("Error fetching news:", error)
+    return { success: false, error: error.message, data: [] }
+  }
+}
+
+export async function getNewsById(id: string) {
+  const db = await getFirestoreServer()
+  try {
+    const docRef = doc(db, "news", id)
+    const docSnap = await getDoc(docRef)
+    if (docSnap.exists()) {
+      return { success: true, news: { id: docSnap.id, ...docSnap.data() } as News }
+    }
+    return { success: false, error: "News not found" }
+  } catch (error: any) {
+    console.error("Error fetching news by id:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+export async function toggleLikeNews(newsId: string) {
+  const session = await clerkAuth()
+  const userId = session.userId
+
+  if (!userId) {
+    console.warn("toggleLikeNews: No userId found")
+    return { success: false, error: "Authentication required" }
+  }
+
+  const db = await getFirestoreServer()
+  try {
+    const newsRef = doc(db, "news", newsId)
+    const newsSnap = await getDoc(newsRef)
+
+    if (!newsSnap.exists()) return { success: false, error: "News not found" }
+
+    const data = newsSnap.data()
+    const likes = data.likes || []
+    const hasLiked = likes.includes(userId)
+
+    const newLikes = hasLiked
+      ? likes.filter((id: string) => id !== userId)
+      : [...likes, userId]
+
+    await updateDoc(newsRef, { likes: newLikes })
+
+    console.log(`toggleLikeNews: ${userId} ${hasLiked ? "unliked" : "liked"} news ${newsId}`)
+
+    revalidatePath("/news")
+    revalidatePath(`/news/${newsId}`)
+    return { success: true, liked: !hasLiked }
+  } catch (error: any) {
+    console.error("Error toggling like:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+export async function addComment(newsId: string, content: string) {
+  const session = await clerkAuth()
+  const user = await currentUser()
+
+  if (!session.userId || !user) {
+    console.warn("addComment: No user found")
+    return { success: false, error: "Authentication required" }
+  }
+
+  const db = await getFirestoreServer()
+  try {
+    const docRef = await addDoc(collection(db, "news_comments"), {
+      news_id: newsId,
+      user_id: user.id,
+      user_name: user.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : user.username || "Anonymous",
+      user_image: user.imageUrl,
+      content,
+      created_at: new Date().toISOString(),
+    })
+
+    console.log(`addComment: Comment ${docRef.id} added to news ${newsId}`)
+
+    revalidatePath(`/news/${newsId}`)
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error adding comment:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+
+export async function getComments(newsId: string) {
+  const db = await getFirestoreServer()
+  try {
+    const q = query(collection(db, "news_comments"), where("news_id", "==", newsId), orderBy("created_at", "desc"))
+    const querySnapshot = await getDocs(q)
+    const data = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as NewsComment[]
+    return { success: true, data }
+  } catch (error: any) {
+    console.error("Error fetching comments:", error)
+    return { success: false, error: error.message, data: [] }
+  }
+}
+
+export async function deleteComment(commentId: string, newsId: string) {
+  const session = await clerkAuth()
+  if (!session.userId) return { success: false, error: "Authentication required" }
+
+  const db = await getFirestoreServer()
+  try {
+    const commentRef = doc(db, "news_comments", commentId)
+    const commentSnap = await getDoc(commentRef)
+
+    if (!commentSnap.exists()) return { success: false, error: "Comment not found" }
+
+    if (commentSnap.data().user_id !== session.userId) {
+      return { success: false, error: "Unauthorized" }
+    }
+
+    await deleteDoc(commentRef)
+    revalidatePath(`/news/${newsId}`)
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error deleting comment:", error)
+    return { success: false, error: error.message }
+  }
+}
+

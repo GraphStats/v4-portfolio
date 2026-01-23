@@ -16,7 +16,6 @@ export default async function MaintenancePage() {
         <div className="dark min-h-screen relative flex items-center justify-center overflow-hidden bg-[#030712] text-foreground">
             <div className="mesh-bg absolute inset-0 opacity-30 pointer-events-none" />
 
-            {/* Background Orbs */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse-glow" />
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: "-2s" }} />

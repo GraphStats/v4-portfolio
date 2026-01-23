@@ -10,10 +10,8 @@ import { V4Dock } from "@/components/v4/V4Dock"
 export const dynamic = "force-dynamic"
 
 export default async function TagsInfoPage() {
-    // Platform Status check (Skipped if local)
     const isLocal = await isLocalRequest()
     if (!isLocal) {
-        // Maintenance check
         const { isMaintenance } = await getMaintenanceMode()
         if (isMaintenance) {
             redirect("/maintenance")
@@ -81,7 +79,7 @@ export default async function TagsInfoPage() {
             details: [
                 "Le projet est entièrement fonctionnel et stable",
                 "Toutes les fonctionnalités prévues ont été implémentées",
-                "Le projet ne recevra plus de mises à jour majeures ni mineures",
+                "Le projet ne recevra plus de mises à jour majeures ni minoritaires",
                 "Corrections de bugs et mises à jour de sécurité uniquement si nécessaire"
             ]
         },
@@ -111,7 +109,6 @@ export default async function TagsInfoPage() {
             <V4Navbar />
 
             <main className="relative z-10 pt-40 pb-32 container mx-auto px-6">
-                {/* Hero Section */}
                 <div className="max-w-4xl mx-auto text-center space-y-8 mb-24">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full v4-glass border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-primary mx-auto">
                         <Tags className="w-3 h-3" />
@@ -125,7 +122,6 @@ export default async function TagsInfoPage() {
                     </p>
                 </div>
 
-                {/* Tags Grid */}
                 <div className="max-w-6xl mx-auto space-y-6">
                     {tagCategories.map((tag, index) => {
                         const IconComponent = tag.icon
@@ -134,11 +130,9 @@ export default async function TagsInfoPage() {
                                 key={tag.id}
                                 className="v4-glass p-8 md:p-10 rounded-[2rem] border-white/5 relative overflow-hidden group hover:border-primary/30 transition-all duration-500"
                             >
-                                {/* Gradient Overlay */}
                                 <div className={`absolute top-0 right-0 w-96 h-96 bg-gradient-to-br ${tag.color} opacity-5 rounded-full blur-3xl group-hover:opacity-10 transition-opacity`} />
 
                                 <div className="relative z-10">
-                                    {/* Header */}
                                     <div className="flex items-start gap-6 mb-8">
                                         <div className={`w-16 h-16 rounded-2xl ${tag.bgColor} border ${tag.borderColor} flex items-center justify-center flex-shrink-0 shadow-lg backdrop-blur-xl`}>
                                             <IconComponent className={`h-8 w-8 ${tag.iconColor}`} />
@@ -151,7 +145,6 @@ export default async function TagsInfoPage() {
                                         </div>
                                     </div>
 
-                                    {/* Details */}
                                     <div className="space-y-4 pl-[88px]">
                                         {tag.details.map((detail, idx) => (
                                             <div key={idx} className="flex items-start gap-3 group/item">
@@ -168,7 +161,6 @@ export default async function TagsInfoPage() {
                     })}
                 </div>
 
-                {/* Info Box */}
                 <div className="max-w-4xl mx-auto mt-16">
                     <div className="v4-glass p-8 rounded-[2rem] border-white/5 bg-primary/5">
                         <div className="flex items-start gap-4">
@@ -186,7 +178,6 @@ export default async function TagsInfoPage() {
                     </div>
                 </div>
 
-                {/* CTA Section */}
                 <div className="max-w-4xl mx-auto mt-16 text-center">
                     <div className="v4-glass p-12 rounded-[2.5rem] border-white/5 space-y-6 relative overflow-hidden group">
                         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

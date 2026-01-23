@@ -127,7 +127,6 @@ export default function SpecialThemesPage() {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        // Charger les configurations depuis Firebase
         const loadThemes = async () => {
             try {
                 const db = getFirestoreClient()
@@ -137,7 +136,6 @@ export default function SpecialThemesPage() {
                 if (docSnap.exists()) {
                     const data = docSnap.data()
                     if (data.themes) {
-                        // Fusionner avec les thèmes par défaut pour s'assurer que tous sont présents
                         const savedThemes = data.themes as ThemeConfig[]
                         const mergedThemes = AVAILABLE_THEMES.map(defaultTheme => {
                             const savedTheme = savedThemes.find(t => t.id === defaultTheme.id)
@@ -145,14 +143,11 @@ export default function SpecialThemesPage() {
                         })
                         setThemes(mergedThemes)
                     } else {
-                        // Pas de themes dans data, utiliser les valeurs par défaut
                         setThemes(AVAILABLE_THEMES)
                     }
                 } else {
-                    // Pas de document Firebase, utiliser les valeurs par défaut
                     setThemes(AVAILABLE_THEMES)
 
-                    // Initialiser Firebase avec les thèmes par défaut
                     await setDoc(docRef, {
                         themes: AVAILABLE_THEMES,
                         updated_at: new Date().toISOString()
@@ -160,7 +155,6 @@ export default function SpecialThemesPage() {
                 }
             } catch (e) {
                 console.error('Error loading themes config:', e)
-                // En cas d'erreur, utiliser les thèmes par défaut
                 setThemes(AVAILABLE_THEMES)
                 toast.error("Erreur de chargement", {
                     description: "Utilisation des thèmes par défaut."
@@ -186,7 +180,6 @@ export default function SpecialThemesPage() {
                 t.id === editedTheme.id ? editedTheme : t
             )
 
-            // Sauvegarder dans Firebase
             const db = getFirestoreClient()
             const docRef = doc(db, "special-themes", "config")
             await setDoc(docRef, {
@@ -200,7 +193,6 @@ export default function SpecialThemesPage() {
                 description: `Le thème "${editedTheme.name}" a été mis à jour dans Firebase.`
             })
 
-            // Recharger la page après 1 seconde pour appliquer les changements
             setTimeout(() => {
                 window.location.reload()
             }, 1000)
@@ -249,7 +241,6 @@ export default function SpecialThemesPage() {
     return (
         <div className="min-h-screen bg-background p-6">
             <div className="max-w-7xl mx-auto space-y-8">
-                {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-4xl font-bold tracking-tight flex items-center gap-3">
@@ -263,7 +254,6 @@ export default function SpecialThemesPage() {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Liste des thèmes */}
                     <div className="lg:col-span-1 space-y-4">
                         <h2 className="text-xl font-semibold">Thèmes disponibles</h2>
                         {themes.map((theme) => (
@@ -286,7 +276,6 @@ export default function SpecialThemesPage() {
                         ))}
                     </div>
 
-                    {/* Configuration du thème sélectionné */}
                     <div className="lg:col-span-2">
                         {editedTheme ? (
                             <Card>
@@ -300,7 +289,6 @@ export default function SpecialThemesPage() {
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-8">
-                                    {/* Date de début */}
                                     <div className="space-y-4">
                                         <div className="flex items-center gap-2">
                                             <Clock className="h-5 w-5 text-green-500" />
@@ -378,7 +366,6 @@ export default function SpecialThemesPage() {
                                         </div>
                                     </div>
 
-                                    {/* Date de fin */}
                                     <div className="space-y-4">
                                         <div className="flex items-center gap-2">
                                             <Clock className="h-5 w-5 text-red-500" />
@@ -456,7 +443,6 @@ export default function SpecialThemesPage() {
                                         </div>
                                     </div>
 
-                                    {/* Aperçu */}
                                     <div className="p-4 bg-muted rounded-lg space-y-2">
                                         <p className="font-semibold">Aperçu :</p>
                                         <p className="text-sm">
@@ -479,7 +465,6 @@ export default function SpecialThemesPage() {
                                         </p>
                                     </div>
 
-                                    {/* Actions */}
                                     <div className="flex gap-4">
                                         <Button onClick={handleSave} className="flex-1">
                                             <Save className="h-4 w-4 mr-2" />

@@ -99,7 +99,7 @@ export function ContactForm() {
                     id="message"
                     name="message"
                     required
-                    placeholder="Votre message..."
+                    placeholder="Comment puis-je vous aider ?"
                     className="min-h-[150px] rounded-xl bg-background/50 border-white/10 focus:border-primary/50 transition-colors resize-none p-4"
                 />
             </div>

@@ -41,15 +41,6 @@ export function AdPopup() {
                 </div>
 
                 <div className="mt-8 flex justify-center">
-                    <button
-                        onClick={() => setIsOpen(false)}
-                        className="px-8 py-3 bg-primary text-primary-foreground rounded-full font-bold hover:scale-105 transition-transform"
-                    >
-                        Continue to Site
-                    </button>
-                </div>
-
-                <div className="mt-4 flex justify-center gap-4">
                     <AdBanner />
                     <AdBanner />
                 </div>

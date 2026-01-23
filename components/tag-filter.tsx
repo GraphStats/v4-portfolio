@@ -39,4 +39,3 @@ export function TagFilter({ tags, selectedTag, onTagSelect }: TagFilterProps) {
     </div>
   )
 }
-

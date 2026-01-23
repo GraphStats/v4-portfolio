@@ -19,8 +19,8 @@ export function AuthButtons() {
   return (
     <>
       <SignedOut>
-        <SignInButton mode="modal" afterSignInUrl="/">
-          <Button variant="ghost" size="sm" className="hidden sm:flex rounded-full glass border border-white/10 hover:bg-primary hover:text-primary-foreground transition-all duration-500 hover:shadow-[0_0_20px_rgba(var(--primary),0.3)]">
+        <SignInButton mode="modal" fallbackRedirectUrl="/">
+          <Button variant="outline" size="sm" className="rounded-xl glass border-white/5 text-[10px] font-black uppercase tracking-widest px-6 hover:bg-primary hover:text-primary-foreground transition-all duration-300">
             Se connecter
           </Button>
         </SignInButton>

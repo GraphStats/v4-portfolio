@@ -15,10 +15,8 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export default async function ContactPage() {
-    // Platform Status check (Skipped if local)
     const isLocal = await isLocalRequest()
     if (!isLocal) {
-        // Maintenance check
         const { isMaintenance } = await getMaintenanceMode()
         if (isMaintenance) {
             redirect("/maintenance")
@@ -46,7 +44,6 @@ export default async function ContactPage() {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-8 v4-glass p-4 rounded-[4rem] border-white/5 shadow-2xl">
-                    {/* Info Side */}
                     <div className="bg-white/5 rounded-[3.5rem] p-10 md:p-14 flex flex-col justify-between relative overflow-hidden group">
                         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
 
@@ -88,14 +85,12 @@ export default async function ContactPage() {
                         </div>
                     </div>
 
-                    {/* Form Side */}
                     <div className="p-8 md:p-12 self-center">
                         <SignedIn>
                             <ChatInterface isAvailable={isAvailable} />
                         </SignedIn>
                         <SignedOut>
                             <div className="relative py-12">
-                                {/* Flou overlay */}
                                 <div className="absolute inset-0 bg-background/40 backdrop-blur-xl rounded-[3rem] z-10 flex items-center justify-center border border-white/10">
                                     <div className="text-center space-y-6 p-8 max-w-xs">
                                         <div className="w-16 h-16 mx-auto rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4 border border-primary/20">
@@ -110,7 +105,6 @@ export default async function ContactPage() {
                                         </SignInButton>
                                     </div>
                                 </div>
-                                {/* Contenu flouté */}
                                 <div className="blur-xl opacity-30 pointer-events-none scale-95">
                                     <ChatInterface isAvailable={isAvailable} />
                                 </div>

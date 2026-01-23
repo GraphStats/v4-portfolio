@@ -8,9 +8,8 @@ export function ChristmasOverlay() {
     useEffect(() => {
         setMounted(true)
 
-        // Flocons de neige en quantité minimale pour performance
         const createSnowflakes = () => {
-            const snowflakeCount = 15 // Quantité modérée
+            const snowflakeCount = 15
             const container = document.getElementById('christmas-snowflakes')
             if (!container) return
 
@@ -21,26 +20,23 @@ export function ChristmasOverlay() {
                 snowflake.className = 'snowflake'
                 snowflake.textContent = snowflakeChars[Math.floor(Math.random() * snowflakeChars.length)]
                 snowflake.style.left = `${Math.random() * 100}%`
-                snowflake.style.animationDuration = `${8 + Math.random() * 10}s` // 8-18s
+                snowflake.style.animationDuration = `${8 + Math.random() * 10}s`
                 snowflake.style.animationDelay = `${Math.random() * 5}s`
-                snowflake.style.fontSize = `${0.8 + Math.random() * 0.7}em` // 0.8-1.5em
-                snowflake.style.opacity = `${0.6 + Math.random() * 0.4}` // 0.6-1.0
+                snowflake.style.fontSize = `${0.8 + Math.random() * 0.7}em`
+                snowflake.style.opacity = `${0.6 + Math.random() * 0.4}`
                 container.appendChild(snowflake)
             }
         }
 
-        // Initialiser les flocons
         setTimeout(() => {
             createSnowflakes()
         }, 100)
 
-        // Message de Noël qui apparaît brièvement
         const messageTimeout = setTimeout(() => {
             const message = document.getElementById('christmas-message')
             if (message) {
                 message.style.display = 'block'
 
-                // Disparaître après 5 secondes
                 setTimeout(() => {
                     message.style.animation = 'fadeOutUp 1s ease-out forwards'
                 }, 5000)
@@ -56,14 +52,12 @@ export function ChristmasOverlay() {
 
     return (
         <>
-            {/* Container pour les flocons de neige */}
             <div
                 id="christmas-snowflakes"
                 className="fixed inset-0 pointer-events-none z-[9998] overflow-hidden"
                 aria-hidden="true"
             />
 
-            {/* Message "Joyeux Noël" */}
             <div
                 id="christmas-message"
                 className="fixed top-8 left-1/2 z-[9999] pointer-events-none"
@@ -111,7 +105,6 @@ export function ChristmasOverlay() {
                 </div>
             </div>
 
-            {/* Animation CSS pour fadeOutUp */}
             <style jsx>{`
                 @keyframes fadeOutUp {
                     from {

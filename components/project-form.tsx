@@ -25,7 +25,6 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<FormTab>("details")
 
-  // States for form fields
   const [inDev, setInDev] = useState(project?.in_development || false)
   const [developmentStatus, setDevelopmentStatus] = useState<'active' | 'paused'>(project?.development_status || 'active')
   const [isCompleted, setIsCompleted] = useState(project?.is_completed || false)
@@ -68,7 +67,6 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
     }
   }
 
-  // Changelog management functions
   const addChangelogEntry = () => {
     const newEntry: ChangelogEntry = {
       id: crypto.randomUUID(),
@@ -132,10 +130,8 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header with Tabs (Sticky) */}
       <div className="sticky top-0 z-30 bg-[#05080C]/90 backdrop-blur-xl border-b border-white/5 pb-4 mb-6">
         <div className="relative grid grid-cols-2 p-1 bg-white/5 border border-white/10 rounded-2xl w-[350px] mx-auto overflow-hidden">
-          {/* Sliding Indicator Background */}
           <div
             className="absolute h-[calc(100%-8px)] top-1 rounded-xl bg-primary shadow-lg shadow-primary/20 transition-all duration-300 ease-out z-0"
             style={{
@@ -164,9 +160,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
       </div>
 
       <form ref={formRef} onSubmit={handleSubmit} className="flex-1 overflow-y-auto overflow-x-hidden pr-2 space-y-8">
-        {/* TAB 1: DETAILS */}
         <div className={`space-y-8 animate-in slide-in-from-left-8 fade-in duration-500 fill-mode-both ${activeTab !== "details" ? "hidden" : ""}`}>
-          {/* Basic Info */}
           <section className="space-y-4">
             <div className="flex items-center gap-2 text-primary/80">
               <Settings2 className="h-4 w-4" />
@@ -208,7 +202,6 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
             </div>
           </section>
 
-          {/* Lifecycle Info */}
           <section className="space-y-4 pb-4">
             <div className="flex items-center gap-2 text-primary/80">
               <Sparkles className="h-4 w-4" />
@@ -283,7 +276,6 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
         </div>
 
 
-        {/* TAB 2: UPDATES */}
         <div className={`space-y-6 animate-in slide-in-from-right-8 fade-in duration-500 fill-mode-both ${activeTab !== "updates" ? "hidden" : ""}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-primary/80">
@@ -398,7 +390,6 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
 
       </form>
 
-      {/* Footer Save Area */}
       <div className="mt-auto pt-6 border-t border-white/5 bg-transparent">
         {error && <p className="text-xs text-destructive font-bold mb-3 text-center mb-4">{error}</p>}
         <Button

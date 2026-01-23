@@ -17,7 +17,6 @@ export default function Error({
 
     return (
         <div className="min-h-screen bg-[#030712] text-[#f9fafb] font-sans flex items-center justify-center overflow-hidden relative selection:bg-red-500/30 selection:text-red-500">
-            {/* Ambient Orbs */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
                 <div className="absolute top-[-10%] left-[-10%] w-[45vw] h-[45vw] bg-red-600/10 rounded-full blur-[120px] animate-pulse-glow" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-amber-600/10 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: "-2s" }} />

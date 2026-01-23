@@ -2,10 +2,6 @@
 
 import { useState, useEffect, useRef } from "react"
 
-// Import odometer dynamically or via CDN
-// For simplicity in this environment without installing new packages,
-// we'll inject the script and styles.
-
 interface CountdownProps {
     targetDate: string
 }
@@ -36,22 +32,17 @@ export function Countdown({ targetDate }: CountdownProps) {
 
     useEffect(() => {
         setIsClient(true)
-        console.log("Countdown component mounted on client")
 
         const loadOdometer = () => {
             if (window.Odometer) {
-                console.log("Odometer already exists in window")
                 setIsOdometerReady(true)
                 return
             }
 
-            // Check if script already exists to avoid duplicates
             if (document.querySelector('script[src*="odometer"]')) {
-                console.log("Odometer script already present in DOM, waiting for load...")
                 return
             }
 
-            console.log("Loading Odometer script and styles...")
             const link = document.createElement('link')
             link.rel = 'stylesheet'
             link.href = 'https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.7/themes/odometer-theme-default.css'
@@ -61,7 +52,6 @@ export function Countdown({ targetDate }: CountdownProps) {
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.7/odometer.min.js'
             script.async = true
             script.onload = () => {
-                console.log("Odometer.js script onload triggered")
                 setIsOdometerReady(true)
             }
             script.onerror = (e) => console.error("Odometer.js script failed to load:", e)
@@ -70,10 +60,8 @@ export function Countdown({ targetDate }: CountdownProps) {
 
         loadOdometer()
 
-        // Polling as a fallback if onload doesn't fire
         const pollTimer = setInterval(() => {
             if (window.Odometer && !isOdometerReady) {
-                console.log("Odometer found via polling")
                 setIsOdometerReady(true)
             }
         }, 500)
@@ -102,14 +90,12 @@ export function Countdown({ targetDate }: CountdownProps) {
         }
     }, [targetDate, isOdometerReady])
 
-    // Initialize or Update Odometers when ready and values change
     useEffect(() => {
         if (!isOdometerReady || !window.Odometer || !timeLeft) return
 
         Object.entries(refs).forEach(([key, ref]) => {
             if (ref.current) {
                 if (!odometers.current[key]) {
-                    console.log(`Initializing Odometer for ${key}`)
                     odometers.current[key] = new window.Odometer({
                         el: ref.current,
                         value: timeLeft[key as keyof typeof timeLeft],
@@ -123,7 +109,6 @@ export function Countdown({ targetDate }: CountdownProps) {
         })
     }, [isOdometerReady, timeLeft])
 
-    // Avoid hydration mismatch by not rendering the countdown structure on the server
     if (!isClient) {
         return <div className="h-48 flex items-center justify-center">
             <div className="w-12 h-12 border-2 border-primary border-t-transparent rounded-full animate-spin" />

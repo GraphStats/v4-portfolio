@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import dynamic from "next/dynamic"
 
-// Charger les overlays dynamiquement uniquement quand les thèmes sont actifs
 const NewYearOverlay = dynamic(
     () => import("./special-themes/new-year-overlay").then(mod => ({ default: mod.NewYearOverlay })),
     { ssr: false }
@@ -64,15 +63,19 @@ export function SpecialThemeHandler() {
                 if (docSnap.exists()) {
                     const data = docSnap.data()
                     if (data.themes) {
-                        themes = data.themes
+                        const savedThemes = data.themes
+                        const mergedThemes = AVAILABLE_THEMES.map(defaultTheme => {
+                            const savedTheme = savedThemes.find(t => t.id === defaultTheme.id)
+                            return savedTheme || defaultTheme
+                        })
+                        themes = mergedThemes
                     }
                 }
 
-                // Vérifier chaque thème
+
                 const newYearTheme = themes.find(t => t.id === 'new-year')
                 const christmasTheme = themes.find(t => t.id === 'christmas')
 
-                // Nouvel An
                 let isNewYearActive = false
                 if (newYearTheme) {
                     const startDate = new Date(
@@ -94,7 +97,6 @@ export function SpecialThemeHandler() {
                     isNewYearActive = now >= startDate && now <= endDate
                 }
 
-                // Noël
                 let isChristmasActive = false
                 if (christmasTheme) {
                     const startDate = new Date(
@@ -116,12 +118,10 @@ export function SpecialThemeHandler() {
                     isChristmasActive = now >= startDate && now <= endDate
                 }
 
-                // Appliquer les thèmes (priorité: Nouvel An > Noël)
                 if (isNewYearActive) {
                     document.documentElement.classList.remove("special-christmas")
                     document.documentElement.classList.add("special-new-year")
 
-                    // Charger CSS Nouvel An
                     if (!document.getElementById('new-year-theme-css')) {
                         const link = document.createElement('link')
                         link.id = 'new-year-theme-css'
@@ -130,7 +130,6 @@ export function SpecialThemeHandler() {
                         document.head.appendChild(link)
                     }
 
-                    // Retirer CSS Noël
                     const christmasLink = document.getElementById('christmas-theme-css')
                     if (christmasLink) christmasLink.remove()
 
@@ -139,7 +138,6 @@ export function SpecialThemeHandler() {
                     document.documentElement.classList.remove("special-new-year")
                     document.documentElement.classList.add("special-christmas")
 
-                    // Charger CSS Noël
                     if (!document.getElementById('christmas-theme-css')) {
                         const link = document.createElement('link')
                         link.id = 'christmas-theme-css'
@@ -148,13 +146,11 @@ export function SpecialThemeHandler() {
                         document.head.appendChild(link)
                     }
 
-                    // Retirer CSS Nouvel An
                     const newYearLink = document.getElementById('new-year-theme-css')
                     if (newYearLink) newYearLink.remove()
 
                     setActiveThemes({ newYear: false, christmas: true })
                 } else {
-                    // Aucun thème actif
                     document.documentElement.classList.remove("special-new-year", "special-christmas")
 
                     const newYearLink = document.getElementById('new-year-theme-css')
@@ -170,14 +166,13 @@ export function SpecialThemeHandler() {
         }
 
         checkThemes()
-        const interval = setInterval(checkThemes, 1000 * 60 * 60) // Check every hour
+        const interval = setInterval(checkThemes, 1000 * 60 * 60)
 
         return () => {
             clearInterval(interval)
         }
     }, [])
 
-    // Afficher les overlays selon les thèmes actifs
     return (
         <>
             {activeThemes.newYear && <NewYearOverlay />}

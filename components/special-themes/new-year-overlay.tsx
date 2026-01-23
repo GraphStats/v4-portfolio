@@ -8,11 +8,8 @@ export function NewYearOverlay() {
     useEffect(() => {
         setMounted(true)
 
-        // Particules et confettis en quantité MINIMALE pour éviter le lag
-
-        // Créer des particules dorées flottantes
         const createParticles = () => {
-            const particleCount = 5 // Très réduit pour performance
+            const particleCount = 5
             const container = document.getElementById('new-year-particles')
             if (!container) return
 
@@ -21,14 +18,13 @@ export function NewYearOverlay() {
                 particle.className = 'golden-particle'
                 particle.style.left = `${Math.random() * 100}%`
                 particle.style.animationDelay = `${Math.random() * 15}s`
-                particle.style.animationDuration = `${20 + Math.random() * 10}s` // Plus lent
+                particle.style.animationDuration = `${20 + Math.random() * 10}s`
                 container.appendChild(particle)
             }
         }
 
-        // Créer des confettis dorés
         const createConfetti = () => {
-            const confettiCount = 2 // Très réduit pour performance
+            const confettiCount = 2
             const container = document.getElementById('new-year-confetti')
             if (!container) return
 
@@ -37,10 +33,10 @@ export function NewYearOverlay() {
             for (let i = 0; i < confettiCount; i++) {
                 const confetti = document.createElement('div')
                 confetti.className = 'golden-confetti'
-                confetti.style.left = `${(i + 1) * 33}%` // Espacés régulièrement
+                confetti.style.left = `${(i + 1) * 33}%`
                 confetti.style.backgroundColor = colors[i % colors.length]
                 confetti.style.animationDelay = `${i * 2.5}s`
-                confetti.style.animationDuration = `${8 + Math.random() * 4}s` // Plus lent
+                confetti.style.animationDuration = `${8 + Math.random() * 4}s`
                 confetti.style.width = `8px`
                 confetti.style.height = `8px`
                 confetti.style.borderRadius = '50%'
@@ -48,7 +44,6 @@ export function NewYearOverlay() {
             }
         }
 
-        // Initialiser les effets (PAS de feux d'artifice)
         setTimeout(() => {
             createParticles()
             createConfetti()
@@ -59,21 +54,18 @@ export function NewYearOverlay() {
 
     return (
         <>
-            {/* Container pour les particules */}
             <div
                 id="new-year-particles"
                 className="fixed inset-0 pointer-events-none z-[9998] overflow-hidden"
                 aria-hidden="true"
             />
 
-            {/* Container pour les confettis */}
             <div
                 id="new-year-confetti"
                 className="fixed inset-0 pointer-events-none z-[9998] overflow-hidden"
                 aria-hidden="true"
             />
 
-            {/* Overlay avec message "Bonne Année" (optionnel, apparaît brièvement) */}
             <div
                 className="fixed top-8 left-1/2 z-[9999] pointer-events-none"
                 style={{
@@ -91,7 +83,6 @@ export function NewYearOverlay() {
                 </div>
             </div>
 
-            {/* Styles additionnels pour les animations */}
             <style jsx>{`
                 @keyframes fadeOutUp {
                     from {

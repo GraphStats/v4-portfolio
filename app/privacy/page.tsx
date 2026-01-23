@@ -59,7 +59,6 @@ export default function PrivacyPolicyPage() {
             <V4Navbar />
 
             <main className="relative z-10 pt-40 pb-32 container mx-auto px-6">
-                {/* Hero Section */}
                 <div className="max-w-4xl mx-auto text-center space-y-8 mb-24">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full v4-glass border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-primary mx-auto">
                         <Shield className="w-3 h-3" />
@@ -73,7 +72,6 @@ export default function PrivacyPolicyPage() {
                     </p>
                 </div>
 
-                {/* Introduction */}
                 <div className="max-w-4xl mx-auto mb-16">
                     <div className="v4-glass p-8 rounded-[2rem] border-white/5">
                         <p className="text-muted-foreground/70 leading-relaxed">
@@ -82,7 +80,6 @@ export default function PrivacyPolicyPage() {
                     </div>
                 </div>
 
-                {/* Sections */}
                 <div className="max-w-4xl mx-auto space-y-8">
                     {sections.map((section, index) => {
                         const IconComponent = section.icon
@@ -107,7 +104,6 @@ export default function PrivacyPolicyPage() {
                     })}
                 </div>
 
-                {/* Contact Section */}
                 <div className="max-w-4xl mx-auto mt-16">
                     <div className="v4-glass p-8 rounded-[2rem] border-white/5 bg-primary/5 text-center">
                         <h3 className="text-2xl font-black uppercase tracking-tight mb-4">Questions About Privacy?</h3>

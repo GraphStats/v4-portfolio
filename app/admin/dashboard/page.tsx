@@ -13,16 +13,18 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { UpdateDialog } from "@/components/update-dialog"
 import { BadgeDialog } from "@/components/badge-dialog"
 import { Separator } from "@/components/ui/separator"
-import type { Project, Admin, SiteUpdate } from "@/lib/types"
+import { AdminNewsCard } from "@/components/admin-news-card"
+import { NewsDialog } from "@/components/news-dialog"
+import type { Project, Admin, SiteUpdate, News } from "@/lib/types"
 import { logoutAdmin } from "@/lib/auth"
-import { getAdmins, getMaintenanceMode, getAvailability, getV4Mode } from "@/lib/actions"
+import { getAdmins, getMaintenanceMode, getAvailability, getV4Mode, getNews } from "@/lib/actions"
 import { MaintenanceToggle } from "@/components/maintenance-toggle"
 import { V4Toggle } from "@/components/v4-toggle"
 import { AvailabilityToggle } from "@/components/availability-toggle"
 import { getFirestoreClient } from "@/lib/firebase/client"
 import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
 import Link from "next/link"
-import { Sparkles, Rocket } from "lucide-react"
+import { Sparkles, Rocket, Newspaper } from "lucide-react"
 
 export default function AdminDashboardPage() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -40,6 +42,8 @@ export default function AdminDashboardPage() {
   const [v4Message, setV4Message] = useState("")
   const [v4Progress, setV4Progress] = useState(0)
   const [isAvailable, setIsAvailable] = useState(true)
+  const [news, setNews] = useState<News[]>([])
+  const [addNewsOpen, setAddNewsOpen] = useState(false)
 
   const fetchProjects = async () => {
     const db = getFirestoreClient()
@@ -96,6 +100,13 @@ export default function AdminDashboardPage() {
     }
   }
 
+  const fetchNews = async () => {
+    const result = await getNews()
+    if (result.success) {
+      setNews(result.data || [])
+    }
+  }
+
   useEffect(() => {
     fetchProjects()
     fetchAdmins()
@@ -103,6 +114,7 @@ export default function AdminDashboardPage() {
     fetchMaintenanceMode()
     fetchV4Mode()
     fetchAvailability()
+    fetchNews()
   }, [])
 
   const handleProjectDeleted = (projectId: string) => {
@@ -125,13 +137,11 @@ export default function AdminDashboardPage() {
     <div className="min-h-screen bg-background relative selection:bg-primary/30 selection:text-primary transition-colors duration-500 font-sans">
       <div className="noise-overlay" />
 
-      {/* Background Orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px] animate-pulse-glow" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/20 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: "-2s" }} />
       </div>
 
-      {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 backdrop-blur-md bg-background/60">
         <div className="container mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -157,11 +167,9 @@ export default function AdminDashboardPage() {
         </div>
       </header>
 
-      {/* Content */}
       <main className="relative z-10 pt-32 pb-24 container mx-auto px-6 space-y-20">
 
 
-        {/* Analytics Section */}
         <section className="space-y-8">
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
@@ -180,7 +188,6 @@ export default function AdminDashboardPage() {
         <Separator className="bg-white/5" />
 
 
-        {/* Projects Section */}
         <section className="space-y-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="space-y-4">
@@ -235,7 +242,60 @@ export default function AdminDashboardPage() {
 
         <Separator className="bg-white/5" />
 
-        {/* Messages Section */}
+        <section className="space-y-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                <Newspaper className="h-4 w-4" />
+                News Hub
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">MANAGE NEWS</h2>
+              <p className="text-muted-foreground font-medium max-w-xl">
+                Keep your audience engaged with the latest news, updates, and announcements.
+              </p>
+            </div>
+            <Button onClick={() => setAddNewsOpen(true)} className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 group self-start md:self-auto">
+              <Plus className="mr-2 h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
+              New Article
+            </Button>
+          </div>
+
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map(i => (
+                <div key={i} className="h-64 rounded-3xl glass border-white/5 animate-pulse" />
+              ))}
+            </div>
+          ) : news.length === 0 ? (
+            <div className="glass p-20 rounded-[3.5rem] border-white/5 text-center space-y-6">
+              <div className="w-20 h-20 rounded-full bg-white/5 mx-auto flex items-center justify-center text-muted-foreground">
+                <Newspaper className="h-10 w-10" />
+              </div>
+              <div className="space-y-2">
+                <p className="text-xl font-bold">No news published</p>
+                <p className="text-muted-foreground">Start by writing your first article to share with your audience.</p>
+              </div>
+              <Button onClick={() => setAddNewsOpen(true)} variant="outline" className="rounded-full glass border-white/10">
+                <Plus className="mr-2 h-4 w-4" />
+                Write News
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {news.map((item) => (
+                <AdminNewsCard
+                  key={item.id}
+                  news={item}
+                  onDeleted={() => fetchNews()}
+                  onUpdated={() => fetchNews()}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+
+        <Separator className="bg-white/5" />
+
         <section className="space-y-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="space-y-4">
@@ -260,7 +320,6 @@ export default function AdminDashboardPage() {
 
         <Separator className="bg-white/5" />
 
-        {/* Hero Communication Section */}
         <section className="space-y-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="space-y-4">
@@ -299,7 +358,6 @@ export default function AdminDashboardPage() {
 
         <Separator className="bg-white/5" />
 
-        {/* Site Updates Section */}
         <section className="space-y-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="space-y-4">
@@ -335,7 +393,6 @@ export default function AdminDashboardPage() {
 
         <Separator className="bg-white/5" />
 
-        {/* Site Status Section */}
         <section className="space-y-12">
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
@@ -361,7 +418,6 @@ export default function AdminDashboardPage() {
 
         <Separator className="bg-white/5" />
 
-        {/* Special Themes Section */}
         <section className="space-y-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="space-y-4">
@@ -399,7 +455,6 @@ export default function AdminDashboardPage() {
 
         <Separator className="bg-white/5" />
 
-        {/* Admins Section */}
         <section className="space-y-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="space-y-4">
@@ -436,6 +491,7 @@ export default function AdminDashboardPage() {
       <AdminDialog open={addAdminOpen} onOpenChange={setAddAdminOpen} onSuccess={fetchAdmins} />
       <UpdateDialog open={updateDialogOpen} onOpenChange={setUpdateDialogOpen} onSuccess={fetchUpdateData} />
       <BadgeDialog open={badgeDialogOpen} onOpenChange={setBadgeDialogOpen} onSuccess={fetchUpdateData} />
+      <NewsDialog open={addNewsOpen} onOpenChange={setAddNewsOpen} onSuccess={fetchNews} />
     </div>
   )
 }
