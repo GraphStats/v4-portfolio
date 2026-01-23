@@ -102,7 +102,7 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
                 <div className="absolute top-4 left-4">
                     <Badge className="bg-background/80 backdrop-blur-md text-foreground border-white/5 font-bold uppercase tracking-widest text-[9px] px-3 py-1 flex items-center gap-1.5">
                         {project.in_development && (project.development_status === 'paused' ? <Pause className="w-2.5 h-2.5" /> : <Play className="w-2.5 h-2.5 animate-pulse" />)}
-                        getStatusText()
+                        {getStatusText()}
                     </Badge>
                 </div>
             </div>
@@ -151,9 +151,9 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
                     {!isLocked && (project.project_url || project.github_url) && (
                         <div className="flex flex-col sm:flex-row gap-3 w-full">
                             {project.project_url && (
-                                <Button 
-                                    asChild 
-                                    size="sm" 
+                                <Button
+                                    asChild
+                                    size="sm"
                                     variant="secondary"
                                     className="w-full sm:flex-1 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5 h-10"
                                 >
@@ -164,9 +164,9 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
                                 </Button>
                             )}
                             {project.github_url && (
-                                <Button 
-                                    asChild 
-                                    size="sm" 
+                                <Button
+                                    asChild
+                                    size="sm"
                                     variant="secondary"
                                     className="w-full sm:flex-1 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5 h-10"
                                 >
@@ -179,9 +179,9 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
                         </div>
                     )}
 
-                    <Button 
-                        asChild 
-                        variant="ghost" 
+                    <Button
+                        asChild
+                        variant="ghost"
                         className="w-full h-10 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5"
                     >
                         <Link href={
