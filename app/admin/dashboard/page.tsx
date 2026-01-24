@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon, Activity } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { cn } from "@/lib/utils"
+import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon, Activity, ListFilter } from "lucide-react"
 import { AdminProjectCard } from "@/components/admin-project-card"
 import { ProjectDialog } from "@/components/project-dialog"
 import { AdminDialog } from "@/components/admin-dialog"
@@ -25,12 +28,13 @@ import { ErrorModeToggle } from "@/components/error-mode-toggle"
 import { getFirestoreClient } from "@/lib/firebase/client"
 import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
 import Link from "next/link"
-import { Sparkles, Rocket, Newspaper } from "lucide-react"
+import { Sparkles, Newspaper } from "lucide-react"
 
 export default function AdminDashboardPage() {
   const [projects, setProjects] = useState<Project[]>([])
   const [admins, setAdmins] = useState<Admin[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [projectFilter, setProjectFilter] = useState<"all" | "in_dev" | "finished" | "archived">("all")
   const [addProjectOpen, setAddProjectOpen] = useState(false)
   const [addAdminOpen, setAddAdminOpen] = useState(false)
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
@@ -118,6 +122,33 @@ export default function AdminDashboardPage() {
     }
   }
 
+  const formatDate = (value?: string | null) => {
+    if (!value) return "—"
+    const date = new Date(value)
+    if (Number.isNaN(date.getTime())) return "—"
+    return date.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })
+  }
+
+  const projectFilterCounts = {
+    all: projects.length,
+    in_dev: projects.filter((project) => project.in_development).length,
+    finished: projects.filter((project) => project.is_completed).length,
+    archived: projects.filter((project) => project.is_archived).length,
+  }
+
+  const filteredProjects = projects.filter((project) => {
+    switch (projectFilter) {
+      case "in_dev":
+        return !!project.in_development
+      case "finished":
+        return !!project.is_completed
+      case "archived":
+        return !!project.is_archived
+      default:
+        return true
+    }
+  })
+
   useEffect(() => {
     fetchProjects()
     fetchAdmins()
@@ -181,25 +212,6 @@ export default function AdminDashboardPage() {
 
       <main className="relative z-10 pt-32 pb-24 container mx-auto px-6 space-y-20">
 
-
-        <section className="space-y-8">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-              <Activity className="h-4 w-4" />
-              Performance Overview
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">NETWORK PULSE</h2>
-            <p className="text-muted-foreground font-medium max-w-xl">
-              Real-time insights into traffic, security, and performance across the global edge network.
-            </p>
-          </div>
-          <AdminStats />
-        </section>
-
-
-        <Separator className="bg-white/5" />
-
-
         <section className="space-y-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="space-y-4">
@@ -250,6 +262,170 @@ export default function AdminDashboardPage() {
               ))}
             </div>
           )}
+        </section>
+
+        <Separator className="bg-white/5" />
+
+        <section className="space-y-12">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                <ListFilter className="h-4 w-4" />
+                Global View
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">PROJECTS OVERVIEW</h2>
+              <p className="text-muted-foreground font-medium max-w-xl">
+                Visualisez tous les projets en un seul endroit, avec des filtres rapides par statut.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {([
+                { id: "all", label: "All", count: projectFilterCounts.all },
+                { id: "in_dev", label: "In Dev", count: projectFilterCounts.in_dev },
+                { id: "finished", label: "Finished", count: projectFilterCounts.finished },
+                { id: "archived", label: "Archived", count: projectFilterCounts.archived },
+              ] as const).map((filter) => (
+                <Button
+                  key={filter.id}
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setProjectFilter(filter.id)}
+                  className={cn(
+                    "rounded-full border border-white/10 glass px-4 text-xs font-bold uppercase tracking-widest transition-all",
+                    projectFilter === filter.id
+                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/10"
+                  )}
+                >
+                  {filter.label}
+                  <span className={cn(
+                    "ml-2 rounded-full px-2 py-0.5 text-[10px]",
+                    projectFilter === filter.id ? "bg-primary-foreground/20 text-primary-foreground" : "bg-white/10 text-muted-foreground"
+                  )}>
+                    {filter.count}
+                  </span>
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <div className="glass rounded-[2.5rem] border-white/5 bg-white/[0.02] overflow-hidden">
+            {isLoading ? (
+              <div className="p-12 space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-10 rounded-2xl bg-white/5 animate-pulse" />
+                ))}
+              </div>
+            ) : filteredProjects.length === 0 ? (
+              <div className="p-16 text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-white/5 mx-auto flex items-center justify-center text-muted-foreground">
+                  <Database className="h-8 w-8" />
+                </div>
+                <div className="space-y-2">
+                  <p className="text-lg font-bold">Aucun projet trouvé</p>
+                  <p className="text-muted-foreground text-sm">
+                    Ajuste les filtres pour afficher les projets correspondants.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <Table className="text-xs">
+                <TableHeader className="bg-white/5">
+                  <TableRow className="border-white/5">
+                    <TableHead className="px-6 py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Projet</TableHead>
+                    <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Statut</TableHead>
+                    <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Tags</TableHead>
+                    <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Dernière MAJ</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredProjects.map((project) => {
+                    const tags = project.tags || []
+                    const visibleTags = tags.slice(0, 3)
+                    const extraTags = tags.length - visibleTags.length
+                    const updatedAt = project.updated_at || project.created_at
+
+                    return (
+                      <TableRow key={project.id} className="border-white/5 hover:bg-white/[0.04]">
+                        <TableCell className="px-6 py-4">
+                          <div className="space-y-1">
+                            <p className="font-bold text-foreground/90">{project.title}</p>
+                            <p className="text-[10px] text-muted-foreground/70">{project.slug || "—"}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-4">
+                          <div className="flex flex-wrap items-center gap-2">
+                            {project.in_development && (
+                              <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 text-[10px]">
+                                In Dev
+                              </Badge>
+                            )}
+                            {project.in_development && project.development_status === "paused" && (
+                              <Badge variant="secondary" className="bg-orange-500/10 text-orange-400 border-orange-500/20 text-[10px]">
+                                Paused
+                              </Badge>
+                            )}
+                            {project.is_completed && (
+                              <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">
+                                Finished
+                              </Badge>
+                            )}
+                            {project.is_archived && (
+                              <Badge variant="secondary" className="bg-indigo-500/10 text-indigo-500 border-indigo-500/20 text-[10px]">
+                                Archived
+                              </Badge>
+                            )}
+                            {!project.in_development && !project.is_completed && !project.is_archived && (
+                              <Badge variant="secondary" className="bg-white/10 text-muted-foreground border-white/10 text-[10px]">
+                                Active
+                              </Badge>
+                            )}
+                            {project.in_development && typeof project.development_progress === "number" && (
+                              <span className="text-[10px] text-muted-foreground">{project.development_progress}%</span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-4">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            {visibleTags.map((tag) => (
+                              <Badge key={tag} variant="outline" className="rounded-full bg-white/5 border-white/10 text-[9px] uppercase tracking-tighter">
+                                {tag}
+                              </Badge>
+                            ))}
+                            {extraTags > 0 && (
+                              <span className="text-[10px] text-muted-foreground">+{extraTags}</span>
+                            )}
+                            {tags.length === 0 && (
+                              <span className="text-[10px] text-muted-foreground">—</span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-4 text-[10px] text-muted-foreground">
+                          {formatDate(updatedAt)}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            )}
+          </div>
+        </section>
+
+        <Separator className="bg-white/5" />
+
+        <section className="space-y-8">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+              <Activity className="h-4 w-4" />
+              Performance Overview
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">NETWORK PULSE</h2>
+            <p className="text-muted-foreground font-medium max-w-xl">
+              Real-time insights into traffic, security, and performance across the global edge network.
+            </p>
+          </div>
+          <AdminStats />
         </section>
 
         <Separator className="bg-white/5" />
