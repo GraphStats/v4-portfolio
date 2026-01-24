@@ -30,10 +30,10 @@ export default function Error({
                         500
                     </div>
                     <h1 className="text-4xl md:text-5xl font-black tracking-tight font-display uppercase italic">
-                        Noyau <span className="text-red-500">Instable</span>
+                        Unstable <span className="text-red-500">Core</span>
                     </h1>
                     <p className="text-muted-foreground text-lg md:text-xl max-w-lg mx-auto font-medium leading-relaxed">
-                        Le serveur du portfolio Drayko subit une surcharge de données. L'accès à mes projets est temporairement suspendu pour maintenance corrective.
+                        The Drayko portfolio server is experiencing heavy load. Access to my projects is temporarily suspended for corrective maintenance.
                     </p>
                 </div>
 
@@ -43,7 +43,7 @@ export default function Error({
                         className="group relative inline-flex items-center gap-3 px-10 py-5 bg-red-600 text-white font-black uppercase tracking-widest text-sm rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_10px_40px_-10px_rgba(220,38,38,0.5)] hover:shadow-[0_20px_50px_-10px_rgba(220,38,38,0.6)]"
                     >
                         <RefreshCcw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
-                        Relancer le Système
+                        Restart System
                     </button>
 
                     <Link
@@ -51,14 +51,14 @@ export default function Error({
                         className="group inline-flex items-center gap-3 px-10 py-5 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-sm rounded-2xl hover:bg-white/10 transition-all"
                     >
                         <Home className="w-5 h-5" />
-                        Hub Central
+                        Central Hub
                     </Link>
                 </div>
 
                 <div className="flex justify-center flex-col items-center gap-4 opacity-50">
                     <div className="flex gap-3">
                         <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                        <span className="text-[10px] font-bold tracking-[0.3em] uppercase">Diagnostic en cours...</span>
+                        <span className="text-[10px] font-bold tracking-[0.3em] uppercase">Running diagnostics...</span>
                     </div>
                 </div>
             </div>

@@ -28,28 +28,28 @@ const VERSIONS: Array<{
         id: "v1",
         label: "Version 1",
         available: true,
-        description: "Version HTML statique",
+        description: "Static HTML version",
         icon: Code,
     },
     {
         id: "v2",
         label: "Version 2",
         available: true,
-        description: "Refonte graphique complète, nouvelle technologie",
+        description: "Full visual redesign, new technology",
         icon: Code,
     },
     {
         id: "v3",
         label: "Version 3",
         available: true,
-        description: "La v3, nouvelle interface",
+        description: "v3, new interface",
         icon: Code,
     },
     {
         id: "v4",
         label: "Version 4",
         available: true,
-        description: "Version actuelle",
+        description: "Current version",
         icon: Sparkles,
     },
 ]
@@ -138,7 +138,7 @@ export function VersionSelector() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 glass border-white/10">
                 <DropdownMenuLabel className="text-xs font-black uppercase tracking-widest">
-                    Sélectionner la version
+                    Select version
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-white/10" />
                 {VERSIONS.map((version) => {

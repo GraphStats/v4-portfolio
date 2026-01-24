@@ -33,14 +33,14 @@ export function ProjectCard({ project }: ProjectCardProps) {
           <div className="text-center space-y-4 p-6">
             <Lock className="h-12 w-12 text-white mx-auto animate-pulse" />
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-white">Connexion requise</h3>
+              <h3 className="text-xl font-bold text-white">Sign-in required</h3>
               <p className="text-white/80 text-sm max-w-xs">
-                Ce projet nécessite une authentification pour être consulté.
+                This project requires authentication to view.
               </p>
             </div>
             <SignInButton mode="modal">
               <button className="px-6 py-3 bg-primary text-primary-foreground rounded-full font-bold hover:bg-primary/90 transition-colors shadow-lg">
-                Se connecter
+                Sign in
               </button>
             </SignInButton>
           </div>
@@ -85,12 +85,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
                     {isPaused ? (
                       <>
                         <Pause className="h-3 w-3" />
-                        Développement en pause
+                        Development paused
                       </>
                     ) : (
                       <>
                         <Play className="h-3 w-3" />
-                        Développement en cours
+                        Development in progress
                       </>
                     )}
                   </div>
@@ -132,7 +132,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             <span className={`text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500
               ${isFinished ? "text-emerald-500/30" : isArchived ? "text-indigo-500/30" : "text-muted-foreground/30 group-hover:text-primary/40"}
             `}>
-              Projet sans visuel
+              No project image
             </span>
           </div>
         </div>
@@ -215,7 +215,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                   {isPaused ? (
                     <>
                       <Pause className="h-3 w-3" />
-                      En pause
+                      Paused
                     </>
                   ) : (
                     <>
@@ -315,14 +315,14 @@ export function ProjectCard({ project }: ProjectCardProps) {
           <div className="text-center space-y-4 p-6">
             <Lock className="h-12 w-12 text-white mx-auto animate-pulse" />
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-white">Connexion requise</h3>
+              <h3 className="text-xl font-bold text-white">Sign-in required</h3>
               <p className="text-white/80 text-sm max-w-xs">
-                Ce projet nécessite une authentification pour être consulté.
+                This project requires authentication to view.
               </p>
             </div>
             <SignInButton mode="modal">
               <button className="px-6 py-3 bg-primary text-primary-foreground rounded-full font-bold hover:bg-primary/90 transition-colors shadow-lg">
-                Se connecter
+                Sign in
               </button>
             </SignInButton>
           </div>

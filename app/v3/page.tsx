@@ -12,7 +12,7 @@ export default function V3Page() {
                     </div>
                     <div>
                         <h1 className="text-3xl font-black tracking-tight">Version 3</h1>
-                        <p className="text-muted-foreground">Indisponible</p>
+                        <p className="text-muted-foreground">Unavailable</p>
                     </div>
                 </div>
 
@@ -21,10 +21,10 @@ export default function V3Page() {
                         <Sparkles className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
                         <div className="space-y-2">
                             <p className="text-sm font-medium">
-                                La version 3 n'est pas disponible.
+                                Version 3 is not available.
                             </p>
                             <p className="text-sm text-muted-foreground">
-                                Cette version n'a pas pu être récupérée, pour utiliser cette version, utiliser la WayBack Machine d'Internet Archive.
+                                This version couldn't be retrieved. To view it, use the Wayback Machine at Internet Archive.
                             </p>
                         </div>
                     </div>
@@ -33,12 +33,12 @@ export default function V3Page() {
                         <Button asChild variant="outline" className="flex-1 sm:flex-none">
                             <Link href="/">
                                 <ArrowLeft className="w-4 h-4 mr-2" />
-                                Retour à la version 4
+                                Back to version 4
                             </Link>
                         </Button>
                         <Button asChild className="flex-1 sm:flex-none">
                             <Link href="/v1.html">
-                                Voir la version 1
+                                View version 1
                             </Link>
                         </Button>
                     </div>

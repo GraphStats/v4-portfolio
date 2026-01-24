@@ -65,10 +65,10 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
         timersRef.current.slowTimer = setTimeout(() => {
             if (!loadingRef.current || slowToastShown.current) return
             slowToastShown.current = true
-            toast.info("Serveur chargé", {
+            toast.info("Server busy", {
                 description: isHome
-                    ? "Beaucoup de requêtes sont en cours. L'accueil peut être plus lent à charger (images, animations, etc.)."
-                    : "Beaucoup de requêtes sont en cours sur le serveur. Le site peut paraître plus lent."
+                    ? "High traffic right now. The homepage may load more slowly (images, animations, etc.)."
+                    : "High traffic on the server. The site may feel slower."
             })
         }, 2500)
 

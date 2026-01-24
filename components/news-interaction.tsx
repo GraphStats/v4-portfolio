@@ -22,7 +22,7 @@ export function NewsInteraction({ newsId, initialLikes, commentCount }: NewsInte
 
     const handleLike = async () => {
         if (!user) {
-            toast.error("Veuillez vous connecter pour liker")
+            toast.error("Please sign in to like")
             return
         }
 
@@ -36,14 +36,14 @@ export function NewsInteraction({ newsId, initialLikes, commentCount }: NewsInte
                 setLikes(likes.filter(id => id !== user.id))
             }
         } else {
-            toast.error(result.error || "Une erreur est survenue")
+            toast.error(result.error || "An error occurred")
         }
         setIsLiking(false)
     }
 
     const handleShare = () => {
         navigator.clipboard.writeText(window.location.href)
-        toast.success("Lien copié dans le presse-papier !")
+        toast.success("Link copied to clipboard!")
     }
 
     return (

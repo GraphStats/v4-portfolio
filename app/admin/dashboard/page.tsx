@@ -319,7 +319,7 @@ export default function AdminDashboardPage() {
                 <h2 className="text-4xl md:text-5xl font-bold tracking-tight">MESSAGES</h2>
               </div>
               <p className="text-muted-foreground font-medium max-w-xl">
-                Gérez les demandes de contact entrantes et répondez aux opportunités.
+                Manage incoming contact requests and respond to opportunities.
               </p>
             </div>
             <div className="w-full md:w-auto">
@@ -439,17 +439,17 @@ export default function AdminDashboardPage() {
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
                 <Sparkles className="h-4 w-4" />
-                Thèmes Festifs
+                Festive Themes
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">THÈMES SPÉCIAUX</h2>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">SPECIAL THEMES</h2>
               <p className="text-muted-foreground font-medium max-w-xl">
-                Configurez les périodes d'activation des thèmes festifs pour créer des expériences uniques.
+                Configure activation periods for festive themes to create unique experiences.
               </p>
             </div>
             <Button asChild className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 self-start md:self-auto transition-all">
               <Link href="/admin/special-themes">
                 <Sparkles className="mr-2 h-5 w-5" />
-                Gérer les Thèmes
+                Manage Themes
               </Link>
             </Button>
           </div>
@@ -460,9 +460,9 @@ export default function AdminDashboardPage() {
                 <Sparkles className="h-8 w-8 text-primary shadow-glow shadow-primary/20" />
               </div>
               <div className="space-y-1">
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Thème Actuel</p>
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Current Theme</p>
                 <p className="text-xl md:text-3xl font-bold text-foreground/90 italic">
-                  Nouvel An 2026 (20 déc - 2 jan)
+                  New Year 2026 (Dec 20 - Jan 2)
                 </p>
               </div>
             </div>

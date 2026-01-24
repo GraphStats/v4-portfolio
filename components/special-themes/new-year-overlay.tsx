@@ -75,10 +75,10 @@ export function NewYearOverlay() {
             >
                 <div className="new-year-text text-center px-8 py-4 rounded-2xl backdrop-blur-sm bg-black/20 border border-[#FFD700]/30">
                     <div className="text-4xl md:text-6xl font-black tracking-tight">
-                        ✨ BONNE ANNÉE 2026 ✨
+                        HAPPY NEW YEAR 2026
                     </div>
                     <div className="text-lg md:text-xl mt-2 text-[#FFF4A3] font-semibold">
-                        Meilleurs vœux pour cette nouvelle année !
+                        Best wishes for the new year!
                     </div>
                 </div>
             </div>

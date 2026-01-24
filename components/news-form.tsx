@@ -88,10 +88,10 @@ export function NewsForm({ news, onSuccess }: NewsFormProps) {
                     disabled={isLoading}
                     className="w-full h-12 rounded-2xl font-bold uppercase tracking-widest text-xs shadow-xl transition-all bg-gradient-to-r from-primary to-primary/80 hover:scale-[1.02] active:scale-[0.98]"
                 >
-                    {isLoading ? "Enregistrement..." : (
+                    {isLoading ? "Saving..." : (
                         <span className="flex items-center gap-2">
                             <Save className="h-4 w-4" />
-                            {news ? "Mettre à jour la news" : "Publier la news"}
+                            {news ? "Update news" : "Publish news"}
                         </span>
                     )}
                 </Button>

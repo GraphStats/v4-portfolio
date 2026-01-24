@@ -47,19 +47,19 @@ export function DeleteNewsDialog({
         <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent className="bg-[#05080C]/90 backdrop-blur-2xl border border-white/10 rounded-[2rem]">
                 <AlertDialogHeader>
-                    <AlertDialogTitle className="text-xl font-bold">Supprimer la news ?</AlertDialogTitle>
+                    <AlertDialogTitle className="text-xl font-bold">Delete this news item?</AlertDialogTitle>
                     <AlertDialogDescription className="text-muted-foreground">
-                        Êtes-vous sûr de vouloir supprimer "{newsTitle}" ? Cette action est irréversible.
+                        Are you sure you want to delete "{newsTitle}"? This action cannot be undone.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel disabled={isDeleting} className="rounded-xl border-white/10 bg-white/5">Annuler</AlertDialogCancel>
+                    <AlertDialogCancel disabled={isDeleting} className="rounded-xl border-white/10 bg-white/5">Cancel</AlertDialogCancel>
                     <AlertDialogAction
                         onClick={handleDelete}
                         disabled={isDeleting}
                         className="bg-destructive text-white hover:bg-destructive/90 rounded-xl"
                     >
-                        {isDeleting ? "Suppression..." : "Supprimer"}
+                        {isDeleting ? "Deleting..." : "Delete"}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

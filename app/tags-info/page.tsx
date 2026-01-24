@@ -27,12 +27,12 @@ export default async function TagsInfoPage() {
             bgColor: "bg-blue-500/10",
             borderColor: "border-blue-500/20",
             iconColor: "text-blue-400",
-            description: "Le projet est en version stable et actif.",
+            description: "The project is in a stable, active release.",
             details: [
-                "Le projet est pleinement fonctionnel et en version stable",
-                "Des mises à jour régulières sont toujours apportées",
-                "De nouvelles fonctionnalités peuvent être ajoutées",
-                "Le projet est activement maintenu et amélioré"
+                "The project is fully functional and in a stable release",
+                "Regular updates are still delivered",
+                "New features may be added",
+                "The project is actively maintained and improved"
             ]
         },
         {
@@ -43,12 +43,12 @@ export default async function TagsInfoPage() {
             bgColor: "bg-green-500/10",
             borderColor: "border-green-500/20",
             iconColor: "text-green-400",
-            description: "Le projet est actuellement en développement actif avec des progrès réguliers.",
+            description: "The project is currently in active development with steady progress.",
             details: [
-                "Le projet est en construction active",
-                "Des mises à jour régulières sont apportées",
-                "La barre de progression avance continuellement",
-                "Le projet arrivera prochainement dans une version stable"
+                "The project is under active construction",
+                "Regular updates are delivered",
+                "The progress bar keeps moving",
+                "The project will reach a stable release soon"
             ]
         },
         {
@@ -59,12 +59,12 @@ export default async function TagsInfoPage() {
             bgColor: "bg-orange-500/10",
             borderColor: "border-orange-500/20",
             iconColor: "text-orange-400",
-            description: "Le développement du projet est temporairement en pause.",
+            description: "Project development is temporarily paused.",
             details: [
-                "Le projet est en construction mais temporairement suspendu",
-                "Aucune mise à jour n'est apportée pour le moment",
-                "La barre de progression est figée",
-                "Le développement reprendra ultérieurement"
+                "The project is under construction but temporarily suspended",
+                "No updates are being delivered for now",
+                "The progress bar is frozen",
+                "Development will resume later"
             ]
         },
         {
@@ -75,12 +75,12 @@ export default async function TagsInfoPage() {
             bgColor: "bg-emerald-500/10",
             borderColor: "border-emerald-500/20",
             iconColor: "text-emerald-400",
-            description: "Ce tag signifie que le projet est complètement terminé et fonctionnel.",
+            description: "This tag means the project is fully completed and functional.",
             details: [
-                "Le projet est entièrement fonctionnel et stable",
-                "Toutes les fonctionnalités prévues ont été implémentées",
-                "Le projet ne recevra plus de mises à jour majeures ni minoritaires",
-                "Corrections de bugs et mises à jour de sécurité uniquement si nécessaire"
+                "The project is fully functional and stable",
+                "All planned features have been implemented",
+                "The project will no longer receive major or minor updates",
+                "Bug fixes and security updates only when necessary"
             ]
         },
         {
@@ -91,12 +91,12 @@ export default async function TagsInfoPage() {
             bgColor: "bg-gray-500/10",
             borderColor: "border-gray-500/20",
             iconColor: "text-gray-400",
-            description: "Ce tag indique que le projet a été archivé et n'est plus maintenu.",
+            description: "This tag indicates the project has been archived and is no longer maintained.",
             details: [
-                "Le projet ne recevra plus aucune mise à jour",
-                "Le projet n'est pas terminé et est incomplet",
-                "Certaines fonctionnalités peuvent ne pas être opérationnelles",
-                "Le code source reste disponible pour référence ou fork (si possible)"
+                "The project will no longer receive updates",
+                "The project is not finished and is incomplete",
+                "Some features may not be operational",
+                "The source code remains available for reference or fork (if possible)"
             ]
         }
     ]
@@ -115,10 +115,10 @@ export default async function TagsInfoPage() {
                         Project Status Guide
                     </div>
                     <h1 className="text-5xl md:text-8xl font-black tracking-tighter uppercase italic">
-                        COMPRENDRE LES <span className="text-primary">TAGS.</span>
+                        UNDERSTANDING <span className="text-primary">TAGS.</span>
                     </h1>
                     <p className="text-xl text-muted-foreground/70 font-medium max-w-2xl mx-auto leading-relaxed">
-                        Chaque projet est marqué d'un <span className="text-primary font-bold">tag de statut</span> pour vous informer de son état actuel.
+                        Each project is labeled with a <span className="text-primary font-bold">status tag</span> to keep you informed about its current state.
                     </p>
                 </div>
 
@@ -168,10 +168,10 @@ export default async function TagsInfoPage() {
                                 <AlertCircle className="h-6 w-6 text-primary" />
                             </div>
                             <div className="flex-1 space-y-3">
-                                <h3 className="text-xl font-black uppercase tracking-tight">Bon à savoir</h3>
+                                <h3 className="text-xl font-black uppercase tracking-tight">Good to know</h3>
                                 <p className="text-muted-foreground/70 font-medium leading-relaxed">
-                                    Les tags sont mis à jour régulièrement pour refléter l'état actuel de chaque projet.
-                                    Si vous avez des questions sur un projet spécifique, n'hésitez pas à me <Link href="/contact" className="text-primary hover:underline font-bold">contacter</Link>.
+                                    Tags are updated regularly to reflect each project's current state.
+                                    If you have questions about a specific project, feel free to <Link href="/contact" className="text-primary hover:underline font-bold">contact me</Link>.
                                 </p>
                             </div>
                         </div>
@@ -182,9 +182,9 @@ export default async function TagsInfoPage() {
                     <div className="v4-glass p-12 rounded-[2.5rem] border-white/5 space-y-6 relative overflow-hidden group">
                         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                         <Rocket className="h-12 w-12 text-primary mx-auto animate-pulse relative z-10" />
-                        <h3 className="text-3xl font-black tracking-tight uppercase italic relative z-10">Prêt à explorer mes projets ?</h3>
+                        <h3 className="text-3xl font-black tracking-tight uppercase italic relative z-10">Ready to explore my projects?</h3>
                         <p className="text-lg text-muted-foreground/70 font-medium max-w-xl mx-auto relative z-10">
-                            Découvrez tous mes projets et leurs statuts actuels.
+                            Discover all my projects and their current statuses.
                         </p>
                         <div className="pt-4 relative z-10">
                             <Link
@@ -192,7 +192,7 @@ export default async function TagsInfoPage() {
                                 className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-primary-foreground font-black text-xs uppercase tracking-widest hover:bg-primary/90 transition-all hover:scale-105 shadow-xl shadow-primary/20"
                             >
                                 <Code2 className="h-4 w-4" />
-                                Voir les projets
+                                View projects
                             </Link>
                         </div>
                     </div>

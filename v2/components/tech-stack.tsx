@@ -28,9 +28,9 @@ export function TechStack() {
     <section id="tech-stack" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 animate-fade-in">
-          <h3 className="text-3xl font-bold mb-4 text-balance">Ma Stack Technique</h3>
+          <h3 className="text-3xl font-bold mb-4 text-balance">My Tech Stack</h3>
           <p className="text-muted-foreground text-pretty max-w-2xl mx-auto">
-            Les technologies et outils que j'utilise pour créer des applications modernes et performantes
+            The technologies and tools I use to build modern, high-performance applications
           </p>
         </div>
 

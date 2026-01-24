@@ -50,8 +50,8 @@ interface ThemeConfig {
 const AVAILABLE_THEMES: ThemeConfig[] = [
     {
         id: "new-year",
-        name: "Nouvel An",
-        description: "Thème doré festif pour célébrer la nouvelle année",
+        name: "New Year",
+        description: "Festive gold theme to celebrate the new year",
         startDate: {
             day: 20,
             month: 12,
@@ -85,8 +85,8 @@ const AVAILABLE_THEMES: ThemeConfig[] = [
     },
     {
         id: "christmas",
-        name: "Noël",
-        description: "Thème rouge et vert avec flocons de neige pour Noël",
+        name: "Christmas",
+        description: "Red and green theme with snowflakes for Christmas",
         startDate: {
             day: 1,
             month: 12,
@@ -156,8 +156,8 @@ export default function SpecialThemesPage() {
             } catch (e) {
                 console.error('Error loading themes config:', e)
                 setThemes(AVAILABLE_THEMES)
-                toast.error("Erreur de chargement", {
-                    description: "Utilisation des thèmes par défaut."
+                toast.error("Load error", {
+                    description: "Using default themes."
                 })
             } finally {
                 setIsLoading(false)
@@ -189,8 +189,8 @@ export default function SpecialThemesPage() {
 
             setThemes(updatedThemes)
 
-            toast.success("Configuration sauvegardée", {
-                description: `Le thème "${editedTheme.name}" a été mis à jour dans Firebase.`
+            toast.success("Configuration saved", {
+                description: `The theme "${editedTheme.name}" has been updated in Firebase.`
             })
 
             setTimeout(() => {
@@ -198,8 +198,8 @@ export default function SpecialThemesPage() {
             }, 1000)
         } catch (e) {
             console.error('Error saving theme config:', e)
-            toast.error("Erreur de sauvegarde", {
-                description: "Impossible de sauvegarder dans Firebase."
+            toast.error("Save error", {
+                description: "Unable to save to Firebase."
             })
         }
     }
@@ -210,8 +210,8 @@ export default function SpecialThemesPage() {
         const defaultTheme = AVAILABLE_THEMES.find(t => t.id === selectedTheme.id)
         if (defaultTheme) {
             setEditedTheme({ ...defaultTheme })
-            toast.info("Réinitialisé", {
-                description: "Les dates par défaut ont été restaurées."
+            toast.info("Reset", {
+                description: "Default dates have been restored."
             })
         }
     }
@@ -245,17 +245,17 @@ export default function SpecialThemesPage() {
                     <div>
                         <h1 className="text-4xl font-bold tracking-tight flex items-center gap-3">
                             <Sparkles className="h-10 w-10 text-primary" />
-                            Thèmes Spéciaux
+                            Special Themes
                         </h1>
                         <p className="text-muted-foreground mt-2">
-                            Gérez les périodes d'activation des thèmes festifs
+                            Manage activation periods for festive themes
                         </p>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-1 space-y-4">
-                        <h2 className="text-xl font-semibold">Thèmes disponibles</h2>
+                        <h2 className="text-xl font-semibold">Available themes</h2>
                         {themes.map((theme) => (
                             <Card
                                 key={theme.id}
@@ -282,21 +282,21 @@ export default function SpecialThemesPage() {
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2">
                                         <Calendar className="h-6 w-6 text-primary" />
-                                        Configuration : {editedTheme.name}
+                                        Configuration: {editedTheme.name}
                                     </CardTitle>
                                     <CardDescription>
-                                        Définissez les dates de début et de fin d'activation
+                                        Set the activation start and end dates
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-8">
                                     <div className="space-y-4">
                                         <div className="flex items-center gap-2">
                                             <Clock className="h-5 w-5 text-green-500" />
-                                            <h3 className="text-lg font-semibold">Date de début</h3>
+                                            <h3 className="text-lg font-semibold">Start date</h3>
                                         </div>
                                         <div className="grid grid-cols-3 gap-4">
                                             <div>
-                                                <Label htmlFor="start-day">Jour</Label>
+                                                <Label htmlFor="start-day">Day</Label>
                                                 <Input
                                                     id="start-day"
                                                     type="number"
@@ -307,7 +307,7 @@ export default function SpecialThemesPage() {
                                                 />
                                             </div>
                                             <div>
-                                                <Label htmlFor="start-month">Mois</Label>
+                                                <Label htmlFor="start-month">Month</Label>
                                                 <Input
                                                     id="start-month"
                                                     type="number"
@@ -318,7 +318,7 @@ export default function SpecialThemesPage() {
                                                 />
                                             </div>
                                             <div>
-                                                <Label htmlFor="start-year">Année</Label>
+                                                <Label htmlFor="start-year">Year</Label>
                                                 <Input
                                                     id="start-year"
                                                     type="number"
@@ -331,7 +331,7 @@ export default function SpecialThemesPage() {
                                         </div>
                                         <div className="grid grid-cols-3 gap-4">
                                             <div>
-                                                <Label htmlFor="start-hour">Heure</Label>
+                                                <Label htmlFor="start-hour">Hour</Label>
                                                 <Input
                                                     id="start-hour"
                                                     type="number"
@@ -353,7 +353,7 @@ export default function SpecialThemesPage() {
                                                 />
                                             </div>
                                             <div>
-                                                <Label htmlFor="start-second">Seconde</Label>
+                                                <Label htmlFor="start-second">Second</Label>
                                                 <Input
                                                     id="start-second"
                                                     type="number"
@@ -369,11 +369,11 @@ export default function SpecialThemesPage() {
                                     <div className="space-y-4">
                                         <div className="flex items-center gap-2">
                                             <Clock className="h-5 w-5 text-red-500" />
-                                            <h3 className="text-lg font-semibold">Date de fin</h3>
+                                            <h3 className="text-lg font-semibold">End date</h3>
                                         </div>
                                         <div className="grid grid-cols-3 gap-4">
                                             <div>
-                                                <Label htmlFor="end-day">Jour</Label>
+                                                <Label htmlFor="end-day">Day</Label>
                                                 <Input
                                                     id="end-day"
                                                     type="number"
@@ -384,7 +384,7 @@ export default function SpecialThemesPage() {
                                                 />
                                             </div>
                                             <div>
-                                                <Label htmlFor="end-month">Mois</Label>
+                                                <Label htmlFor="end-month">Month</Label>
                                                 <Input
                                                     id="end-month"
                                                     type="number"
@@ -395,7 +395,7 @@ export default function SpecialThemesPage() {
                                                 />
                                             </div>
                                             <div>
-                                                <Label htmlFor="end-year">Année</Label>
+                                                <Label htmlFor="end-year">Year</Label>
                                                 <Input
                                                     id="end-year"
                                                     type="number"
@@ -408,7 +408,7 @@ export default function SpecialThemesPage() {
                                         </div>
                                         <div className="grid grid-cols-3 gap-4">
                                             <div>
-                                                <Label htmlFor="end-hour">Heure</Label>
+                                                <Label htmlFor="end-hour">Hour</Label>
                                                 <Input
                                                     id="end-hour"
                                                     type="number"
@@ -430,7 +430,7 @@ export default function SpecialThemesPage() {
                                                 />
                                             </div>
                                             <div>
-                                                <Label htmlFor="end-second">Seconde</Label>
+                                                <Label htmlFor="end-second">Second</Label>
                                                 <Input
                                                     id="end-second"
                                                     type="number"
@@ -444,21 +444,21 @@ export default function SpecialThemesPage() {
                                     </div>
 
                                     <div className="p-4 bg-muted rounded-lg space-y-2">
-                                        <p className="font-semibold">Aperçu :</p>
+                                        <p className="font-semibold">Preview:</p>
                                         <p className="text-sm">
-                                            <span className="text-green-600 font-medium">Début :</span>{' '}
+                                            <span className="text-green-600 font-medium">Start:</span>{' '}
                                             {editedTheme.startDate.day.toString().padStart(2, '0')}/
                                             {editedTheme.startDate.month.toString().padStart(2, '0')}/
-                                            {editedTheme.startDate.year} à{' '}
+                                            {editedTheme.startDate.year} at{' '}
                                             {editedTheme.startDate.hour.toString().padStart(2, '0')}:
                                             {editedTheme.startDate.minute.toString().padStart(2, '0')}:
                                             {editedTheme.startDate.second.toString().padStart(2, '0')}
                                         </p>
                                         <p className="text-sm">
-                                            <span className="text-red-600 font-medium">Fin :</span>{' '}
+                                            <span className="text-red-600 font-medium">End:</span>{' '}
                                             {editedTheme.endDate.day.toString().padStart(2, '0')}/
                                             {editedTheme.endDate.month.toString().padStart(2, '0')}/
-                                            {editedTheme.endDate.year} à{' '}
+                                            {editedTheme.endDate.year} at{' '}
                                             {editedTheme.endDate.hour.toString().padStart(2, '0')}:
                                             {editedTheme.endDate.minute.toString().padStart(2, '0')}:
                                             {editedTheme.endDate.second.toString().padStart(2, '0')}
@@ -468,16 +468,16 @@ export default function SpecialThemesPage() {
                                     <div className="flex gap-4">
                                         <Button onClick={handleSave} className="flex-1">
                                             <Save className="h-4 w-4 mr-2" />
-                                            Sauvegarder et Appliquer
+                                            Save and Apply
                                         </Button>
                                         <Button onClick={handleReset} variant="outline">
                                             <RotateCcw className="h-4 w-4 mr-2" />
-                                            Réinitialiser
+                                            Reset
                                         </Button>
                                     </div>
 
                                     <div className="text-sm text-muted-foreground text-center">
-                                        💡 La page se rechargera automatiquement après la sauvegarde pour appliquer les changements
+                                        💡 The page will reload automatically after saving to apply changes
                                     </div>
                                 </CardContent>
                             </Card>
@@ -485,7 +485,7 @@ export default function SpecialThemesPage() {
                             <Card className="h-full flex items-center justify-center min-h-[400px]">
                                 <CardContent className="text-center text-muted-foreground">
                                     <Sparkles className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                                    <p>Sélectionnez un thème pour le configurer</p>
+                                    <p>Select a theme to configure</p>
                                 </CardContent>
                             </Card>
                         )}

@@ -66,13 +66,13 @@ export function V4Projects({ projects }: V4ProjectsProps) {
                         FEATURED <span className="text-muted-foreground/40 italic">PROJECTS</span>
                     </motion.h2>
                     <p className="text-sm sm:text-base text-muted-foreground max-w-xl">
-                        Filtrez par tag ou recherchez un projet pour trouver rapidement ce que vous voulez explorer.
+                        Filter by tag or search for a project to quickly find what you want to explore.
                     </p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
                     <Badge className="rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                        {filteredProjects.length} / {projects.length} projets
+                        {filteredProjects.length} / {projects.length} projects
                     </Badge>
                     {hasFilters && (
                         <Button
@@ -313,9 +313,9 @@ function EmptyState({ onReset, hasFilters }: { onReset: () => void; hasFilters: 
                 <div className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground">
                     No results
                 </div>
-                <h3 className="text-2xl md:text-3xl font-black">Aucun projet trouvé</h3>
+                <h3 className="text-2xl md:text-3xl font-black">No projects found</h3>
                 <p className="text-sm md:text-base text-muted-foreground max-w-md mx-auto">
-                    Essayez un autre tag ou supprimez vos filtres pour revoir tous les projets.
+                    Try another tag or clear your filters to see all projects.
                 </p>
                 {hasFilters && (
                     <Button

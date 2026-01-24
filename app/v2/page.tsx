@@ -21,10 +21,10 @@ export default function V2Page() {
                         <Info className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                         <div className="space-y-2">
                             <p className="text-sm font-medium">
-                                Cette version a une erreur de déploiement sur Vercel.
+                                This version has a deployment error on Vercel.
                             </p>
                             <p className="text-sm text-muted-foreground">
-                                Merci de visiter la version 4 qui est la version la plus récente et fonctionnelle.
+                                Please visit version 4, which is the most recent and functional version.
                             </p>
                         </div>
                     </div>
@@ -33,7 +33,7 @@ export default function V2Page() {
                         <Button asChild className="w-full sm:w-auto">
                             <Link href="/">
                                 <ArrowLeft className="w-4 h-4 mr-2" />
-                                Retour à la version 4
+                                Back to version 4
                             </Link>
                         </Button>
                     </div>

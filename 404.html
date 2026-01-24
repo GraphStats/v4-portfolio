@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Page Introuvable | Drayko Portfolio</title>
+    <title>404 - Page Not Found | Drayko Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -20,13 +19,11 @@
             --glass: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             background-color: var(--background);
             color: var(--foreground);
@@ -38,7 +35,6 @@
             overflow: hidden;
             position: relative;
         }
-
         /* Ambient Orbs */
         .orb {
             position: fixed;
@@ -48,7 +44,6 @@
             opacity: 0.4;
             pointer-events: none;
         }
-
         .orb-1 {
             top: -10%;
             left: -10%;
@@ -57,7 +52,6 @@
             background: var(--primary);
             animation: pulse 12s infinite alternate;
         }
-
         .orb-2 {
             bottom: -10%;
             right: -10%;
@@ -67,19 +61,16 @@
             animation: pulse 12s infinite alternate-reverse;
             animation-delay: -3s;
         }
-
         @keyframes pulse {
             0% {
                 transform: scale(1) translate(0, 0);
                 opacity: 0.3;
             }
-
             100% {
                 transform: scale(1.2) translate(5%, 5%);
                 opacity: 0.5;
             }
         }
-
         .noise {
             position: fixed;
             inset: 0;
@@ -88,7 +79,6 @@
             pointer-events: none;
             z-index: 1;
         }
-
         .container {
             position: relative;
             z-index: 10;
@@ -97,19 +87,16 @@
             text-align: center;
             animation: fadeInScale 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
         @keyframes fadeInScale {
             from {
                 opacity: 0;
                 transform: scale(0.9) translateY(30px);
             }
-
             to {
                 opacity: 1;
                 transform: scale(1) translateY(0);
             }
         }
-
         .error-code {
             font-family: 'Outfit', sans-serif;
             font-size: clamp(8rem, 20vw, 12rem);
@@ -123,7 +110,6 @@
             -webkit-text-fill-color: transparent;
             opacity: 0.8;
         }
-
         h1 {
             font-family: 'Outfit', sans-serif;
             font-size: 2.5rem;
@@ -132,7 +118,6 @@
             letter-spacing: -0.02em;
             color: #fff;
         }
-
         p {
             font-size: 1.125rem;
             line-height: 1.6;
@@ -142,7 +127,6 @@
             margin-left: auto;
             margin-right: auto;
         }
-
         .btn {
             display: inline-flex;
             align-items: center;
@@ -159,59 +143,49 @@
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: 0 10px 25px -5px rgba(255, 255, 255, 0.2);
         }
-
         .btn:hover {
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 20px 35px -8px rgba(255, 255, 255, 0.3);
             background: var(--primary);
             color: #fff;
         }
-
         .btn svg {
             width: 20px;
             height: 20px;
         }
-
         .decorative-dots {
             margin-top: 4rem;
             display: flex;
             justify-content: center;
             gap: 0.75rem;
         }
-
         .dot {
             width: 6px;
             height: 6px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
         }
-
         .dot:first-child {
             background: var(--primary);
         }
     </style>
 </head>
-
 <body>
     <div class="noise"></div>
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
-
     <div class="container">
         <div class="error-code">404</div>
-        <h1>Destination <span style="color: var(--primary)">Inconnue</span></h1>
-        <p>Le serveur ne parvient pas à localiser cette section du portfolio. Il est possible que ce projet ait
-            été déplacé ou n'existe plus dans mes archives.</p>
-
+        <h1>Destination <span style="color: var(--primary)">Unknown</span></h1>
+        <p>The server can't locate this section of the portfolio. This project may have been moved or no longer exists in my archives.</p>
         <a href="/" class="btn">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m12 19-7-7 7-7" />
                 <path d="M19 12H5" />
             </svg>
-            Revenir au Hub
+            Back to the Hub
         </a>
-
         <div class="decorative-dots">
             <div class="dot"></div>
             <div class="dot"></div>
@@ -219,5 +193,4 @@
         </div>
     </div>
 </body>
-
 </html>

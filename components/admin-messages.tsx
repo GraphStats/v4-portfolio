@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Mail, MessageSquare, ArrowRight, Loader2, Search } from "lucide-react"
 import { MessageDialog } from "./message-dialog"
 import { formatDistanceToNow } from "date-fns"
-import { fr } from "date-fns/locale"
+import { enUS } from "date-fns/locale"
 import { Input } from "@/components/ui/input"
 
 export function AdminMessages() {
@@ -45,7 +45,7 @@ export function AdminMessages() {
                 <div className="relative w-full md:w-full">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                        placeholder="Rechercher..."
+                        placeholder="Search..."
                         className="pl-9 h-12 rounded-xl bg-background/50 border-white/10 w-full"
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
@@ -65,8 +65,8 @@ export function AdminMessages() {
                         <Mail className="h-10 w-10 opacity-20" />
                     </div>
                     <div className="space-y-2">
-                        <p className="text-xl font-bold">Aucun message</p>
-                        <p className="text-muted-foreground">Votre boîte de réception est vide pour le moment.</p>
+                        <p className="text-xl font-bold">No messages</p>
+                        <p className="text-muted-foreground">Your inbox is empty for now.</p>
                     </div>
                 </div>
             ) : (
@@ -92,16 +92,14 @@ export function AdminMessages() {
                                         {msg.name}
                                     </h3>
                                     <p className="text-xs text-muted-foreground font-medium">
-                                        {formatDistanceToNow(new Date(msg.created_at), { addSuffix: true, locale: fr })}
+                                        {formatDistanceToNow(new Date(msg.created_at), { addSuffix: true, locale: enUS })}
                                     </p>
                                 </div>
                                 {!msg.read && (
                                     <span className="h-2 w-2 rounded-full bg-primary shadow-glow shadow-primary" />
                                 )}
                                 {msg.replied && (
-                                    <span className="px-2 py-0.5 rounded-full bg-green-500/10 text-green-500 text-[10px] font-bold border border-green-500/20">
-                                        RÉPONDU
-                                    </span>
+                                    <span className="px-2 py-0.5 rounded-full bg-green-500/10 text-green-500 text-[10px] font-bold border border-green-500/20">REPLIED</span>
                                 )}
                             </div>
 

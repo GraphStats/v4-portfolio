@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- saved from url=(0040)https://graphstats-portfolio.vercel.app/ -->
-<html lang="fr"><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/content/location/location.js" id="eppiocemhmnlbhjplcgkofciiegomcon"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/extend-native-history-api.js"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/requests.js"></script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en"><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/content/location/location.js" id="eppiocemhmnlbhjplcgkofciiegomcon"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/extend-native-history-api.js"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/requests.js"></script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GraphStats</title>
@@ -155,25 +155,24 @@
     }
   </style>
   <script>
-  const translations = {
-    fr: {
-      navProjects: "Projets",
+  const translations = {    fr: {
+      navProjects: "Projects",
       navStack: "Stack",
       navContact: "Contact",
       heroTitle: "GraphStats",
-      heroDescription: "Passionné par les <span class='font-semibold text-white'>stats YouTube</span>, les interfaces <span class='font-semibold text-white'>dynamiques</span> et les données en <span class='font-semibold text-white'>temps réel</span>. Je crée des expériences web modernes avec des technologies performantes.",
-      heroProjects: "Voir mes projets",
-      heroContact: "Me contacter",
-      projectsTitle: "Mes projets",
-      projectsDescription: "Découvrez mes réalisations qui combinent design moderne et fonctionnalités avancées.",
-      contactTitle: "Contactez-moi",
-      contactDescription: "Vous avez un projet ou une question ? Envoyez-moi un message et je vous répondrai rapidement.",
-      contactName: "Votre nom",
-      contactEmail: "Votre email",
-      contactSubject: "Sujet",
-      contactMessage: "Votre message",
-      contactButton: "Envoyer le message",
-      footerText: "Créateur d'expériences web basées sur les données.",
+      heroDescription: "Passionate about <span class='font-semibold text-white'>YouTube stats</span>, <span class='font-semibold text-white'>dynamic</span> interfaces, and <span class='font-semibold text-white'>real-time</span> data. I create modern web experiences with high-performance technologies.",
+      heroProjects: "View my projects",
+      heroContact: "Contact me",
+      projectsTitle: "My Projects",
+      projectsDescription: "Discover my work that combines modern design and advanced features.",
+      contactTitle: "Contact Me",
+      contactDescription: "Do you have a project or a question? Send me a message, and I'll respond quickly.",
+      contactName: "Your Name",
+      contactEmail: "Your Email",
+      contactSubject: "Subject",
+      contactMessage: "Your Message",
+      contactButton: "Send Message",
+      footerText: "Creator of data-driven web experiences.",
     },
     en: {
       navProjects: "Projects",
@@ -201,11 +200,11 @@
     document.querySelector("[data-nav-stack]").textContent = translations[lang].navStack;
     document.querySelector("[data-nav-contact]").textContent = translations[lang].navContact;
     document.querySelector("[data-hero-title]").textContent = translations[lang].heroTitle;
-    document.querySelector("[data-hero-description]").innerHTML = translations[lang].heroDescription;
+      <p class="text-xl text-gray-300 mt-6 max-w-2xl mx-auto leading-relaxed" data-hero-description="">Passionate about <span class="font-semibold text-white">YouTube stats</span>, <span class="font-semibold text-white">dynamic</span> interfaces, and <span class="font-semibold text-white">real-time</span> data. I create modern web experiences with high-performance technologies.</p>
     document.querySelector("[data-hero-projects]").textContent = translations[lang].heroProjects;
     document.querySelector("[data-hero-contact]").textContent = translations[lang].heroContact;
     document.querySelector("[data-projects-title]").textContent = translations[lang].projectsTitle;
-    document.querySelector("[data-projects-description]").textContent = translations[lang].projectsDescription;
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto text-center mb-16 animate-on-scroll" data-projects-description="">Discover my work that combines modern design and advanced features.</p>
     document.querySelector("[data-contact-title]").textContent = translations[lang].contactTitle;
     document.querySelector("[data-contact-description]").textContent = translations[lang].contactDescription;
     document.querySelector("[data-contact-name]").textContent = translations[lang].contactName;
@@ -213,11 +212,11 @@
     document.querySelector("[data-contact-subject]").textContent = translations[lang].contactSubject;
     document.querySelector("[data-contact-message]").textContent = translations[lang].contactMessage;
     document.querySelector("[data-contact-button]").textContent = translations[lang].contactButton;
-    document.querySelector("[data-footer-text]").textContent = translations[lang].footerText;
+          <p class="text-gray-500 mt-2" data-footer-text="">Creator of data-driven web experiences.</p>
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    const defaultLang = "fr";
+    const defaultLang = "en";
     switchLanguage(defaultLang);
     
     // Add animated elements
@@ -241,7 +240,7 @@
     <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4" bis_skin_checked="1">
       <a href="https://graphstats-portfolio.vercel.app/#" class="text-2xl font-bold gradient-text animate__animated animate__fadeIn">GraphStats</a>
       <div class="hidden md:flex space-x-8" bis_skin_checked="1">
-        <a href="https://graphstats-portfolio.vercel.app/#projects" class="text-gray-300 hover:text-white animated-border py-2" data-nav-projects="">Projets</a>
+        <a href="https://graphstats-portfolio.vercel.app/#projects" class="text-gray-300 hover:text-white animated-border py-2" data-nav-projects="">Projects</a>
         <a href="https://graphstats-portfolio.vercel.app/#stack" class="text-gray-300 hover:text-white animated-border py-2" data-nav-stack="">Stack</a>
         <a href="https://graphstats-portfolio.vercel.app/#contact" class="text-gray-300 hover:text-white animated-border py-2" data-nav-contact="">Contact</a>
       </div>
@@ -262,10 +261,10 @@
     
     <div class="relative z-10 max-w-4xl aos-init aos-animate" data-aos="fade-up" bis_skin_checked="1">
       <h1 class="text-5xl md:text-7xl font-bold mb-6 gradient-text animate__animated animate__fadeInDown" data-hero-title="">GraphStats</h1>
-      <p class="text-xl text-gray-300 mt-6 max-w-2xl mx-auto leading-relaxed" data-hero-description="">Passionné par les <span class="font-semibold text-white">stats YouTube</span>, les interfaces <span class="font-semibold text-white">dynamiques</span> et les données en <span class="font-semibold text-white">temps réel</span>. Je crée des expériences web modernes avec des technologies performantes.</p>
+      <p class="text-xl text-gray-300 mt-6 max-w-2xl mx-auto leading-relaxed" data-hero-description="">Passionate about <span class="font-semibold text-white">YouTube stats</span>, <span class="font-semibold text-white">dynamic</span> interfaces, and <span class="font-semibold text-white">real-time</span> data. I create modern web experiences with high-performance technologies.</p>
       <div class="mt-10 flex justify-center gap-4 animate-on-scroll scale-in fade-in" bis_skin_checked="1">
-        <a href="https://graphstats-portfolio.vercel.app/#projects" class="px-8 py-3 rounded-full gradient-bg text-white font-medium hover:shadow-lg hover:shadow-indigo-500/20 transition-all duration-300 transform hover:scale-105" data-hero-projects="">Voir mes projets</a>
-        <a href="https://graphstats-portfolio.vercel.app/#contact" class="px-8 py-3 rounded-full border border-gray-700 text-gray-300 font-medium hover:bg-gray-900/50 hover:text-white transition-all duration-300" data-hero-contact="">Me contacter</a>
+        <a href="https://graphstats-portfolio.vercel.app/#projects" class="px-8 py-3 rounded-full gradient-bg text-white font-medium hover:shadow-lg hover:shadow-indigo-500/20 transition-all duration-300 transform hover:scale-105" data-hero-projects="">View my projects</a>
+        <a href="https://graphstats-portfolio.vercel.app/#contact" class="px-8 py-3 rounded-full border border-gray-700 text-gray-300 font-medium hover:bg-gray-900/50 hover:text-white transition-all duration-300" data-hero-contact="">Contact me</a>
       </div>
     </div>
     
@@ -281,21 +280,21 @@
   <!-- Projects Section -->
   <section class="px-6 py-24 relative" id="projects">
     <div class="max-w-7xl mx-auto relative" bis_skin_checked="1">
-      <h2 class="text-4xl md:text-5xl font-bold mb-6 text-center gradient-text animate-on-scroll" data-projects-title="">Mes projets</h2>
-      <p class="text-xl text-gray-400 max-w-3xl mx-auto text-center mb-16 animate-on-scroll" data-projects-description="">Découvrez mes réalisations qui combinent design moderne et fonctionnalités avancées.</p>
+      <h2 class="text-4xl md:text-5xl font-bold mb-6 text-center gradient-text animate-on-scroll" data-projects-title="">My Projects</h2>
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto text-center mb-16 animate-on-scroll" data-projects-description="">Discover my work that combines modern design and advanced features.</p>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" bis_skin_checked="1">
         <!-- Project Card -->
         <div class="glass-card p-6 glow-effect animate-on-scroll aos-init" data-aos="fade-up" data-aos-delay="200" bis_skin_checked="1">
           <h3 class="text-xl font-semibold mb-2 text-white">DockyCount (Changed name)</h3>
-          <p class="text-gray-400 mb-4">Compteur d'abonnés YouTube en temps réel avec interface futuriste et animations fluides.</p>
+          <p class="text-gray-400 mb-4">Real-time YouTube subscriber counter with a futuristic interface and smooth animations.</p>
           <div class="flex flex-wrap gap-2 mb-4" bis_skin_checked="1">
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">JavaScript</span>
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">API YouTube</span>
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">UI/UX</span>
           </div>
           <a href="https://fast-count.vercel.app/" target="_blank" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 transition">
-            Voir le projet
+            View project
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
@@ -305,7 +304,7 @@
         <!-- Project Card -->
         <div class="glass-card p-6 glow-effect animate-on-scroll aos-init" data-aos="fade-up" data-aos-delay="400" bis_skin_checked="1">
           <h3 class="text-xl font-semibold mb-2 text-white">Graphy Host (Closed)</h3>
-          <p class="text-gray-400 mb-4">Un hébergeur gratuit à vie, conçu avec CSS, HTML, JS et Node.js.</p>
+          <p class="text-gray-400 mb-4">A free-for-life hosting service built with CSS, HTML, JS, and Node.js.</p>
           <div class="flex flex-wrap gap-2 mb-4" bis_skin_checked="1">
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">CSS</span>
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">HTML</span>
@@ -313,7 +312,7 @@
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">Node.js</span>
           </div>
           <a href="https://github.com/GraphStats/graphy-host/" target="_blank" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 transition">
-            Voir le GitHub du projet
+            View project GitHub
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
@@ -323,14 +322,14 @@
         <!-- Project Card -->
         <div class="glass-card p-6 glow-effect animate-on-scroll aos-init" data-aos="fade-up" data-aos-delay="600" bis_skin_checked="1">
           <h3 class="text-xl font-semibold mb-2 text-white">DockyCount 2</h3>
-          <p class="text-gray-400 mb-4">Nouvelle version améliorée du compteur d'abonnés YouTube avec des fonctionnalités supplémentaires.</p>
+          <p class="text-gray-400 mb-4">Improved version of the YouTube subscriber counter with additional features.</p>
           <div class="flex flex-wrap gap-2 mb-4" bis_skin_checked="1">
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">JavaScript</span>
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">API YouTube</span>
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">UI/UX</span>
           </div>
           <a href="https://fastcount-2-beta.vercel.app/" target="_blank" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 transition">
-            Voir le projet
+            View project
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
@@ -340,14 +339,14 @@
         <!-- Project Card -->
         <div class="glass-card p-6 glow-effect animate-on-scroll aos-init" data-aos="fade-up" data-aos-delay="800" bis_skin_checked="1">
           <h3 class="text-xl font-semibold mb-2 text-white">IPV6 Detector</h3>
-          <p class="text-gray-400 mb-4">Application permettant de détecter et d'afficher les informations sur les adresses IPv6.</p>
+          <p class="text-gray-400 mb-4">Application that detects and displays information about IPv6 addresses.</p>
           <div class="flex flex-wrap gap-2 mb-4" bis_skin_checked="1">
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">JavaScript</span>
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">HTML</span>
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">CSS</span>
           </div>
           <a href="https://ipv6-detector-lunaria.vercel.app/" target="_blank" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 transition">
-            Voir le projet
+            View project
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
@@ -356,15 +355,15 @@
 
         <!-- Project Card -->
         <div class="glass-card p-6 glow-effect animate-on-scroll aos-init" data-aos="fade-up" data-aos-delay="1000" bis_skin_checked="1">
-          <h3 class="text-xl font-semibold mb-2 text-white">MrBeast Counter</h3>
-          <p class="text-gray-400 mb-4">Compteur en temps réel des abonnés de MrBeast avec une interface moderne et fluide.</p>
+          <p class="text-gray-400 mb-4">Real-time MrBeast subscriber counter with a modern, fluid interface.</p>
+          <p class="text-gray-400 mb-4">Real-time MrBeast subscriber counter with a modern, fluid interface.</p>
           <div class="flex flex-wrap gap-2 mb-4" bis_skin_checked="1">
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">JavaScript</span>
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">API YouTube</span>
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">UI/UX</span>
           </div>
           <a href="https://mrbeast-count.vercel.app/" target="_blank" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 transition">
-            Voir le projet
+            View project
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
@@ -374,14 +373,14 @@
         <!-- Project Card -->
         <div class="glass-card p-6 glow-effect animate-on-scroll aos-init" data-aos="fade-up" data-aos-delay="1200" bis_skin_checked="1">
           <h3 class="text-xl font-semibold mb-2 text-white">444 Count (Closed)</h3>
-          <p class="text-gray-400 mb-4">Un site pour voir le nombre de followers en temps réel avec une interface élégante.</p>
+          <p class="text-gray-400 mb-4">A site to view follower counts in real time with an elegant interface.</p>
           <div class="flex flex-wrap gap-2 mb-4" bis_skin_checked="1">
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">JavaScript</span>
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">API</span>
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">UI/UX</span>
           </div>
           <a href="https://444-count.vercel.app/" target="_blank" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 transition">
-            Voir le projet
+            View project
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
@@ -391,12 +390,12 @@
         <!-- Project Card -->
         <div class="glass-card p-6 glow-effect animate-on-scroll aos-init" data-aos="fade-up" data-aos-delay="1200" bis_skin_checked="1">
           <h3 class="text-xl font-semibold mb-2 text-white">DockyFocus</h3>
-          <p class="text-gray-400 mb-4">Un site pour se concentrer sur nos tâches</p>
+          <p class="text-gray-400 mb-4">A site to help you focus on your tasks</p>
           <div class="flex flex-wrap gap-2 mb-4" bis_skin_checked="1">
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">HTML</span>
           </div>
           <a href="https://docky-focus.vercel.app/" target="_blank" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 transition">
-            Voir le projet
+            View project
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
@@ -406,12 +405,12 @@
         <!-- Project Card -->
         <div class="glass-card p-6 glow-effect animate-on-scroll aos-init" data-aos="fade-up" data-aos-delay="1200" bis_skin_checked="1">
           <h3 class="text-xl font-semibold mb-2 text-white">DockyMusic</h3>
-          <p class="text-gray-400 mb-4">Un site pour écouter de le musique</p>
+          <p class="text-gray-400 mb-4">A site to listen to music</p>
           <div class="flex flex-wrap gap-2 mb-4" bis_skin_checked="1">
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">JS</span>
           </div>
           <a href="https://dockymusic.vercel.app/" target="_blank" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 transition">
-            Voir le projet
+            View project
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
@@ -421,14 +420,14 @@
          <!-- Project Card -->
         <div class="glass-card p-6 glow-effect animate-on-scroll aos-init" data-aos="fade-up" data-aos-delay="400" bis_skin_checked="1">
           <h3 class="text-xl font-semibold mb-2 text-white">DockyHost (New)</h3>
-          <p class="text-gray-400 mb-4">Un hébergeur gratuit à vie, conçu avec Jexactyl</p>
+          <p class="text-gray-400 mb-4">A free-for-life hosting service built with Jexactyl</p>
           <div class="flex flex-wrap gap-2 mb-4" bis_skin_checked="1">
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">Jexactyl</span>
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">Free</span>
             <span class="text-xs px-3 py-1 bg-gray-900/50 rounded-full text-gray-300">Server</span>
           </div>
           <a href="http://91.169.161.97:64000/" target="_blank" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 transition">
-            Voir le projet
+            View project
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
@@ -443,7 +442,7 @@
     <div class="max-w-7xl mx-auto" bis_skin_checked="1">
       <h2 class="text-4xl md:text-5xl font-bold mb-6 text-center gradient-text animate-on-scroll">Ma stack technique</h2>
       <p class="text-xl text-gray-400 max-w-3xl mx-auto text-center mb-16 animate-on-scroll">
-        Les technologies que j'utilise pour créer des expériences modernes et performantes.
+        The technologies I use to create modern, high-performance experiences.
       </p>
       
       <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6" bis_skin_checked="1">
@@ -551,29 +550,29 @@
     <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/10 to-black/80" bis_skin_checked="1"></div>
     
     <div class="max-w-4xl mx-auto relative" bis_skin_checked="1">
-      <h2 class="text-4xl md:text-5xl font-bold mb-6 text-center gradient-text animate-on-scroll aos-init" data-aos="fade-up" data-contact-title="">Contactez-moi</h2>
-      <p class="text-xl text-gray-400 max-w-2xl mx-auto text-center mb-16 animate-on-scroll aos-init" data-aos="fade-up" data-aos-delay="100" data-contact-description="">Vous avez un projet ou une question ? Envoyez-moi un message et je vous répondrai rapidement.</p>
+      <h2 class="text-4xl md:text-5xl font-bold mb-6 text-center gradient-text animate-on-scroll aos-init" data-aos="fade-up" data-contact-title="">Contact Me</h2>
+      <p class="text-xl text-gray-400 max-w-2xl mx-auto text-center mb-16 animate-on-scroll aos-init" data-aos="fade-up" data-aos-delay="100" data-contact-description="">Do you have a project or a question? Send me a message, and I'll respond quickly.</p>
       
       <form class="glass-card p-8 glow-effect animate-on-scroll aos-init" data-aos="fade-up" data-aos-delay="200">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6" bis_skin_checked="1">
           <div bis_skin_checked="1">
-            <label for="name" class="block text-sm font-medium text-gray-300 mb-2" data-contact-name="">Votre nom</label>
+            <label for="name" class="block text-sm font-medium text-gray-300 mb-2" data-contact-name="">Your Name</label>
             <input type="text" id="name" class="w-full px-4 py-3 rounded-lg input-field border border-gray-800 focus:border-indigo-500 outline-none text-white" required="">
           </div>
           <div bis_skin_checked="1">
-            <label for="email" class="block text-sm font-medium text-gray-300 mb-2" data-contact-email="">Votre email</label>
+            <label for="email" class="block text-sm font-medium text-gray-300 mb-2" data-contact-email="">Your Email</label>
             <input type="email" id="email" class="w-full px-4 py-3 rounded-lg input-field border border-gray-800 focus:border-indigo-500 outline-none text-white" required="">
           </div>
         </div>
         <div class="mb-6" bis_skin_checked="1">
-          <label for="subject" class="block text-sm font-medium text-gray-300 mb-2" data-contact-subject="">Sujet</label>
+          <label for="subject" class="block text-sm font-medium text-gray-300 mb-2" data-contact-subject="">Subject</label>
           <input type="text" id="subject" class="w-full px-4 py-3 rounded-lg input-field border border-gray-800 focus:border-indigo-500 outline-none text-white" required="">
         </div>
         <div class="mb-6" bis_skin_checked="1">
-          <label for="message" class="block text-sm font-medium text-gray-300 mb-2" data-contact-message="">Votre message</label>
+          <label for="message" class="block text-sm font-medium text-gray-300 mb-2" data-contact-message="">Your Message</label>
           <textarea id="message" rows="5" class="w-full px-4 py-3 rounded-lg input-field border border-gray-800 focus:border-indigo-500 outline-none text-white" required=""></textarea>
         </div>
-        <button type="submit" class="w-full py-4 rounded-lg gradient-bg text-white font-medium hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 transform hover:scale-[1.02]" data-contact-button="">Envoyer le message</button>
+        <button type="submit" class="w-full py-4 rounded-lg gradient-bg text-white font-medium hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 transform hover:scale-[1.02]" data-contact-button="">Send Message</button>
       </form>
     </div>
   </section>
@@ -584,7 +583,7 @@
       <div class="flex flex-col md:flex-row justify-between items-center" bis_skin_checked="1">
         <div class="mb-6 md:mb-0 animate-on-scroll" bis_skin_checked="1">
           <a href="https://graphstats-portfolio.vercel.app/#" class="text-2xl font-bold gradient-text">GraphStats</a>
-          <p class="text-gray-500 mt-2" data-footer-text="">Créateur d'expériences web basées sur les données.</p>
+          <p class="text-gray-500 mt-2" data-footer-text="">Creator of data-driven web experiences.</p>
         </div>
         
         <div class="flex space-x-6 animate-on-scroll" bis_skin_checked="1">
@@ -598,14 +597,14 @@
       
       <div class="mt-12 pt-8 border-t border-gray-900 flex flex-col md:flex-row justify-between items-center animate-on-scroll" bis_skin_checked="1">
         <p class="text-gray-500 text-sm mb-4 md:mb-0">
-          © 2025 GraphStats. Tous droits réservés.
+          ? 2025 GraphStats. All rights reserved.
         </p>
       </div>
     </div>
   </footer>
 
   <!-- Scripts -->
-  <script src="./GraphStats_files/aos.js.téléchargement"></script>
+  <script src="./GraphStats_files/aos.js"></script>
   <script>
     AOS.init({
       once: true,

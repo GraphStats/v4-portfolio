@@ -25,10 +25,10 @@ export function AvailabilityToggle({ initialState }: AvailabilityToggleProps) {
         startTransition(async () => {
             const result = await updateAvailability(checked)
             if (result.success) {
-                toast.success(checked ? "Vous êtes maintenant 'Available'" : "Vous n'êtes plus disponible")
+                toast.success(checked ? "You are now available" : "You are no longer available")
             } else {
                 setIsAvailable(!checked)
-                toast.error("Erreur lors de la mise à jour")
+                toast.error("Failed to update availability")
             }
         })
     }
@@ -44,17 +44,17 @@ export function AvailabilityToggle({ initialState }: AvailabilityToggleProps) {
                         <Briefcase className="h-6 w-6" />
                     </div>
                     <div className="space-y-1">
-                        <Label className="text-lg font-bold text-foreground block">Disponibilité Projet</Label>
+                        <Label className="text-lg font-bold text-foreground block">Project Availability</Label>
                         <div className="flex items-center gap-2 text-sm font-medium transition-colors">
                             {isAvailable ? (
                                 <span className="text-green-500 flex items-center gap-1.5">
                                     <CheckCircle2 className="h-3.5 w-3.5" />
-                                    Ouvert aux opportunités
+                                    Open to opportunities
                                 </span>
                             ) : (
                                 <span className="text-red-500/80 flex items-center gap-1.5">
                                     <XCircle className="h-3.5 w-3.5" />
-                                    Indisponible actuellement
+                                    Currently unavailable
                                 </span>
                             )}
                         </div>

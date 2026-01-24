@@ -7,7 +7,7 @@ import { markMessageAsRead, markMessageAsReplied, deleteMessage } from "@/lib/ac
 import { useState, useEffect } from "react"
 import { Mail, Trash2, CheckCircle2, User, Calendar, Clock, Reply, Check } from "lucide-react"
 import { format } from "date-fns"
-import { fr } from "date-fns/locale"
+import { enUS } from "date-fns/locale"
 import { toast } from "sonner"
 
 interface MessageDialogProps {
@@ -41,26 +41,26 @@ export function MessageDialog({ open, onOpenChange, message, onSuccess }: Messag
         setIsLoading(true)
         const result = await markMessageAsReplied(message.id)
         if (result.success) {
-            toast.success("Message marqué comme répondu")
+            toast.success("Message marked as replied")
             onSuccess?.()
             onOpenChange(false)
         } else {
-            toast.error("Erreur lors de la mise à jour")
+            toast.error("Failed to update")
         }
         setIsLoading(false)
     }
 
     const handleDelete = async () => {
-        if (!confirm("Êtes-vous sûr de vouloir supprimer ce message ?")) return
+        if (!confirm("Are you sure you want to delete this message?")) return
 
         setIsLoading(true)
         const result = await deleteMessage(message.id)
         if (result.success) {
-            toast.success("Message supprimé")
+            toast.success("Message deleted")
             onSuccess?.()
             onOpenChange(false)
         } else {
-            toast.error("Erreur lors de la suppression")
+            toast.error("Failed to delete")
         }
         setIsLoading(false)
     }
@@ -72,16 +72,16 @@ export function MessageDialog({ open, onOpenChange, message, onSuccess }: Messag
                     <div className="space-y-1">
                         <DialogTitle className="text-xl font-bold flex items-center gap-2">
                             <Mail className="h-5 w-5 text-primary" />
-                            Message de {message.name}
+                            Message from {message.name}
                         </DialogTitle>
                         <DialogDescription>
-                            Reçu le {format(new Date(message.created_at), "d MMMM yyyy 'à' HH:mm", { locale: fr })}
+                            Received on {format(new Date(message.created_at), "MMM d, yyyy 'at' HH:mm", { locale: enUS })}
                         </DialogDescription>
                     </div>
                     <div className="flex gap-2">
                         {message.replied && (
                             <div className="px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-xs font-bold border border-green-500/20 flex items-center gap-1">
-                                <CheckCircle2 className="h-3 w-3" /> Répondu
+                                <CheckCircle2 className="h-3 w-3" /> Replied
                             </div>
                         )}
                     </div>
@@ -92,14 +92,12 @@ export function MessageDialog({ open, onOpenChange, message, onSuccess }: Messag
                         <div className="grid grid-cols-2 gap-4">
                             <div className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1">
                                 <div className="text-[10px] uppercase tracking-widest text-muted-foreground flex items-center gap-1">
-                                    <User className="h-3 w-3" /> De
-                                </div>
+                                    <User className="h-3 w-3" />From</div>
                                 <div className="font-medium text-sm truncate" title={message.email}>{message.email}</div>
                             </div>
                             <div className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-1">
                                 <div className="text-[10px] uppercase tracking-widest text-muted-foreground flex items-center gap-1">
-                                    <Mail className="h-3 w-3" /> Sujet
-                                </div>
+                                    <Mail className="h-3 w-3" />Subject</div>
                                 <div className="font-medium text-sm truncate" title={message.subject}>{message.subject}</div>
                             </div>
                         </div>
@@ -112,21 +110,17 @@ export function MessageDialog({ open, onOpenChange, message, onSuccess }: Messag
 
                 <DialogFooter className="p-6 pt-0 sm:justify-between gap-4">
                     <Button variant="ghost" className="text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={handleDelete} disabled={isLoading}>
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Supprimer
-                    </Button>
+                        <Trash2 className="h-4 w-4 mr-2" />Delete</Button>
 
                     <div className="flex gap-3">
                         <Button variant="outline" onClick={handleReply} className="border-white/10 hover:bg-white/5">
                             <Reply className="h-4 w-4 mr-2" />
-                            Répondre par Email
+                            Reply by Email
                         </Button>
 
                         {!message.replied && (
                             <Button onClick={handleMarkReplied} disabled={isLoading} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                                <Check className="h-4 w-4 mr-2" />
-                                Marquer comme traité
-                            </Button>
+                                <Check className="h-4 w-4 mr-2" />Mark as resolved</Button>
                         )}
                     </div>
                 </DialogFooter>

@@ -37,15 +37,15 @@ export function ErrorModeToggle({ initialState, initialMessage, onUpdated }: Err
         toast({
           title: checked ? "Error Mode Enabled" : "Error Mode Disabled",
           description: checked
-            ? "Le site affiche l'écran de surcharge."
-            : "Le site est à nouveau normal.",
+            ? "The site is showing the overload screen."
+            : "The site is back to normal.",
         })
         if (onUpdated) onUpdated()
       } else {
         setIsErrorMode(!checked)
         toast({
-          title: "Erreur",
-          description: "Impossible de mettre à jour le mode erreur.",
+          title: "Error",
+          description: "Unable to update error mode.",
           variant: "destructive",
         })
       }
@@ -57,14 +57,14 @@ export function ErrorModeToggle({ initialState, initialMessage, onUpdated }: Err
       const result = await updateErrorMode(isErrorMode, message)
       if (result.success) {
         toast({
-          title: "Message enregistré",
-          description: "Le message de surcharge a été mis à jour.",
+          title: "Message saved",
+          description: "The overload message has been updated.",
         })
         if (onUpdated) onUpdated()
       } else {
         toast({
-          title: "Erreur",
-          description: "Impossible d'enregistrer le message.",
+          title: "Error",
+          description: "Unable to save the message.",
           variant: "destructive",
         })
       }
@@ -81,7 +81,7 @@ export function ErrorModeToggle({ initialState, initialMessage, onUpdated }: Err
           <div>
             <Label className="text-base font-bold text-foreground">Error Mode</Label>
             <p className="text-sm text-muted-foreground">
-              {isErrorMode ? "Écran de surcharge actif." : "Mode normal."}
+              {isErrorMode ? "Overload screen active." : "Normal mode."}
             </p>
           </div>
         </div>
@@ -93,19 +93,17 @@ export function ErrorModeToggle({ initialState, initialMessage, onUpdated }: Err
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label>Message personnalisé</Label>
+          <Label>Custom message</Label>
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Message affiché sur toutes les pages..."
+            placeholder="Message shown on all pages..."
             className="bg-white/5 border-white/10 text-foreground"
           />
         </div>
 
         <Button onClick={handleSave} disabled={isPending} className="w-full">
-          <Save className="mr-2 h-4 w-4" />
-          Sauvegarder
-        </Button>
+          <Save className="mr-2 h-4 w-4" />Save</Button>
       </div>
     </div>
   )

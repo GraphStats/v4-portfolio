@@ -1,11 +1,5 @@
-/* ============================================
-   THÈME SPÉCIAL NOUVEL AN 2025-2026
-   Période: 20 décembre - 2 janvier
-   ============================================ */
-
-/* PALETTE DE COULEURS DORÉES SPECTACULAIRES */
 .special-new-year {
-    /* Couleurs principales dorées */
+    
     --gold-primary: #FFD700;
     --gold-bright: #FFF4A3;
     --gold-deep: #B8860B;
@@ -14,13 +8,13 @@
     --bronze: #CD7F32;
     --amber: #FFBF00;
 
-    /* Couleurs d'accent festives */
+    
     --festive-red: #DC143C;
     --festive-green: #228B22;
     --midnight-blue: #191970;
     --starlight: #FFFACD;
 
-    /* Override des variables de base */
+    
     --primary: 48 100% 50%;
     --primary-foreground: 0 0% 0%;
     --accent: 45 100% 60%;
@@ -29,7 +23,6 @@
     --border: 45 40% 70%;
 }
 
-/* MODE SOMBRE - Ambiance dorée luxueuse */
 .special-new-year.dark,
 .dark .special-new-year {
     --background: 240 10% 5%;
@@ -53,7 +46,6 @@
     --ring: 48 100% 60%;
 }
 
-/* MODE CLAIR - Ambiance dorée avec bon contraste */
 .special-new-year:not(.dark) {
     --background: 45 40% 98%;
     --foreground: 45 20% 10%;
@@ -76,10 +68,6 @@
     --ring: 45 90% 45%;
 }
 
-
-/* ANIMATIONS ET EFFETS SPECTACULAIRES */
-
-/* Particules dorées flottantes */
 @keyframes float-particles {
 
     0%,
@@ -102,7 +90,6 @@
     }
 }
 
-/* Brillance dorée animée */
 @keyframes golden-shine {
     0% {
         background-position: -200% center;
@@ -113,7 +100,6 @@
     }
 }
 
-/* Pulsation de lueur dorée */
 @keyframes golden-glow-pulse {
 
     0%,
@@ -130,7 +116,6 @@
     }
 }
 
-/* Scintillement d'étoiles */
 @keyframes twinkle {
 
     0%,
@@ -145,7 +130,6 @@
     }
 }
 
-/* Rotation festive */
 @keyframes festive-rotate {
     from {
         transform: rotate(0deg);
@@ -156,7 +140,6 @@
     }
 }
 
-/* Effet de confettis */
 @keyframes confetti-fall {
     0% {
         transform: translateY(-100%) rotate(0deg);
@@ -169,9 +152,6 @@
     }
 }
 
-/* STYLES POUR LES ÉLÉMENTS */
-
-/* Texte avec dégradé doré spectaculaire */
 .special-new-year .text-gradient,
 .special-new-year h1,
 .special-new-year h2 {
@@ -192,7 +172,6 @@
     filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
 }
 
-/* Boutons avec effet doré */
 .special-new-year button,
 .special-new-year .button,
 .special-new-year a[class*="button"] {
@@ -213,7 +192,6 @@
         0 8px 25px rgba(255, 165, 0, 0.4);
 }
 
-/* Cartes avec bordure dorée */
 .special-new-year .glass,
 .special-new-year [class*="card"],
 .special-new-year .mesh-bg {
@@ -226,7 +204,6 @@
     animation: golden-glow-pulse 3s ease-in-out infinite;
 }
 
-/* Orbes de fond dorés */
 .special-new-year .animate-pulse-glow {
     background: radial-gradient(circle,
             rgba(255, 215, 0, 0.4) 0%,
@@ -238,7 +215,6 @@
     filter: blur(60px);
 }
 
-/* Header avec effet doré - Mode sombre */
 .special-new-year.dark header,
 .dark .special-new-year header {
     background: linear-gradient(to bottom,
@@ -248,58 +224,51 @@
     box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
 }
 
-/* Header avec effet doré - Mode clair - CONTRASTE MAXIMUM */
 .special-new-year:not(.dark) header {
     background: rgb(255, 255, 255) !important;
-    /* Blanc 100% opaque */
+    
     border-bottom: 2px solid rgba(184, 134, 11, 0.4) !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
     backdrop-filter: none !important;
 }
 
-/* Texte de navigation en mode clair - TRÈS SOMBRE pour contraste */
 .special-new-year:not(.dark) header nav a,
 .special-new-year:not(.dark) header nav button,
 .special-new-year:not(.dark) header a,
 .special-new-year:not(.dark) header button {
     color: rgb(30, 30, 30) !important;
-    /* Presque noir */
+    
 }
 
 .special-new-year:not(.dark) header nav a:hover,
 .special-new-year:not(.dark) header nav button:hover {
     color: rgb(0, 0, 0) !important;
-    /* Noir au hover */
+    
 }
 
-/* Logo avec rotation festive */
 .special-new-year header .w-10.h-10 {
     background: linear-gradient(135deg, #FFD700, #FFA500);
     animation: festive-rotate 20s linear infinite;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
 }
 
-/* Links avec effet doré au survol */
 .special-new-year a:hover {
     color: #FFD700;
     text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
-/* Effet de scintillement sur les icônes */
 .special-new-year svg,
 .special-new-year [class*="icon"] {
     filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));
     animation: twinkle 2s ease-in-out infinite;
 }
 
-/* Badge de mise à jour avec style festif */
 .special-new-year .inline-flex.items-center.px-4.py-2 {
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.1));
     border: 1px solid rgba(255, 215, 0, 0.4);
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
 }
 
-/* Footer avec ambiance dorée - Mode sombre */
 .special-new-year.dark footer,
 .dark .special-new-year footer {
     background: linear-gradient(to top,
@@ -308,15 +277,13 @@
     border-top: 1px solid rgba(255, 215, 0, 0.3);
 }
 
-/* Footer avec ambiance dorée - Mode clair */
 .special-new-year:not(.dark) footer {
     background: rgb(255, 255, 255) !important;
-    /* Blanc 100% opaque */
+    
     border-top: 2px solid rgba(184, 134, 11, 0.4) !important;
     color: rgb(30, 30, 30) !important;
 }
 
-/* Texte du footer en mode clair */
 .special-new-year:not(.dark) footer p,
 .special-new-year:not(.dark) footer a,
 .special-new-year:not(.dark) footer h5,
@@ -328,7 +295,6 @@
     color: rgb(0, 0, 0) !important;
 }
 
-/* Effet de neige dorée (particules) */
 .golden-particle {
     position: fixed;
     width: 8px;
@@ -341,7 +307,6 @@
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
 }
 
-/* Confettis dorés */
 .golden-confetti {
     position: fixed;
     width: 10px;
@@ -351,7 +316,6 @@
     animation: confetti-fall 5s linear infinite;
 }
 
-/* Effet de firework (feu d'artifice) */
 @keyframes firework {
     0% {
         transform: translate(0, 0);
@@ -377,7 +341,6 @@
     animation: firework 1s ease-out forwards;
 }
 
-/* Texte "Bonne Année" si présent */
 .special-new-year .new-year-text {
     font-size: 4rem;
     font-weight: 900;
@@ -391,19 +354,16 @@
     filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
 }
 
-/* Effet de lueur sur le curseur */
 .special-new-year {
     cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="8" fill="%23FFD700" opacity="0.5"/><circle cx="16" cy="16" r="4" fill="%23FFA500"/></svg>') 16 16, auto;
 }
 
-/* Amélioration de la sélection de texte */
 .special-new-year ::selection {
     background: rgba(255, 215, 0, 0.3);
     color: #FFD700;
     text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
-/* Scrollbar dorée */
 .special-new-year ::-webkit-scrollbar {
     width: 12px;
 }
@@ -422,11 +382,6 @@
     background: linear-gradient(180deg, #FFF4A3, #FFD700);
 }
 
-/* ============================================
-   EXCLUSIONS - Éléments qui gardent leur style original
-   ============================================ */
-
-/* NAVBAR - Garder le style original */
 .special-new-year header nav a,
 .special-new-year header nav button {
     background: none !important;
@@ -444,7 +399,6 @@
     background: none !important;
 }
 
-/* THEME TOGGLE - Garder le style original */
 .special-new-year header button[aria-label*="theme"],
 .special-new-year header button[aria-label*="Theme"],
 .special-new-year header button svg,
@@ -463,7 +417,6 @@
     box-shadow: none !important;
 }
 
-/* Icônes de la navbar - Pas de scintillement */
 .special-new-year header nav svg,
 .special-new-year header button[aria-label*="theme"] svg,
 .special-new-year header button[aria-label*="Theme"] svg {
@@ -471,7 +424,6 @@
     filter: none !important;
 }
 
-/* Bouton Admin - Garder le style original */
 .special-new-year header a[href="/admin"],
 .special-new-year header a[href="/admin"] button {
     background: none !important;
@@ -479,7 +431,6 @@
     box-shadow: none !important;
 }
 
-/* Liens de navigation - Style original */
 .special-new-year header nav {
     color: inherit !important;
 }
@@ -490,14 +441,12 @@
     text-decoration: none !important;
 }
 
-/* Réinitialiser les effets sur tous les boutons du header */
 .special-new-year header button:not([class*="w-10"]):not([class*="h-10"]) {
     background: transparent !important;
     animation: none !important;
     box-shadow: none !important;
 }
 
-/* Garder uniquement le logo avec l'effet doré */
 .special-new-year header .w-10.h-10 {
     background: linear-gradient(135deg, #FFD700, #FFA500) !important;
     animation: festive-rotate 20s linear infinite !important;

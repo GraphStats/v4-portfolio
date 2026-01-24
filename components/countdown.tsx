@@ -118,7 +118,7 @@ export function Countdown({ targetDate }: CountdownProps) {
     if (!timeLeft) {
         return (
             <div className="text-2xl font-bold text-muted-foreground animate-pulse text-center">
-                MODIFICATION TERMINÉE !
+                UPDATE COMPLETE!
             </div>
         )
     }

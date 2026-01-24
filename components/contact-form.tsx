@@ -24,13 +24,13 @@ export function ContactForm() {
 
             if (result.success) {
                 setIsSuccess(true)
-                toast.success("Message envoyé avec succès !")
+                toast.success("Message sent successfully!")
             } else {
-                toast.error("Erreur lors de l'envoi du message.")
+                toast.error("Failed to send the message.")
                 console.error(result.error)
             }
         } catch (e) {
-            toast.error("Une erreur est survenue.")
+            toast.error("An error occurred.")
         }
         setIsLoading(false)
     }
@@ -41,16 +41,16 @@ export function ContactForm() {
                 <div className="w-20 h-20 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-glow shadow-primary/20">
                     <CheckCircle2 className="w-10 h-10" />
                 </div>
-                <h3 className="text-2xl font-black tracking-tight">Message Envoyé !</h3>
+                <h3 className="text-2xl font-black tracking-tight">Message Sent!</h3>
                 <p className="text-muted-foreground font-medium max-w-md mx-auto leading-relaxed">
-                    Merci de m'avoir contacté. Je vous répondrai dans les plus brefs délais sur votre adresse e-mail.
+                    Thanks for reaching out. I'll get back to you as soon as possible at your email address.
                 </p>
                 <Button
                     variant="outline"
                     onClick={() => setIsSuccess(false)}
                     className="mt-6 rounded-xl border-white/10 hover:bg-white/5"
                 >
-                    Envoyer un autre message
+                    Send another message
                 </Button>
             </div>
         )
@@ -60,12 +60,12 @@ export function ContactForm() {
         <form onSubmit={onSubmit} className="space-y-6 text-left">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Nom</label>
+                    <label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Name</label>
                     <Input
                         id="name"
                         name="name"
                         required
-                        placeholder="Votre nom"
+                        placeholder="Your name"
                         className="h-11 rounded-xl bg-background/50 border-white/10 focus:border-primary/50 transition-colors"
                     />
                 </div>
@@ -76,19 +76,19 @@ export function ContactForm() {
                         name="email"
                         type="email"
                         required
-                        placeholder="votre@email.com"
+                        placeholder="your@email.com"
                         className="h-11 rounded-xl bg-background/50 border-white/10 focus:border-primary/50 transition-colors"
                     />
                 </div>
             </div>
 
             <div className="space-y-2">
-                <label htmlFor="subject" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Sujet</label>
+                <label htmlFor="subject" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Subject</label>
                 <Input
                     id="subject"
                     name="subject"
                     required
-                    placeholder="Sujet de votre message"
+                    placeholder="Subject of your message"
                     className="h-11 rounded-xl bg-background/50 border-white/10 focus:border-primary/50 transition-colors"
                 />
             </div>
@@ -99,7 +99,7 @@ export function ContactForm() {
                     id="message"
                     name="message"
                     required
-                    placeholder="Comment puis-je vous aider ?"
+                    placeholder="How can I help?"
                     className="min-h-[150px] rounded-xl bg-background/50 border-white/10 focus:border-primary/50 transition-colors resize-none p-4"
                 />
             </div>
@@ -112,12 +112,12 @@ export function ContactForm() {
                 {isLoading ? (
                     <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Envoi en cours...
+                        Sending...
                     </>
                 ) : (
                     <>
                         <Send className="mr-2 h-4 w-4" />
-                        Envoyer le message
+                        Send message
                     </>
                 )}
             </Button>

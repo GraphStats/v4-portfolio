@@ -10,7 +10,7 @@ interface ErrorModeScreenProps {
 export function ErrorModeScreen({ message, pathname }: ErrorModeScreenProps) {
   const isHome = pathname === "/"
   const fallbackMessage =
-    "Le site est surchargé ou en maintenance temporaire. Merci de réessayer dans quelques minutes. Si le problème persiste, n'hésitez pas à me contacter via hello@drayko.xyz."
+    "The site is overloaded or under temporary maintenance. Please try again in a few minutes. If the issue persists, feel free to contact me at hello@drayko.xyz."
 
   return (
     <div className="min-h-screen bg-background text-foreground relative flex items-center justify-center px-4 sm:px-6">
@@ -22,7 +22,7 @@ export function ErrorModeScreen({ message, pathname }: ErrorModeScreenProps) {
           <AlertTriangle className="h-8 w-8" />
         </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
-          Surcharge détectée
+          Overload detected
         </h1>
         <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
           {message && message.trim().length > 0 ? message : fallbackMessage}

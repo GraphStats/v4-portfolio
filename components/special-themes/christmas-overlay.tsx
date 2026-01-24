@@ -87,7 +87,7 @@ export function ChristmasOverlay() {
                                     letterSpacing: '0.05em',
                                 }}
                             >
-                                Joyeux Noël 2025 !
+                                Merry Christmas 2025!
                             </h2>
                             <p
                                 className="text-sm text-white/90 mt-1"
@@ -95,7 +95,7 @@ export function ChristmasOverlay() {
                                     textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
                                 }}
                             >
-                                Passez de merveilleuses fêtes ✨
+                                Wishing you a wonderful holiday season ?
                             </p>
                         </div>
                         <span className="text-4xl" role="img" aria-label="Gift">

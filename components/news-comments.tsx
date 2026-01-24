@@ -9,7 +9,7 @@ import type { NewsComment } from "@/lib/types"
 import { toast } from "sonner"
 import { MessageCircle, Send, Trash2, User } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
-import { fr } from "date-fns/locale"
+import { enUS } from "date-fns/locale"
 import Image from "next/image"
 
 interface NewsCommentsProps {
@@ -45,9 +45,9 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
             }
             setComments([newComment, ...comments])
             setContent("")
-            toast.success("Commentaire ajouté !")
+            toast.success("Comment added!")
         } else {
-            toast.error(result.error || "Une erreur est survenue")
+            toast.error(result.error || "An error occurred")
         }
         setIsSubmitting(false)
     }
@@ -56,9 +56,9 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
         const result = await deleteComment(commentId, newsId)
         if (result.success) {
             setComments(comments.filter(c => c.id !== commentId))
-            toast.success("Commentaire supprimé")
+            toast.success("Comment deleted")
         } else {
-            toast.error(result.error || "Une erreur est survenue")
+            toast.error(result.error || "An error occurred")
         }
     }
 
@@ -83,7 +83,7 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Posting as {user.firstName}</span>
                         </div>
                         <Textarea
-                            placeholder="Partagez votre avis sur cette news..."
+                            placeholder="Share your thoughts on this update..."
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             className="min-h-[120px] rounded-3xl border-white/10 bg-white/5 focus:bg-white/10 transition-colors p-6 text-sm"
@@ -95,11 +95,9 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
                                 disabled={isSubmitting || !content.trim()}
                                 className="rounded-full h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-widest text-[10px] shadow-lg shadow-primary/20"
                             >
-                                {isSubmitting ? "Envoi..." : (
+                                {isSubmitting ? "Sending..." : (
                                     <span className="flex items-center gap-2">
-                                        <Send className="h-3.5 w-3.5" />
-                                        Poster le commentaire
-                                    </span>
+                                        <Send className="h-3.5 w-3.5" />Post comment</span>
                                 )}
                             </Button>
                         </div>
@@ -108,12 +106,10 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
                     <div className="p-10 rounded-[2rem] border border-dashed border-white/10 bg-white/[0.01] text-center space-y-6">
                         <div className="space-y-2">
                             <p className="text-lg font-bold uppercase italic tracking-tight">Join the conversation</p>
-                            <p className="text-muted-foreground text-sm font-medium">Connectez-vous pour partager vos impressions.</p>
+                            <p className="text-muted-foreground text-sm font-medium">Sign in to share your thoughts.</p>
                         </div>
                         <SignInButton mode="modal">
-                            <Button className="rounded-full h-12 px-8 bg-white text-black font-black uppercase tracking-widest text-[10px] hover:bg-white/90">
-                                Se connecter
-                            </Button>
+                            <Button className="rounded-full h-12 px-8 bg-white text-black font-black uppercase tracking-widest text-[10px] hover:bg-white/90">Sign in</Button>
                         </SignInButton>
                     </div>
                 )}
@@ -121,7 +117,7 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
                 <div className="space-y-8 pt-8 border-t border-white/5">
                     {comments.length === 0 ? (
                         <p className="text-center text-muted-foreground font-medium py-10 italic">
-                            Aucun commentaire pour le moment. Soyez le premier à réagir !
+                            No comments yet. Be the first to respond!
                         </p>
                     ) : (
                         comments.map((comment) => (
@@ -142,7 +138,7 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
                                         <div className="space-x-3">
                                             <span className="text-sm font-black uppercase tracking-tight text-white">{comment.user_name}</span>
                                             <span className="text-[10px] font-bold text-muted-foreground/60 uppercase">
-                                                {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true, locale: fr })}
+                                                {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true, locale: enUS })}
                                             </span>
                                         </div>
                                         {user?.id === comment.user_id && (
