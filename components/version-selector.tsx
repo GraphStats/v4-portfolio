@@ -105,7 +105,7 @@ export function VersionSelector() {
                 startTransition("/v1.html")
                 break
             case "v2":
-                startTransition("/v2")
+                window.location.assign("https://v2.drayko.xyz")
                 break
             case "v3":
                 window.location.assign("https://v3.drayko.xyz")
