@@ -242,6 +242,27 @@ export async function getV4Mode() {
   }
 }
 
+export async function getErrorMode() {
+  const db = await getFirestoreServer()
+  try {
+    const docRef = doc(db, "settings", "general")
+    const docSnap = await getDoc(docRef)
+
+    if (docSnap.exists()) {
+      const data = docSnap.data()
+      return {
+        success: true,
+        isErrorMode: data.error_mode || false,
+        message: data.error_message || ""
+      }
+    }
+    return { success: true, isErrorMode: false, message: "" }
+  } catch (error: any) {
+    console.error("Error fetching error mode:", error)
+    return { success: false, error: error.message, isErrorMode: false, message: "" }
+  }
+}
+
 export async function updateV4Mode(isV4Mode: boolean, message?: string, progress?: number) {
   const db = await getFirestoreServer()
   try {
@@ -257,6 +278,24 @@ export async function updateV4Mode(isV4Mode: boolean, message?: string, progress
     return { success: true }
   } catch (error: any) {
     console.error("Error updating v4 mode:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+export async function updateErrorMode(isErrorMode: boolean, message?: string) {
+  const db = await getFirestoreServer()
+  try {
+    const docRef = doc(db, "settings", "general")
+    const data: any = { error_mode: isErrorMode }
+    if (message !== undefined) data.error_message = message
+
+    await setDoc(docRef, data, { merge: true })
+
+    revalidatePath("/")
+    revalidatePath("/admin/dashboard")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error updating error mode:", error)
     return { success: false, error: error.message }
   }
 }

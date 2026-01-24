@@ -39,10 +39,10 @@ export function V4TechStack() {
     const duration = marqueeWidth / speedFactor;
 
     return (
-        <section className="py-20 relative overflow-hidden bg-muted/5">
+        <section className="py-16 sm:py-20 relative overflow-hidden bg-muted/5">
             <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background z-10 pointer-events-none" />
 
-            <div className="container mx-auto px-6 mb-12 text-center">
+            <div className="container mx-auto px-4 sm:px-6 mb-10 sm:mb-12 text-center">
                 <motion.h3
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
@@ -61,14 +61,14 @@ export function V4TechStack() {
                         repeat: Infinity, 
                         ease: "linear" 
                     }}
-                    className="flex gap-12 whitespace-nowrap px-6"
+                    className="flex gap-8 sm:gap-12 whitespace-nowrap px-4 sm:px-6"
                 >
                     {[...tech, ...tech].map((item, i) => (
                         <div key={i} className="flex items-center gap-4 group/item">
                             <div className="p-4 rounded-2xl v4-glass border-white/5 group-hover/item:border-primary/50 transition-colors">
                                 <item.icon className={`w-8 h-8 ${item.color} group-hover/item:scale-110 transition-transform`} />
                             </div>
-                            <span className="text-2xl font-black text-muted-foreground group-hover/item:text-foreground transition-colors uppercase italic tracking-tighter">
+                            <span className="text-lg sm:text-xl md:text-2xl font-black text-muted-foreground group-hover/item:text-foreground transition-colors uppercase italic tracking-tighter">
                                 {item.name}
                             </span>
                         </div>

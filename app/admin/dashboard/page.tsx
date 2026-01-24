@@ -17,10 +17,11 @@ import { AdminNewsCard } from "@/components/admin-news-card"
 import { NewsDialog } from "@/components/news-dialog"
 import type { Project, Admin, SiteUpdate, News } from "@/lib/types"
 import { logoutAdmin } from "@/lib/auth"
-import { getAdmins, getMaintenanceMode, getAvailability, getV4Mode, getNews } from "@/lib/actions"
+import { getAdmins, getMaintenanceMode, getAvailability, getV4Mode, getNews, getErrorMode } from "@/lib/actions"
 import { MaintenanceToggle } from "@/components/maintenance-toggle"
 import { V4Toggle } from "@/components/v4-toggle"
 import { AvailabilityToggle } from "@/components/availability-toggle"
+import { ErrorModeToggle } from "@/components/error-mode-toggle"
 import { getFirestoreClient } from "@/lib/firebase/client"
 import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
 import Link from "next/link"
@@ -38,6 +39,8 @@ export default function AdminDashboardPage() {
   const [maintenanceMode, setMaintenanceMode] = useState(false)
   const [maintenanceMessage, setMaintenanceMessage] = useState("")
   const [maintenanceProgress, setMaintenanceProgress] = useState(0)
+  const [errorMode, setErrorMode] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
   const [v4Mode, setV4Mode] = useState(false)
   const [v4Message, setV4Message] = useState("")
   const [v4Progress, setV4Progress] = useState(0)
@@ -93,6 +96,14 @@ export default function AdminDashboardPage() {
     }
   }
 
+  const fetchErrorMode = async () => {
+    const result = await getErrorMode()
+    if (result.success) {
+      setErrorMode(result.isErrorMode)
+      setErrorMessage(result.message || "")
+    }
+  }
+
   const fetchAvailability = async () => {
     const result = await getAvailability()
     if (result.success && result.isAvailable !== undefined) {
@@ -112,6 +123,7 @@ export default function AdminDashboardPage() {
     fetchAdmins()
     fetchUpdateData()
     fetchMaintenanceMode()
+    fetchErrorMode()
     fetchV4Mode()
     fetchAvailability()
     fetchNews()
@@ -405,9 +417,13 @@ export default function AdminDashboardPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
               <MaintenanceToggle initialState={maintenanceMode} initialMessage={maintenanceMessage} initialProgress={maintenanceProgress} onUpdated={fetchMaintenanceMode} />
+            </div>
+
+            <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
+              <ErrorModeToggle initialState={errorMode} initialMessage={errorMessage} onUpdated={fetchErrorMode} />
             </div>
 
             <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">

@@ -8,6 +8,10 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { SpecialThemeHandler } from "@/components/special-theme-handler"
 import { ClerkThemeProvider } from "@/components/clerk-theme-provider"
 import { Toaster } from "sonner"
+import { headers } from "next/headers"
+import { getErrorMode } from "@/lib/actions"
+import { ErrorModeScreen } from "@/components/error-mode-screen"
+import { RouteTransitionProvider } from "@/components/route-transition"
 
 import "./globals.css"
 
@@ -29,18 +33,27 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const headersList = await headers()
+  const pathname = headersList.get("x-pathname") || ""
+  const isAdminRoute = pathname.startsWith("/admin")
+  const errorMode = await getErrorMode()
+  const showErrorMode = !isAdminRoute && errorMode.isErrorMode
+
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${outfit.variable}`}>
-      <head>
-        <script src="https://quge5.com/88/tag.min.js" data-zone="202767" async data-cfasync="false"></script>
-      </head>
       <body className="font-sans antialiased selection:bg-primary/30 selection:text-primary transition-colors duration-300" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange storageKey="theme">
           <ClerkThemeProvider>
             <SpecialThemeHandler />
             <Toaster position="top-right" richColors />
             <div className="relative flex min-h-screen flex-col">
-              <main className="flex-1">{children}</main>
+              <main className="flex-1">
+                {showErrorMode ? (
+                  <ErrorModeScreen message={errorMode.message} pathname={pathname} />
+                ) : (
+                  <RouteTransitionProvider>{children}</RouteTransitionProvider>
+                )}
+              </main>
             </div>
             <Analytics />
             <SpeedInsights />

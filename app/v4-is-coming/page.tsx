@@ -24,7 +24,7 @@ export default async function V4ComingPage() {
     }
 
     return (
-        <div className="dark min-h-screen relative flex items-center justify-center overflow-hidden bg-[#030712] font-sans text-foreground">
+        <div className="dark min-h-screen relative flex items-center justify-center overflow-hidden bg-[#030712] font-sans text-foreground px-4 sm:px-6">
             <div className="noise-overlay" />
 
             <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
@@ -33,61 +33,61 @@ export default async function V4ComingPage() {
                 <div className="absolute top-[20%] right-[10%] w-[40%] h-[40%] bg-cyan-500/10 rounded-full blur-[120px] animate-float" />
             </div>
 
-            <div className="relative z-10 p-6 w-full max-w-4xl">
+            <div className="relative z-10 p-4 sm:p-6 w-full max-w-4xl">
                 <div className="text-center space-y-12">
                     <div className="reveal-up">
-                        <div className="inline-flex items-center px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 text-xs font-black uppercase tracking-[0.2em] text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.2)] animate-pulse">
+                        <div className="inline-flex items-center px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.2)] animate-pulse">
                             <Sparkles className="h-4 w-4 mr-2" />
                             The next evolution is near
                         </div>
                     </div>
 
                     <div className="space-y-6">
-                        <h1 className="text-7xl md:text-9xl font-black tracking-tighter leading-none font-display">
+                        <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-none font-display">
                             <span className="block text-white/90">DRAYKO</span>
                             <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-blue-600 bg-clip-text text-transparent italic inline-block drop-shadow-[0_0_30px_rgba(59,130,246,0.3)]">
                                 VERSION 4.
                             </span>
                         </h1>
-                        <p className="text-xl md:text-2xl text-blue-100/60 font-medium max-w-2xl mx-auto leading-relaxed">
+                        <p className="text-base sm:text-lg md:text-2xl text-blue-100/60 font-medium max-w-2xl mx-auto leading-relaxed">
                             {message || "We are rebuilding the future of digital experiences from the ground up."}
                         </p>
                     </div>
 
-                    <div className="glass p-10 md:p-14 rounded-[3.5rem] border-white/5 backdrop-blur-3xl shadow-2xl space-y-10 relative overflow-hidden group">
+                    <div className="glass p-6 sm:p-8 md:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] border-white/5 backdrop-blur-3xl shadow-2xl space-y-8 sm:space-y-10 relative overflow-hidden group">
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50" />
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-10 border-b border-white/5">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 pb-8 sm:pb-10 border-b border-white/5">
                             <div className="flex flex-col items-center gap-3">
                                 <div className="p-4 rounded-2xl bg-white/5 text-blue-400">
                                     <Cpu className="h-6 w-6" />
                                 </div>
-                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">Code Rewrite</span>
+                                <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-white/40">Code Rewrite</span>
                             </div>
                             <div className="flex flex-col items-center gap-3">
                                 <div className="p-4 rounded-2xl bg-white/5 text-indigo-400">
                                     <Globe className="h-6 w-6" />
                                 </div>
-                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">Optimizing</span>
+                                <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-white/40">Optimizing</span>
                             </div>
                             <div className="flex flex-col items-center gap-3">
                                 <div className="p-4 rounded-2xl bg-white/5 text-cyan-400">
                                     <Code2 className="h-6 w-6" />
                                 </div>
-                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">New UI</span>
+                                <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-white/40">New UI</span>
                             </div>
                         </div>
 
                         <div className="space-y-6">
-                            <div className="flex justify-between items-end">
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                                 <div className="text-left">
                                     <span className="text-xs font-black uppercase tracking-[0.2em] text-blue-400/70 block mb-1">System Status</span>
-                                    <span className="text-2xl font-bold text-white uppercase tracking-tighter">
+                                    <span className="text-xl sm:text-2xl font-bold text-white uppercase tracking-tighter">
                                         {getStatusText(progress || 0)}
                                     </span>
                                 </div>
                                 <div className="text-right">
-                                    <span className="text-4xl font-black text-white italic">{progress}%</span>
+                                    <span className="text-3xl sm:text-4xl font-black text-white italic">{progress}%</span>
                                 </div>
                             </div>
 

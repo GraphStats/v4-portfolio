@@ -12,7 +12,7 @@ export default function V2Page() {
                     </div>
                     <div>
                         <h1 className="text-3xl font-black tracking-tight">Version 2</h1>
-                        <p className="text-muted-foreground">Projet Next.js séparé</p>
+                        <p className="text-muted-foreground">Deploy Vercel Error</p>
                     </div>
                 </div>
 
@@ -21,10 +21,10 @@ export default function V2Page() {
                         <Info className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                         <div className="space-y-2">
                             <p className="text-sm font-medium">
-                                La version 2 est un projet Next.js séparé situé dans le dossier <code className="px-2 py-1 rounded bg-background/50 text-xs">v2/</code>
+                                Cette version a une erreur de déploiement sur Vercel.
                             </p>
                             <p className="text-sm text-muted-foreground">
-                                Pour accéder à la version 2, vous devez démarrer le serveur depuis le dossier v2/ avec ses propres dépendances et configuration.
+                                Merci de visiter la version 4 qui est la version la plus récente et fonctionnelle.
                             </p>
                         </div>
                     </div>

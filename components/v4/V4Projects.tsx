@@ -1,15 +1,17 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ExternalLink, Github, ArrowRight, Layers, Lock, History, Pause, Play } from "lucide-react"
+import { ExternalLink, Github, ArrowRight, Layers, Lock, History, Pause, Play, Search, X } from "lucide-react"
 import { Project } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 import { useUser, SignInButton } from "@clerk/nextjs"
 import { HorizontalScrollSection } from "@/components/ui/HorizontalScrollSection"
+import { cn } from "@/lib/utils"
 
 interface V4ProjectsProps {
     projects: Project[]
@@ -17,32 +19,131 @@ interface V4ProjectsProps {
 
 export function V4Projects({ projects }: V4ProjectsProps) {
     const [filter, setFilter] = useState<string>("all")
+    const [query, setQuery] = useState<string>("")
     const { user } = useUser()
     const isSignedIn = !!user
 
-    const filteredProjects = filter === "all"
-        ? projects
-        : projects.filter(p => p.tags?.includes(filter))
+    const normalizedQuery = query.trim().toLowerCase()
 
-    const allTags = Array.from(new Set(projects.flatMap(p => p.tags || [])))
+    const filteredProjects = projects.filter((project) => {
+        const matchesFilter = filter === "all" || project.tags?.includes(filter)
+        const matchesQuery = !normalizedQuery
+            || [project.title, project.description, ...(project.tags || [])]
+                .filter(Boolean)
+                .some((value) => value.toLowerCase().includes(normalizedQuery))
+        return matchesFilter && matchesQuery
+    })
+
+    const allTags = Array.from(new Set(projects.flatMap(p => p.tags || []))).sort((a, b) => a.localeCompare(b))
+    const tagCounts = projects.reduce<Record<string, number>>((acc, project) => {
+        (project.tags || []).forEach((tag) => {
+            acc[tag] = (acc[tag] || 0) + 1
+        })
+        return acc
+    }, {})
+    const hasFilters = filter !== "all" || normalizedQuery.length > 0
+    const clearFilters = () => {
+        setFilter("all")
+        setQuery("")
+    }
 
     const headerContent = (
-        <div className="flex flex-col md:flex-row justify-between items-end gap-10 pt-16 md:pt-32">
-            <div className="space-y-4 max-w-2xl">
-                <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    className="text-primary font-black uppercase tracking-[0.3em] text-sm"
-                >
-                    Selected Works
-                </motion.div>
-                <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    className="text-5xl md:text-7xl font-black tracking-tighter"
-                >
-                    FEATURED <span className="text-muted-foreground/40 italic">PROJECTS</span>
-                </motion.h2>
+        <div className="flex flex-col gap-8 pt-16 md:pt-32">
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+                <div className="space-y-4 max-w-2xl">
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        className="text-primary font-black uppercase tracking-[0.3em] text-xs sm:text-sm"
+                    >
+                        Selected Works
+                    </motion.div>
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter"
+                    >
+                        FEATURED <span className="text-muted-foreground/40 italic">PROJECTS</span>
+                    </motion.h2>
+                    <p className="text-sm sm:text-base text-muted-foreground max-w-xl">
+                        Filtrez par tag ou recherchez un projet pour trouver rapidement ce que vous voulez explorer.
+                    </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3">
+                    <Badge className="rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                        {filteredProjects.length} / {projects.length} projets
+                    </Badge>
+                    {hasFilters && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 rounded-full text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-white"
+                            onClick={clearFilters}
+                        >
+                            <X className="w-3 h-3 mr-2" />
+                            Reset
+                        </Button>
+                    )}
+                </div>
+            </div>
+
+            <div className="flex flex-col gap-4">
+                <div className="flex flex-wrap gap-2">
+                    <button
+                        type="button"
+                        onClick={() => setFilter("all")}
+                        aria-pressed={filter === "all"}
+                        className={cn(
+                            "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-colors",
+                            filter === "all"
+                                ? "bg-primary text-primary-foreground border-primary/50"
+                                : "bg-white/5 text-muted-foreground border-white/10 hover:text-white hover:border-white/30"
+                        )}
+                    >
+                        All
+                        <span className="ml-2 text-[9px] font-black opacity-70">{projects.length}</span>
+                    </button>
+                    {allTags.map((tag) => (
+                        <button
+                            key={tag}
+                            type="button"
+                            onClick={() => setFilter(tag)}
+                            aria-pressed={filter === tag}
+                            className={cn(
+                                "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-colors",
+                                filter === tag
+                                    ? "bg-primary text-primary-foreground border-primary/50"
+                                    : "bg-white/5 text-muted-foreground border-white/10 hover:text-white hover:border-white/30"
+                            )}
+                        >
+                            {tag}
+                            <span className="ml-2 text-[9px] font-black opacity-70">{tagCounts[tag] || 0}</span>
+                        </button>
+                    ))}
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="relative flex-1">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                            value={query}
+                            onChange={(event) => setQuery(event.target.value)}
+                            type="search"
+                            placeholder="Search a project, tag, or keyword"
+                            className="h-11 rounded-xl bg-white/5 border-white/10 pl-9 text-sm text-foreground placeholder:text-muted-foreground"
+                        />
+                    </div>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-11 rounded-xl glass border-white/10 text-[10px] font-black uppercase tracking-widest"
+                        onClick={clearFilters}
+                        disabled={!hasFilters}
+                    >
+                        Clear filters
+                    </Button>
+                </div>
             </div>
         </div>
     );
@@ -50,9 +151,13 @@ export function V4Projects({ projects }: V4ProjectsProps) {
     return (
         <section id="projects" className="relative">
             <HorizontalScrollSection header={headerContent}>
-                {filteredProjects.map((project, index) => (
-                    <ProjectCard key={project.id} project={project} index={index} isSignedIn={isSignedIn} />
-                ))}
+                {filteredProjects.length > 0 ? (
+                    filteredProjects.map((project, index) => (
+                        <ProjectCard key={project.id} project={project} index={index} isSignedIn={isSignedIn} />
+                    ))
+                ) : (
+                    <EmptyState onReset={clearFilters} hasFilters={hasFilters} />
+                )}
             </HorizontalScrollSection>
         </section>
     )
@@ -74,7 +179,7 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
             whileInView={{ opacity: 1 }}
             transition={{ delay: index * 0.1 }}
             viewport={{ once: true }}
-            className={`group relative flex flex-col md:flex-row h-full v4-card p-4 md:p-6 hover:border-primary/50 transition-all duration-500 overflow-hidden ${isLocked ? "scale-[0.98] opacity-90" : ""} w-[90vw] md:w-[70vw] lg:w-[45vw] flex-shrink-0`}
+            className={`group relative flex flex-col md:flex-row h-full v4-card p-4 md:p-6 hover:border-primary/50 transition-all duration-500 overflow-hidden ${isLocked ? "scale-[0.98] opacity-90" : ""} w-full sm:w-[90vw] md:w-[70vw] lg:w-[45vw] flex-shrink-0`}
         >
             <div className="relative w-full md:w-2/5 md:min-w-[280px] lg:min-w-[320px] aspect-[16/10] md:aspect-square rounded-xl overflow-hidden mb-4 md:mb-0 md:mr-6 bg-muted/20 flex-shrink-0">
                 {project.image_url ? (
@@ -198,5 +303,30 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
 
             {!isLocked && <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/2 to-primary/20 rounded-2xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity -z-10" />}
         </motion.div>
+    )
+}
+
+function EmptyState({ onReset, hasFilters }: { onReset: () => void; hasFilters: boolean }) {
+    return (
+        <div className="v4-card p-8 md:p-12 rounded-2xl w-full sm:w-[90vw] md:w-[70vw] lg:w-[45vw] flex-shrink-0">
+            <div className="space-y-4 text-center">
+                <div className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground">
+                    No results
+                </div>
+                <h3 className="text-2xl md:text-3xl font-black">Aucun projet trouvé</h3>
+                <p className="text-sm md:text-base text-muted-foreground max-w-md mx-auto">
+                    Essayez un autre tag ou supprimez vos filtres pour revoir tous les projets.
+                </p>
+                {hasFilters && (
+                    <Button
+                        variant="outline"
+                        className="rounded-xl glass border-white/10 text-[10px] font-black uppercase tracking-widest"
+                        onClick={onReset}
+                    >
+                        Reset filters
+                    </Button>
+                )}
+            </div>
+        </div>
     )
 }

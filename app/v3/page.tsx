@@ -21,10 +21,10 @@ export default function V3Page() {
                         <Sparkles className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
                         <div className="space-y-2">
                             <p className="text-sm font-medium">
-                                La version 3 n'est pas encore disponible.
+                                La version 3 n'est pas disponible.
                             </p>
                             <p className="text-sm text-muted-foreground">
-                                Cette version est en cours de développement ou n'a pas été publiée. Veuillez utiliser une autre version du portfolio.
+                                Cette version n'a pas pu être récupérée, pour utiliser cette version, utiliser la WayBack Machine d'Internet Archive.
                             </p>
                         </div>
                     </div>

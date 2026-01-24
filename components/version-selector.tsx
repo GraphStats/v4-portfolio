@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter, usePathname } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Check, Code, Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useRouteTransition } from "@/components/route-transition"
 
 type Version = "v1" | "v2" | "v3" | "v4"
 
@@ -34,14 +35,14 @@ const VERSIONS: Array<{
         id: "v2",
         label: "Version 2",
         available: true,
-        description: "Version Next.js avec Supabase",
+        description: "Refonte graphique complète, nouvelle technologie",
         icon: Code,
     },
     {
         id: "v3",
         label: "Version 3",
-        available: false,
-        description: "Indisponible",
+        available: true,
+        description: "La v3, nouvelle interface",
         icon: Code,
     },
     {
@@ -56,8 +57,8 @@ const VERSIONS: Array<{
 const VERSION_STORAGE_KEY = "portfolio-version"
 
 export function VersionSelector() {
-    const router = useRouter()
     const pathname = usePathname()
+    const { startTransition } = useRouteTransition()
     const [currentVersion, setCurrentVersion] = useState<Version>("v4")
     const [mounted, setMounted] = useState(false)
 
@@ -101,16 +102,16 @@ export function VersionSelector() {
 
         switch (version) {
             case "v1":
-                window.location.href = "/v1.html"
+                startTransition("/v1.html")
                 break
             case "v2":
-                router.push("/v2")
+                startTransition("/v2")
                 break
             case "v3":
-                router.push("/v3")
+                startTransition("/v3")
                 break
             case "v4":
-                router.push("/")
+                startTransition("/")
                 break
         }
     }

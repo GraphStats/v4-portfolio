@@ -1,0 +1,131 @@
+"use client"
+
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+
+type RouteTransitionState = {
+    loading: boolean
+    progress: number
+    startTransition: (url: string) => void
+}
+
+const RouteTransitionContext = createContext<RouteTransitionState | null>(null)
+
+export function useRouteTransition() {
+    const context = useContext(RouteTransitionContext)
+    return context ?? { loading: false, progress: 0, startTransition: () => {} }
+}
+
+export function RouteTransitionProvider({ children }: { children: React.ReactNode }) {
+    const router = useRouter()
+    const [loading, setLoading] = useState(false)
+    const [progress, setProgress] = useState(0)
+    const timersRef = useRef({
+        progressTimer: null as ReturnType<typeof setInterval> | null,
+        finishTimer: null as ReturnType<typeof setTimeout> | null,
+        hideTimer: null as ReturnType<typeof setTimeout> | null,
+        slowTimer: null as ReturnType<typeof setTimeout> | null,
+    })
+    const latestUrl = useRef<string | null>(null)
+    const slowToastShown = useRef(false)
+    const loadingRef = useRef(false)
+
+    const clearTimers = () => {
+        if (timersRef.current.progressTimer) clearInterval(timersRef.current.progressTimer)
+        if (timersRef.current.finishTimer) clearTimeout(timersRef.current.finishTimer)
+        if (timersRef.current.hideTimer) clearTimeout(timersRef.current.hideTimer)
+        if (timersRef.current.slowTimer) clearTimeout(timersRef.current.slowTimer)
+    }
+
+    const startTransition = useCallback((url: string) => {
+        const nextUrl = new URL(url, window.location.href)
+        const currentUrl = new URL(window.location.href)
+
+        if (nextUrl.href === currentUrl.href) return
+
+        clearTimers()
+        latestUrl.current = `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`
+        slowToastShown.current = false
+
+        const isHome = nextUrl.pathname === "/"
+        const minDelay = isHome ? 2000 : 200
+        const maxDelay = isHome ? 4000 : 3000
+        const delay = minDelay + Math.floor(Math.random() * (maxDelay - minDelay + 1))
+        setLoading(true)
+        loadingRef.current = true
+        setProgress(10)
+
+        let current = 10
+        timersRef.current.progressTimer = setInterval(() => {
+            current = Math.min(current + Math.random() * 12, 90)
+            setProgress(current)
+        }, 200)
+
+        timersRef.current.slowTimer = setTimeout(() => {
+            if (!loadingRef.current || slowToastShown.current) return
+            slowToastShown.current = true
+            toast.info("Serveur chargé", {
+                description: isHome
+                    ? "Beaucoup de requêtes sont en cours. L'accueil peut être plus lent à charger (images, animations, etc.)."
+                    : "Beaucoup de requêtes sont en cours sur le serveur. Le site peut paraître plus lent."
+            })
+        }, 2500)
+
+        timersRef.current.finishTimer = setTimeout(() => {
+            clearTimers()
+            setProgress(100)
+            if (latestUrl.current) {
+                router.push(latestUrl.current)
+            }
+            timersRef.current.hideTimer = setTimeout(() => {
+                setLoading(false)
+                loadingRef.current = false
+                setProgress(0)
+            }, 200)
+        }, delay)
+    }, [router])
+    useEffect(() => {
+        const handleClick = (event: MouseEvent) => {
+            if (event.button !== 0) return
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+
+            const target = event.target as HTMLElement | null
+            const anchor = target?.closest("a") as HTMLAnchorElement | null
+            if (!anchor) return
+            if (anchor.target === "_blank" || anchor.hasAttribute("download")) return
+
+            const href = anchor.getAttribute("href")
+            if (!href || href.startsWith("mailto:") || href.startsWith("tel:")) return
+            if (href.startsWith("#")) return
+
+            const url = new URL(href, window.location.href)
+            if (url.origin !== window.location.origin) return
+
+            const currentUrl = new URL(window.location.href)
+            const isOnlyHashChange =
+                url.pathname === currentUrl.pathname &&
+                url.search === currentUrl.search &&
+                url.hash !== currentUrl.hash
+
+            if (isOnlyHashChange) return
+
+            event.preventDefault()
+            event.stopPropagation()
+            startTransition(url.href)
+        }
+
+        document.addEventListener("click", handleClick, true)
+        return () => document.removeEventListener("click", handleClick, true)
+    }, [startTransition])
+
+    useEffect(() => {
+        return () => clearTimers()
+    }, [])
+
+    return (
+        <RouteTransitionContext.Provider value={{ loading, progress, startTransition }}>
+            {children}
+        </RouteTransitionContext.Provider>
+    )
+}
