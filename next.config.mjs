@@ -33,6 +33,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'help.ovhcloud.com',
       },
+      {
+        protocol: 'https',
+        hostname: '**.public.blob.vercel-storage.com',
+      },
     ],
   },
 }
