@@ -11,6 +11,7 @@ type RouteTransitionState = {
 }
 
 const RouteTransitionContext = createContext<RouteTransitionState | null>(null)
+const VISITED_STORAGE_KEY = "route-visited-paths"
 
 export function useRouteTransition() {
     const context = useContext(RouteTransitionContext)
@@ -30,6 +31,7 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
     const latestUrl = useRef<string | null>(null)
     const slowToastShown = useRef(false)
     const loadingRef = useRef(false)
+    const visitedRef = useRef<Set<string>>(new Set())
 
     const clearTimers = () => {
         if (timersRef.current.progressTimer) clearInterval(timersRef.current.progressTimer)
@@ -48,9 +50,16 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
         latestUrl.current = `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`
         slowToastShown.current = false
 
+        const getRootSegment = (pathname: string) => pathname.split("/").filter(Boolean)[0] ?? ""
+        const getPathKey = (urlToKey: URL) => `${urlToKey.pathname}${urlToKey.search}`
+        const currentRoot = getRootSegment(currentUrl.pathname)
+        const nextRoot = getRootSegment(nextUrl.pathname)
         const isHome = nextUrl.pathname === "/"
-        const minDelay = isHome ? 2000 : 200
-        const maxDelay = isHome ? 4000 : 3000
+        const isSameSection = currentRoot !== "" && currentRoot === nextRoot
+        const hasVisited = visitedRef.current.has(getPathKey(nextUrl))
+        const visitedMultiplier = hasVisited ? 0.4 : 1
+        const minDelay = Math.round((isHome ? 1500 : isSameSection ? 300 : 500) * visitedMultiplier)
+        const maxDelay = Math.round((isHome ? 3500 : isSameSection ? 1000 : 2500) * visitedMultiplier)
         const delay = minDelay + Math.floor(Math.random() * (maxDelay - minDelay + 1))
         setLoading(true)
         loadingRef.current = true
@@ -76,6 +85,15 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
             clearTimers()
             setProgress(100)
             if (latestUrl.current) {
+                try {
+                    visitedRef.current.add(getPathKey(nextUrl))
+                    sessionStorage.setItem(
+                        VISITED_STORAGE_KEY,
+                        JSON.stringify(Array.from(visitedRef.current))
+                    )
+                } catch (error) {
+                    console.error("Error saving visited routes:", error)
+                }
                 router.push(latestUrl.current)
             }
             timersRef.current.hideTimer = setTimeout(() => {
@@ -85,6 +103,25 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
             }, 200)
         }, delay)
     }, [router])
+    useEffect(() => {
+        try {
+            const stored = sessionStorage.getItem(VISITED_STORAGE_KEY)
+            if (stored) {
+                const parsed = JSON.parse(stored)
+                if (Array.isArray(parsed)) {
+                    visitedRef.current = new Set(parsed.filter(item => typeof item === "string"))
+                }
+            }
+            const currentUrl = new URL(window.location.href)
+            visitedRef.current.add(`${currentUrl.pathname}${currentUrl.search}`)
+            sessionStorage.setItem(
+                VISITED_STORAGE_KEY,
+                JSON.stringify(Array.from(visitedRef.current))
+            )
+        } catch (error) {
+            console.error("Error loading visited routes:", error)
+        }
+    }, [])
     useEffect(() => {
         const handleClick = (event: MouseEvent) => {
             if (event.button !== 0) return
