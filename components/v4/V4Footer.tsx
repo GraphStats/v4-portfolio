@@ -17,6 +17,7 @@ export function V4Footer() {
         { label: "About", href: "/about" },
         { label: "Contact", href: "/contact" },
         { label: "Stats", href: "/stats" },
+        { label: "Tags", href: "/tags-info" },
     ]
 
     return (
