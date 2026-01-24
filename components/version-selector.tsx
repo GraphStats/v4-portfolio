@@ -108,7 +108,7 @@ export function VersionSelector() {
                 startTransition("/v2")
                 break
             case "v3":
-                startTransition("/v3")
+                window.location.assign("https://v3.drayko.xyz")
                 break
             case "v4":
                 startTransition("/")
