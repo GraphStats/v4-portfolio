@@ -30,13 +30,34 @@ export function V4TechStack() {
     const [marqueeWidth, setMarqueeWidth] = useState(0);
 
     useLayoutEffect(() => {
-        if (marqueeRef.current) {
-            setMarqueeWidth(marqueeRef.current.scrollWidth / 2);
-        }
+        const node = marqueeRef.current;
+        if (!node) return;
+
+        let frameId: number | null = null;
+        const updateWidth = () => {
+            const width = node.scrollWidth / 2;
+            setMarqueeWidth((prev) => (prev === width ? prev : width));
+        };
+
+        const onResize = () => {
+            if (frameId) cancelAnimationFrame(frameId);
+            frameId = requestAnimationFrame(updateWidth);
+        };
+
+        updateWidth();
+        window.addEventListener("resize", onResize);
+        const resizeObserver = new ResizeObserver(onResize);
+        resizeObserver.observe(node);
+
+        return () => {
+            window.removeEventListener("resize", onResize);
+            resizeObserver.disconnect();
+            if (frameId) cancelAnimationFrame(frameId);
+        };
     }, []);
 
     const speedFactor = 80; 
-    const duration = marqueeWidth / speedFactor;
+    const duration = marqueeWidth ? marqueeWidth / speedFactor : 1;
 
     return (
         <section className="py-16 sm:py-20 relative overflow-hidden bg-muted/5">
@@ -55,7 +76,7 @@ export function V4TechStack() {
             <div className="flex overflow-hidden group">
                 <motion.div
                     ref={marqueeRef}
-                    animate={{ x: [0, -marqueeWidth] }}
+                    animate={marqueeWidth ? { x: [0, -marqueeWidth] } : { x: 0 }}
                     transition={{ 
                         duration: duration,
                         repeat: Infinity, 

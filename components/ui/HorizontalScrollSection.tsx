@@ -12,7 +12,7 @@ export const HorizontalScrollSection = ({ children, header }: HorizontalScrollSe
   const targetRef = useRef<HTMLDivElement | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isStacked, setIsStacked] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: targetRef,
@@ -22,8 +22,8 @@ export const HorizontalScrollSection = ({ children, header }: HorizontalScrollSe
   const [viewportWidth, setViewportWidth] = useState(0);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 768px)");
-    const handleChange = () => setIsMobile(mediaQuery.matches);
+    const mediaQuery = window.matchMedia("(max-width: 1024px)");
+    const handleChange = () => setIsStacked(mediaQuery.matches);
     handleChange();
 
     if (mediaQuery.addEventListener) {
@@ -36,33 +36,42 @@ export const HorizontalScrollSection = ({ children, header }: HorizontalScrollSe
   }, []);
 
   useLayoutEffect(() => {
+    const carousel = carouselRef.current;
+    const viewport = viewportRef.current;
+    if (!carousel || !viewport) return;
+
+    let frameId: number | null = null;
     const updateWidths = () => {
-      if (carouselRef.current) {
-        setCarouselWidth(carouselRef.current.scrollWidth);
-      }
-      if (viewportRef.current) {
-        setViewportWidth(viewportRef.current.offsetWidth);
-      }
+      const nextCarouselWidth = carousel.scrollWidth;
+      const nextViewportWidth = viewport.offsetWidth;
+      setCarouselWidth((prev) => (prev === nextCarouselWidth ? prev : nextCarouselWidth));
+      setViewportWidth((prev) => (prev === nextViewportWidth ? prev : nextViewportWidth));
     };
 
-    const timeoutId = setTimeout(updateWidths, 100);
+    const onResize = () => {
+      if (frameId) cancelAnimationFrame(frameId);
+      frameId = requestAnimationFrame(updateWidths);
+    };
 
-    window.addEventListener("resize", updateWidths);
+    updateWidths();
+    const resizeObserver = new ResizeObserver(onResize);
+    resizeObserver.observe(carousel);
+    resizeObserver.observe(viewport);
+    window.addEventListener("resize", onResize);
+
     return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener("resize", updateWidths);
-    }
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", onResize);
+      if (frameId) cancelAnimationFrame(frameId);
+    };
   }, [children]);
 
-  const x = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [0, -(carouselWidth - viewportWidth)]
-  );
+  const scrollDistance = Math.max(0, carouselWidth - viewportWidth);
+  const x = useTransform(scrollYProgress, [0, 1], [0, -scrollDistance]);
 
-  const height = carouselWidth ? `${carouselWidth}px` : "100vh";
+  const height = `calc(100vh + ${scrollDistance}px)`;
 
-  if (isMobile) {
+  if (isStacked) {
     return (
       <section className="relative py-16">
         <div className="container mx-auto px-4 sm:px-6">
@@ -78,9 +87,9 @@ export const HorizontalScrollSection = ({ children, header }: HorizontalScrollSe
   return (
     <section ref={targetRef} className="relative" style={{ height }}>
       <div className="sticky top-0 h-screen w-full overflow-hidden">
-        <div className="container mx-auto px-4 sm:px-6 h-full flex flex-col">
+        <div className="container mx-auto px-4 sm:px-6 h-full flex flex-col gap-6">
           {header}
-          <div ref={viewportRef} className="flex items-center flex-grow mt-0 lg:mt-[-4rem]">
+          <div ref={viewportRef} className="flex items-start flex-grow pt-2 pb-6">
             <motion.div ref={carouselRef} style={{ x }} className="flex gap-8">
               {children}
             </motion.div>
