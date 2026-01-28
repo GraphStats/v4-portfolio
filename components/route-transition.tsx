@@ -33,6 +33,12 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
     const loadingRef = useRef(false)
     const visitedRef = useRef<Set<string>>(new Set())
 
+    const isExtendedLoadingWindow = (date: Date) => {
+        const utcMinutes = date.getUTCHours() * 60 + date.getUTCMinutes()
+        const minutes = (utcMinutes + 120) % (24 * 60)
+        return minutes >= 8 * 60 + 45 && minutes <= 20 * 60 + 45
+    }
+
     const clearTimers = () => {
         if (timersRef.current.progressTimer) clearInterval(timersRef.current.progressTimer)
         if (timersRef.current.finishTimer) clearTimeout(timersRef.current.finishTimer)
@@ -58,8 +64,9 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
         const isSameSection = currentRoot !== "" && currentRoot === nextRoot
         const hasVisited = visitedRef.current.has(getPathKey(nextUrl))
         const visitedMultiplier = hasVisited ? 0.4 : 1
-        const minDelay = Math.round((isHome ? 1500 : isSameSection ? 300 : 500) * visitedMultiplier)
-        const maxDelay = Math.round((isHome ? 3500 : isSameSection ? 1000 : 2500) * visitedMultiplier)
+        const timeMultiplier = isExtendedLoadingWindow(new Date()) ? 2 : 1
+        const minDelay = Math.round((isHome ? 1500 : isSameSection ? 300 : 500) * visitedMultiplier * timeMultiplier)
+        const maxDelay = Math.round((isHome ? 3500 : isSameSection ? 1000 : 2500) * visitedMultiplier * timeMultiplier)
         const delay = minDelay + Math.floor(Math.random() * (maxDelay - minDelay + 1))
         setLoading(true)
         loadingRef.current = true
@@ -79,7 +86,7 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
                     ? "High traffic right now. The homepage may load more slowly (images, animations, etc.)."
                     : "High traffic on the server. The site may feel slower."
             })
-        }, 2500)
+        }, 2500 * timeMultiplier)
 
         timersRef.current.finishTimer = setTimeout(() => {
             clearTimers()

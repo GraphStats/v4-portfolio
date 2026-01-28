@@ -23,6 +23,7 @@ const tech = [
     { name: "MongoDB", icon: Database, color: "text-green-400" },
     { name: "Redis", icon: Database, color: "text-red-500" },
     { name: "Ubuntu", icon: Terminal, color: "text-orange-500" },
+    { name: "Git", icon: Terminal, color: "text-green-500" },
 ];
 
 export function V4TechStack() {
