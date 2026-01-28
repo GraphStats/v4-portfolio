@@ -22,7 +22,7 @@ export const HorizontalScrollSection = ({ children, header }: HorizontalScrollSe
   const [viewportWidth, setViewportWidth] = useState(0);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 1024px), (max-height: 1000px)");
+    const mediaQuery = window.matchMedia("(max-width: 1024px)");
     const handleChange = () => setIsStacked(mediaQuery.matches);
     handleChange();
 
