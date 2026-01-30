@@ -1,14 +1,16 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ExternalLink, Github, ArrowRight, Layers, Lock, History, Pause, Play, Search, X } from "lucide-react"
+import { ExternalLink, Github, ArrowRight, Layers, Lock, History, Pause, Play, Search, X, Star, Eye } from "lucide-react"
 import { Project } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useUser, SignInButton } from "@clerk/nextjs"
 import { HorizontalScrollSection } from "@/components/ui/HorizontalScrollSection"
 import { cn } from "@/lib/utils"
@@ -20,19 +22,83 @@ interface V4ProjectsProps {
 export function V4Projects({ projects }: V4ProjectsProps) {
     const [filter, setFilter] = useState<string>("all")
     const [query, setQuery] = useState<string>("")
+    const [sortBy, setSortBy] = useState<string>("newest")
+    const [favorites, setFavorites] = useState<string[]>([])
     const { user } = useUser()
     const isSignedIn = !!user
 
     const normalizedQuery = query.trim().toLowerCase()
+    const favoriteSet = useMemo(() => new Set(favorites), [favorites])
+
+    useEffect(() => {
+        const stored = window.localStorage.getItem("v4-favorites")
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored)
+                if (Array.isArray(parsed)) setFavorites(parsed)
+            } catch {
+                setFavorites([])
+            }
+        }
+    }, [])
+
+    useEffect(() => {
+        window.localStorage.setItem("v4-favorites", JSON.stringify(favorites))
+    }, [favorites])
+
+    const toggleFavorite = (projectId: string) => {
+        setFavorites((prev) =>
+            prev.includes(projectId) ? prev.filter((id) => id !== projectId) : [...prev, projectId]
+        )
+    }
 
     const filteredProjects = projects.filter((project) => {
-        const matchesFilter = filter === "all" || project.tags?.includes(filter)
+        const matchesFilter = filter === "all"
+            || (filter === "favorites" ? favoriteSet.has(project.id) : project.tags?.includes(filter))
         const matchesQuery = !normalizedQuery
             || [project.title, project.description, ...(project.tags || [])]
                 .filter(Boolean)
                 .some((value) => value.toLowerCase().includes(normalizedQuery))
         return matchesFilter && matchesQuery
     })
+
+    const getTimestamp = (value: unknown) => {
+        if (!value) return 0
+        if (value instanceof Date) return value.getTime()
+        if (typeof value === "number") return value
+        if (typeof value === "string") {
+            const parsed = Date.parse(value)
+            return Number.isNaN(parsed) ? 0 : parsed
+        }
+        if (typeof value === "object" && value && "seconds" in value) {
+            return Number((value as { seconds: number }).seconds) * 1000
+        }
+        return 0
+    }
+
+    const getStatusRank = (project: Project) => {
+        if (project.in_development) return project.development_status === "paused" ? 1 : 0
+        if (project.is_completed) return 2
+        if (project.is_archived) return 3
+        return 4
+    }
+
+    const sortedProjects = useMemo(() => {
+        const list = [...filteredProjects]
+        switch (sortBy) {
+            case "oldest":
+                return list.sort((a, b) => getTimestamp(a.created_at) - getTimestamp(b.created_at))
+            case "progress":
+                return list.sort((a, b) => (b.development_progress || 0) - (a.development_progress || 0))
+            case "status":
+                return list.sort((a, b) => getStatusRank(a) - getStatusRank(b))
+            case "title":
+                return list.sort((a, b) => a.title.localeCompare(b.title))
+            case "newest":
+            default:
+                return list.sort((a, b) => getTimestamp(b.created_at) - getTimestamp(a.created_at))
+        }
+    }, [filteredProjects, sortBy])
 
     const allTags = Array.from(new Set(projects.flatMap(p => p.tags || []))).sort((a, b) => a.localeCompare(b))
     const tagCounts = projects.reduce<Record<string, number>>((acc, project) => {
@@ -41,6 +107,7 @@ export function V4Projects({ projects }: V4ProjectsProps) {
         })
         return acc
     }, {})
+    const favoriteCount = projects.filter(project => favoriteSet.has(project.id)).length
     const hasFilters = filter !== "all" || normalizedQuery.length > 0
     const clearFilters = () => {
         setFilter("all")
@@ -70,14 +137,14 @@ export function V4Projects({ projects }: V4ProjectsProps) {
                     </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
-                    <Badge className="rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                        {filteredProjects.length} / {projects.length} projects
-                    </Badge>
-                    {hasFilters && (
-                        <Button
-                            variant="ghost"
-                            size="sm"
+            <div className="flex flex-wrap items-center gap-3">
+                <Badge className="rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    {sortedProjects.length} / {projects.length} projects
+                </Badge>
+                {hasFilters && (
+                    <Button
+                        variant="ghost"
+                        size="sm"
                             className="h-8 rounded-full text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-white"
                             onClick={clearFilters}
                         >
@@ -103,6 +170,21 @@ export function V4Projects({ projects }: V4ProjectsProps) {
                     >
                         All
                         <span className="ml-2 text-[9px] font-black opacity-70">{projects.length}</span>
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setFilter("favorites")}
+                        aria-pressed={filter === "favorites"}
+                        className={cn(
+                            "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-colors inline-flex items-center gap-1.5",
+                            filter === "favorites"
+                                ? "bg-primary text-primary-foreground border-primary/50"
+                                : "bg-white/5 text-muted-foreground border-white/10 hover:text-white hover:border-white/30"
+                        )}
+                    >
+                        <Star className={cn("w-3 h-3", filter === "favorites" ? "fill-current" : "")} />
+                        Favorites
+                        <span className="ml-1 text-[9px] font-black opacity-70">{favoriteCount}</span>
                     </button>
                     {allTags.map((tag) => (
                         <button
@@ -134,6 +216,18 @@ export function V4Projects({ projects }: V4ProjectsProps) {
                             className="h-11 rounded-xl bg-white/5 border-white/10 pl-9 text-sm text-foreground placeholder:text-muted-foreground"
                         />
                     </div>
+                    <Select value={sortBy} onValueChange={setSortBy}>
+                        <SelectTrigger className="h-11 w-full sm:w-52 rounded-xl bg-white/5 border-white/10 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                            <SelectValue placeholder="Sort by" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-background/95 border-white/10">
+                            <SelectItem value="newest">Newest</SelectItem>
+                            <SelectItem value="oldest">Oldest</SelectItem>
+                            <SelectItem value="status">Status</SelectItem>
+                            <SelectItem value="progress">Progress</SelectItem>
+                            <SelectItem value="title">Title</SelectItem>
+                        </SelectContent>
+                    </Select>
                     <Button
                         variant="outline"
                         size="sm"
@@ -149,11 +243,18 @@ export function V4Projects({ projects }: V4ProjectsProps) {
     );
 
     return (
-        <section id="projects" className="relative">
+        <section id="projects" className="relative scroll-mt-28">
             <HorizontalScrollSection header={headerContent}>
-                {filteredProjects.length > 0 ? (
-                    filteredProjects.map((project, index) => (
-                        <ProjectCard key={project.id} project={project} index={index} isSignedIn={isSignedIn} />
+                {sortedProjects.length > 0 ? (
+                    sortedProjects.map((project, index) => (
+                        <ProjectCard
+                            key={project.id}
+                            project={project}
+                            index={index}
+                            isSignedIn={isSignedIn}
+                            isFavorite={favoriteSet.has(project.id)}
+                            onToggleFavorite={toggleFavorite}
+                        />
                     ))
                 ) : (
                     <EmptyState onReset={clearFilters} hasFilters={hasFilters} />
@@ -163,7 +264,19 @@ export function V4Projects({ projects }: V4ProjectsProps) {
     )
 }
 
-function ProjectCard({ project, index, isSignedIn }: { project: Project; index: number; isSignedIn: boolean }) {
+function ProjectCard({
+    project,
+    index,
+    isSignedIn,
+    isFavorite,
+    onToggleFavorite,
+}: {
+    project: Project
+    index: number
+    isSignedIn: boolean
+    isFavorite: boolean
+    onToggleFavorite: (projectId: string) => void
+}) {
     const isLocked = project.requires_auth && !isSignedIn
 
     const getStatusText = () => {
@@ -181,6 +294,18 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
             viewport={{ once: true }}
             className={`group relative flex flex-col md:flex-row h-full v4-card p-4 md:p-6 hover:border-primary/50 transition-all duration-500 overflow-hidden ${isLocked ? "scale-[0.98] opacity-90" : ""} w-full sm:w-[90vw] md:w-[70vw] lg:w-[45vw] flex-shrink-0`}
         >
+            <button
+                type="button"
+                onClick={() => onToggleFavorite(project.id)}
+                aria-pressed={isFavorite}
+                className={cn(
+                    "absolute top-4 right-4 z-10 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center transition-all",
+                    isFavorite ? "bg-primary text-primary-foreground" : "bg-white/5 text-muted-foreground hover:text-white hover:border-white/30"
+                )}
+            >
+                <Star className={cn("w-4 h-4", isFavorite && "fill-current")} />
+                <span className="sr-only">{isFavorite ? "Remove from favorites" : "Add to favorites"}</span>
+            </button>
             <div className="relative w-full md:w-2/5 md:min-w-[280px] lg:min-w-[320px] aspect-[16/10] md:aspect-square rounded-xl overflow-hidden mb-4 md:mb-0 md:mr-6 bg-muted/20 flex-shrink-0">
                 {project.image_url ? (
                     <Image
@@ -227,6 +352,29 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
                 <p className={`text-sm md:text-base text-muted-foreground line-clamp-3 md:line-clamp-4 leading-relaxed ${isLocked ? "opacity-30" : ""}`}>
                     {project.description}
                 </p>
+
+                <div className="flex flex-wrap gap-2">
+                    {project.requires_auth && (
+                        <Badge className="rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                            Members
+                        </Badge>
+                    )}
+                    {project.is_completed && (
+                        <Badge className="rounded-full bg-primary/10 border border-primary/20 text-[9px] font-black uppercase tracking-widest text-primary">
+                            Completed
+                        </Badge>
+                    )}
+                    {project.is_archived && (
+                        <Badge className="rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                            Archived
+                        </Badge>
+                    )}
+                    {project.in_development && (
+                        <Badge className="rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                            {project.development_status === "paused" ? "Paused" : "In Development"}
+                        </Badge>
+                    )}
+                </div>
 
                 {project.in_development && (
                     <div className="space-y-2">
@@ -283,6 +431,117 @@ function ProjectCard({ project, index, isSignedIn }: { project: Project; index: 
                             )}
                         </div>
                     )}
+
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button
+                                variant="outline"
+                                className="w-full h-10 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5"
+                            >
+                                <Eye className="w-3 h-3 mr-2" />
+                                Quick View
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="bg-background/95 border-white/10 sm:max-w-4xl">
+                            <div className="grid gap-6 md:grid-cols-[1.2fr,1fr]">
+                                <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-muted/20">
+                                    {project.image_url ? (
+                                        <Image
+                                            src={project.image_url}
+                                            alt={project.title}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center opacity-30">
+                                            <Layers className="w-12 h-12" />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="space-y-5">
+                                    <DialogHeader>
+                                        <DialogTitle className="text-2xl font-black tracking-tight">
+                                            {project.title}
+                                        </DialogTitle>
+                                        <DialogDescription className="text-sm text-muted-foreground leading-relaxed">
+                                            {project.description}
+                                        </DialogDescription>
+                                    </DialogHeader>
+
+                                    <div className="flex flex-wrap gap-2">
+                                        {project.tags?.map(tag => (
+                                            <Badge key={tag} className="rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                                                #{tag}
+                                            </Badge>
+                                        ))}
+                                    </div>
+
+                                    {project.in_development && (
+                                        <div className="space-y-2">
+                                            <div className="flex justify-between text-[10px] uppercase font-black tracking-widest text-muted-foreground">
+                                                <span>Progress</span>
+                                                <span>{project.development_progress || 0}%</span>
+                                            </div>
+                                            <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                                                <div className="h-full bg-primary" style={{ width: `${project.development_progress || 0}%` }} />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div className="flex flex-wrap gap-2">
+                                        <Button
+                                            type="button"
+                                            variant={isFavorite ? "default" : "outline"}
+                                            className="rounded-xl text-[10px] font-black uppercase tracking-widest"
+                                            onClick={() => onToggleFavorite(project.id)}
+                                        >
+                                            <Star className={cn("w-3 h-3 mr-2", isFavorite && "fill-current")} />
+                                            {isFavorite ? "Favorited" : "Add to favorites"}
+                                        </Button>
+                                        <Badge className="rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                                            {getStatusText()}
+                                        </Badge>
+                                    </div>
+
+                                    {!isLocked && (project.project_url || project.github_url) && (
+                                        <div className="flex flex-col sm:flex-row gap-3">
+                                            {project.project_url && (
+                                                <Button asChild size="sm" className="rounded-xl">
+                                                    <Link href={project.project_url} target="_blank" rel="noopener noreferrer">
+                                                        <ExternalLink className="w-3 h-3 mr-2" />
+                                                        Live Demo
+                                                    </Link>
+                                                </Button>
+                                            )}
+                                            {project.github_url && (
+                                                <Button asChild size="sm" variant="outline" className="rounded-xl">
+                                                    <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
+                                                        <Github className="w-3 h-3 mr-2" />
+                                                        GitHub
+                                                    </Link>
+                                                </Button>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    <Button
+                                        asChild
+                                        variant="ghost"
+                                        className="w-full h-10 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5"
+                                    >
+                                        <Link href={
+                                            (project.slug === "my-portfolio-this-web-site" || project.title === "My portfolio (this web site)")
+                                                ? "/update"
+                                                : `/${project.slug || project.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}/update`
+                                        }>
+                                            <History className="w-3 h-3 mr-2" />
+                                            View Updates
+                                        </Link>
+                                    </Button>
+                                </div>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
 
                     <Button
                         asChild
