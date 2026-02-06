@@ -406,7 +406,7 @@ export default function AdminProjectsPage() {
       </header>
 
       <main className="relative z-10 container mx-auto px-6 py-8 space-y-6">
-        <Card>
+        <Card className="v4-card">
           <CardContent className="py-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-widest text-muted-foreground">Mode</p>
@@ -639,17 +639,19 @@ export default function AdminProjectsPage() {
           </Card>
         ) : opsMode === "single" ? (
           <>
-            <Card>
-              <CardHeader className="space-y-1">
-                <CardTitle className="text-2xl">Projet: {currentProject?.title || "-"}</CardTitle>
-                <CardDescription>Change de projet quand tu veux.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-end">
-                  <div className="space-y-2">
-                    <Label htmlFor="project">Changer de projet</Label>
+            <Card className="v4-card">
+              <CardContent className="py-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">Projet courant</p>
+                  <p className="font-semibold truncate">{currentProject?.title || "-"}</p>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-end gap-3">
+                  <div className="space-y-1">
+                    <Label htmlFor="project" className="text-xs">
+                      Changer
+                    </Label>
                     <Select value={selectedProjectId} onValueChange={setSelectedProjectId} disabled={loadingProjects}>
-                      <SelectTrigger className="w-full h-10">
+                      <SelectTrigger className="w-full sm:w-[320px] h-10">
                         <SelectValue placeholder={loadingProjects ? "Chargement..." : "Choisir un projet"} />
                       </SelectTrigger>
                       <SelectContent>
@@ -661,10 +663,9 @@ export default function AdminProjectsPage() {
                       </SelectContent>
                     </Select>
                   </div>
-
-                  <div className="flex items-center gap-2 justify-between md:justify-end">
-                    <Badge variant="secondary">Derniere sync: {formatDate(currentData?.last_updated)}</Badge>
-                  </div>
+                  <Badge variant="secondary" className="h-10 flex items-center justify-center px-3">
+                    Derniere sync: {formatDate(currentData?.last_updated)}
+                  </Badge>
                 </div>
               </CardContent>
             </Card>
@@ -704,12 +705,13 @@ export default function AdminProjectsPage() {
           </TabsContent>
 
           <TabsContent value="roadmap">
-            <Card>
-              <CardHeader className="space-y-1">
-                <CardTitle>Roadmap</CardTitle>
-                <CardDescription>Ajoute une mise a jour courte. Change le statut quand tu avances.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
+              <Card className="v4-card">
+                <CardHeader className="space-y-1">
+                  <CardTitle>Nouvelle mise a jour</CardTitle>
+                  <CardDescription>Cree une entree (sync avec le dashboard).</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="u-title">Titre</Label>
@@ -768,10 +770,15 @@ export default function AdminProjectsPage() {
                     </Button>
                   </div>
                 </div>
+                </CardContent>
+              </Card>
 
-                <Separator />
-
-                <div className="space-y-3">
+              <Card className="v4-card">
+                <CardHeader className="space-y-1">
+                  <CardTitle>Mises a jour publiees</CardTitle>
+                  <CardDescription>Liste basee sur le changelog du projet.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3 max-h-[70vh] overflow-auto pr-1">
                   {currentChangelog.length === 0 ? (
                     <p className="text-sm text-muted-foreground">Aucune entree.</p>
                   ) : (
@@ -780,51 +787,52 @@ export default function AdminProjectsPage() {
                       const status: ProjectUpdateStatus = meta?.status || "planned"
                       const summary = (c.changes || []).join(" | ")
                       return (
-                      <div key={c.id} className="rounded-lg border p-4 space-y-2">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="space-y-1">
-                            <p className="font-semibold">{c.version}</p>
-                            <p className="text-sm text-muted-foreground">{summary}</p>
-                          </div>
-                          <Button variant="ghost" size="icon" onClick={() => deleteUpdate(c.id)} disabled={saving}>
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-2">
-                          <Badge variant="secondary">Statut: {updateStatusLabel[status]}</Badge>
-                          <Badge variant="secondary">Date: {formatDate(c.date)}</Badge>
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-2">
-                          {(["idea", "planned", "in_progress", "done"] as ProjectUpdateStatus[]).map((s) => (
-                            <Button
-                              key={s}
-                              size="sm"
-                              variant={status === s ? "default" : "outline"}
-                              onClick={() => setUpdateStatus(c.id, s)}
-                              disabled={saving || !currentData}
-                            >
-                              {updateStatusLabel[s]}
+                        <div key={c.id} className="rounded-lg border p-4 space-y-2">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="space-y-1">
+                              <p className="font-semibold">{c.version}</p>
+                              <p className="text-sm text-muted-foreground">{summary}</p>
+                            </div>
+                            <Button variant="ghost" size="icon" onClick={() => deleteUpdate(c.id)} disabled={saving}>
+                              <Trash2 className="h-4 w-4" />
                             </Button>
-                          ))}
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-2">
+                            <Badge variant="secondary">Statut: {updateStatusLabel[status]}</Badge>
+                            <Badge variant="secondary">Date: {formatDate(c.date)}</Badge>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-2">
+                            {(["idea", "planned", "in_progress", "done"] as ProjectUpdateStatus[]).map((s) => (
+                              <Button
+                                key={s}
+                                size="sm"
+                                variant={status === s ? "default" : "outline"}
+                                onClick={() => setUpdateStatus(c.id, s)}
+                                disabled={saving || !currentData}
+                              >
+                                {updateStatusLabel[s]}
+                              </Button>
+                            ))}
+                          </div>
                         </div>
-                      </div>
                       )
                     })
                   )}
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="calendar">
-            <Card>
-              <CardHeader className="space-y-1">
-                <CardTitle>Calendrier</CardTitle>
-                <CardDescription>Ajoute un evenement (date + type + note). Liste triee par date.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <Card className="v4-card">
+                <CardHeader className="space-y-1">
+                  <CardTitle>Nouvel evenement</CardTitle>
+                  <CardDescription>Ajoute un evenement (date + type + note).</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="e-title">Titre</Label>
@@ -882,10 +890,15 @@ export default function AdminProjectsPage() {
                     Ajouter
                   </Button>
                 </div>
+                </CardContent>
+              </Card>
 
-                <Separator />
-
-                <div className="space-y-3">
+              <Card className="v4-card">
+                <CardHeader className="space-y-1">
+                  <CardTitle>Evenements planifies</CardTitle>
+                  <CardDescription>Liste triee par date.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
                   {(currentData?.events || []).length === 0 ? (
                     <p className="text-sm text-muted-foreground">Aucun evenement.</p>
                   ) : (
@@ -906,11 +919,11 @@ export default function AdminProjectsPage() {
                         </div>
                       ))
                   )}
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
-            </Tabs>
+        </Tabs>
           </>
         ) : null}
       </main>
