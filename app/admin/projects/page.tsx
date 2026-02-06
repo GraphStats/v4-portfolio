@@ -432,10 +432,11 @@ export default function AdminProjectsPage() {
         </Card>
 
         {opsMode === "general" ? (
-          <Card>
+          <>
+          <Card className="v4-card">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl">Vue generale</CardTitle>
-              <CardDescription>Dernieres mises a jour, derniers evenements et calendrier global.</CardDescription>
+              <CardDescription>Dernieres mises a jour et derniers evenements.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -521,89 +522,90 @@ export default function AdminProjectsPage() {
                   )}
                 </div>
               </div>
+            </CardContent>
+          </Card>
 
-              <Separator />
-
-              <div className="space-y-3">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                  <div>
-                    <p className="font-semibold">Calendrier</p>
-                    <p className="text-sm text-muted-foreground">Tous les evenements (mode grille).</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      className="rounded-full"
-                      onClick={() => setGeneralMonth((d) => startOfMonth(new Date(d.getFullYear(), d.getMonth() - 1, 1)))}
-                    >
-                      Prev
-                    </Button>
-                    <Badge variant="secondary">
-                      {generalMonth.toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}
-                    </Badge>
-                    <Button
-                      variant="outline"
-                      className="rounded-full"
-                      onClick={() => setGeneralMonth((d) => startOfMonth(new Date(d.getFullYear(), d.getMonth() + 1, 1)))}
-                    >
-                      Next
-                    </Button>
-                  </div>
+          <Card className="v4-card">
+            <CardHeader className="space-y-1">
+              <CardTitle className="text-2xl">Calendrier</CardTitle>
+              <CardDescription>Tous les evenements (mode grille).</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    className="rounded-full"
+                    onClick={() => setGeneralMonth((d) => startOfMonth(new Date(d.getFullYear(), d.getMonth() - 1, 1)))}
+                  >
+                    Prev
+                  </Button>
+                  <Badge variant="secondary">
+                    {generalMonth.toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}
+                  </Badge>
+                  <Button
+                    variant="outline"
+                    className="rounded-full"
+                    onClick={() => setGeneralMonth((d) => startOfMonth(new Date(d.getFullYear(), d.getMonth() + 1, 1)))}
+                  >
+                    Next
+                  </Button>
                 </div>
+              </div>
 
-                <div className="grid grid-cols-7 gap-2 text-xs text-muted-foreground">
-                  {["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"].map((d) => (
-                    <div key={d} className="px-2">
-                      {d}
-                    </div>
-                  ))}
-                </div>
+              <div className="grid grid-cols-7 gap-2 text-xs text-muted-foreground">
+                {["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"].map((d) => (
+                  <div key={d} className="px-2">
+                    {d}
+                  </div>
+                ))}
+              </div>
 
-                <div className="grid grid-cols-7 gap-2">
-                  {generalCalendarDays.days.map((day) => {
-                    const key = ymd(day)
-                    const isInMonth = day.getMonth() === generalMonth.getMonth()
-                    const dayEvents = eventsByYmd.get(key) || []
-                    const isToday = sameDay(day, new Date())
+              <div className="grid grid-cols-7 gap-2">
+                {generalCalendarDays.days.map((day) => {
+                  const key = ymd(day)
+                  const isInMonth = day.getMonth() === generalMonth.getMonth()
+                  const dayEvents = eventsByYmd.get(key) || []
+                  const isToday = sameDay(day, new Date())
 
-                    return (
-                      <div
-                        key={key}
-                        className={[
-                          "min-h-24 rounded-lg border p-2 space-y-1",
-                          isInMonth ? "bg-background/40" : "opacity-50",
-                          isToday ? "border-primary" : "",
-                        ].join(" ")}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-semibold">{day.getDate()}</span>
-                          {dayEvents.length ? (
-                            <Badge variant="secondary" className="text-[10px]">
-                              {dayEvents.length}
-                            </Badge>
-                          ) : null}
-                        </div>
-                        <div className="space-y-1">
-                          {dayEvents.slice(0, 3).map((row) => (
-                            <div
-                              key={`${row.projectTitle}:${row.event.id}`}
-                              className="w-full text-left text-[11px] rounded-md px-2 py-1 border border-white/10"
-                            >
-                              <span className="font-semibold">{eventTypeLabel[row.event.type]}</span>
-                              <span className="text-muted-foreground">: {row.event.title}</span>
-                            </div>
-                          ))}
-                          {dayEvents.length > 3 ? (
-                            <p className="text-[11px] text-muted-foreground px-2">+{dayEvents.length - 3} autres</p>
-                          ) : null}
-                        </div>
+                  return (
+                    <div
+                      key={key}
+                      className={[
+                        "min-h-24 rounded-lg border p-2 space-y-1",
+                        isInMonth ? "bg-background/40" : "opacity-50",
+                        isToday ? "border-primary" : "",
+                      ].join(" ")}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold">{day.getDate()}</span>
+                        {dayEvents.length ? (
+                          <Badge variant="secondary" className="text-[10px]">
+                            {dayEvents.length}
+                          </Badge>
+                        ) : null}
                       </div>
-                    )
-                  })}
-                </div>
+                      <div className="space-y-1">
+                        {dayEvents.slice(0, 3).map((row) => (
+                          <div
+                            key={`${row.projectTitle}:${row.event.id}`}
+                            className="w-full text-left text-[11px] rounded-md px-2 py-1 border border-white/10"
+                          >
+                            <span className="font-semibold">{eventTypeLabel[row.event.type]}</span>
+                            <span className="text-muted-foreground">: {row.event.title}</span>
+                          </div>
+                        ))}
+                        {dayEvents.length > 3 ? (
+                          <p className="text-[11px] text-muted-foreground px-2">+{dayEvents.length - 3} autres</p>
+                        ) : null}
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </CardContent>
           </Card>
+          </>
         ) : opsMode === "single" && !isProjectConfirmed ? (
           <Card>
             <CardHeader className="space-y-1">
