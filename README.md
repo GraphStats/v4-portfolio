@@ -1,106 +1,67 @@
-# Portfolio (Next.js + Firebase)
+# Drayko - Creative Developer (Next.js)
 
-Portfolio personnel multi-pages construit avec Next.js, Firestore et Clerk.
+Portfolio + panel admin (dashboard + "Projets Ops") construit avec Next.js (App Router), Firebase/Firestore, Clerk, Tailwind + Radix UI.
 
-## Fonctionnalites
+## Features
 
-- Pages de contenu (about, contact, news, stats, tags, update, etc.)
-- Liste de projets chargee depuis Firestore
-- Dashboard admin pour gerer les projets et la configuration speciale
-- Authentification utilisateur via Clerk pour les zones protegees
-- UI moderne (Tailwind CSS + Radix UI) avec animations (Framer Motion)
-- Analytics et performance via Vercel
+- Pages publiques (v4 UI)
+- Admin login + dashboard: gestion projets, news, stats, toggles (maintenance, v4, disponibilite, error mode)
+- Projets Ops: mode "Single project" + mode "General" (updates/events + calendrier global)
+- Firestore comme source de donnees
 
-## Stack technique
+## Tech stack
 
 - Next.js 16 (App Router)
-- React 19 + TypeScript
-- Tailwind CSS 4
-- Firebase (Firestore client + firebase-admin cote serveur)
-- Clerk (authentification)
-- Radix UI, Framer Motion, Recharts
+- React 19
+- Firebase (Firestore + Storage)
+- Clerk (auth)
+- Tailwind CSS + Radix UI (shadcn-style components)
 
-## Structure du projet
+## Getting started
 
-- `app/` routes et pages
-- `components/` composants UI
-- `lib/` logique metier, actions serveur, integrations (Firebase, Cloudflare)
-- `styles/` styles globaux et themes speciaux
-- `public/` assets statiques
+Prerequis: Node.js recent + npm.
 
-## Pre-requis
+1. Installer les deps:
+   - `npm install`
+2. Configurer les variables d'environnement:
+   - copier `.env.example` vers `.env.local`
+   - remplir les valeurs
+3. Lancer en dev:
+   - `npm run dev`
 
-- Node.js 18+ recommande
-- npm
+## Environment variables
 
-## Installation
+Variables principales:
+- Firebase (public): `NEXT_PUBLIC_FIREBASE_*`
+- Clerk: `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`
+- Cloudflare (optionnel): `CLOUDFLARE_ZONE_ID`, `CLOUDFLARE_API_TOKEN`
 
-```bash
-npm install
-npm run dev
-```
+## Admin
 
-Le site est disponible sur `http://localhost:3000`.
+Routes:
+- `/admin` : page login admin
+- `/admin/dashboard` : dashboard principal
+- `/admin/projects` : Projets Ops (organisation interne)
 
-## Configuration
+Notes:
+- La session admin est geree via un cookie `admin_session` (voir `lib/auth.ts` + `middleware.ts`).
+- Les donnees Projets Ops sont stockees dans `project-admin/{projectId}`.
+- La "Roadmap" Projets Ops est synchronisee avec `portfolio/{projectId}.changelog` (meme systeme que le dashboard).
 
-### Variables d'environnement
+## Firestore data model
 
-Creez un fichier `.env` (ou `.env.local`) et renseignez au minimum :
-
-```bash
-# Firebase (public)
-NEXT_PUBLIC_FIREBASE_API_KEY=
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
-NEXT_PUBLIC_FIREBASE_APP_ID=
-NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
-
-# Clerk
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-
-# Cloudflare (si utilise)
-CLOUDFLARE_ZONE_ID=
-CLOUDFLARE_API_TOKEN=
-```
-
-Note : la config Firebase est actuellement definie dans `lib/firebase/config.ts`.
-Vous pouvez la remplacer par des variables d'environnement si besoin.
-
-### Firebase / Firestore
-
-La base utilise principalement les collections suivantes :
-
-- `portfolio` : projets affiches sur le site
-- `admins` : comptes admin pour le dashboard
-
-Consultez `FIREBASE_SETUP.md` pour la structure exacte et les regles Firestore.
-
-### Acces admin
-
-- Connexion : `/admin`
-- Dashboard : `/admin/dashboard`
-
-Vous pouvez creer un admin via Firestore ou via le dashboard (voir
-`FIREBASE_SETUP.md`). Ne stockez jamais de credentials dans le repo.
+- `portfolio` (projects)
+  - champs projet + `changelog: [{ id, version, date, changes[] }]`
+- `admins` (admin accounts)
+- `project-admin` (meta interne par projet)
+  - `notes`, `updates` (statuts), `events` (calendrier)
+- `news` (posts)
+- `update-p/main` (site update badge / changelog global)
 
 ## Scripts
 
-- `npm run dev` : demarrage en developpement
-- `npm run build` : build de production
-- `npm run start` : demarrage en production
-- `npm run lint` : lint du code
-- `npm run sync-themes` : copie les themes speciaux vers `public/styles/special-themes`
-
-## Deploiement
-
-Le projet peut etre deployee sur Vercel ou tout hebergeur Node.js
-supportant Next.js.
-
-## Securite
-
-- Ne commitez pas vos secrets (`.env`, comptes admin, tokens).
-- Utilisez des regles Firestore restrictives en production.
+- `npm run dev` : dev server
+- `npm run build` : build production
+- `npm run start` : start production
+- `npm run lint` : eslint (si installe/configure)
+- `npm run sync-themes` : copie des CSS de themes speciaux vers `public/`

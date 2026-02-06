@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
-import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon, Activity, ListFilter } from "lucide-react"
+import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon, Activity, ListFilter, NotebookPen } from "lucide-react"
 import { AdminProjectCard } from "@/components/admin-project-card"
 import { ProjectDialog } from "@/components/project-dialog"
 import { AdminDialog } from "@/components/admin-dialog"
@@ -178,14 +178,10 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="min-h-screen bg-background relative selection:bg-primary/30 selection:text-primary transition-colors duration-500 font-sans">
-      <div className="noise-overlay" />
+      <div className="noise-v4" />
+      <div className="mesh-v4 fixed inset-0 pointer-events-none z-0" />
 
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px] animate-pulse-glow" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/20 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: "-2s" }} />
-      </div>
-
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 backdrop-blur-md bg-background/60">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 backdrop-blur-md bg-background/60">
         <div className="container mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20 rotate-3">
@@ -199,6 +195,12 @@ export default function AdminDashboardPage() {
               <Link href="/">
                 <Home className="mr-2 h-4 w-4" />
                 Live Site
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm" className="hidden sm:flex rounded-full border border-white/10 glass hover:bg-white/10 hover:text-foreground transition-all">
+              <Link href="/admin/projects">
+                <NotebookPen className="mr-2 h-4 w-4" />
+                Project Ops
               </Link>
             </Button>
             <ThemeToggle />
