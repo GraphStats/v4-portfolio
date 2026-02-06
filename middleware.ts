@@ -37,7 +37,7 @@ export default clerkMiddleware((auth, req) => {
 
   // IP restriction removed for /admin routes
 
-  if (pathname.startsWith("/admin/dashboard")) {
+  if (pathname.startsWith("/admin/dashboard") || pathname.startsWith("/admin/projects")) {
     const adminSession = req.cookies.get("admin_session")
 
     if (!adminSession) {

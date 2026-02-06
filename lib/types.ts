@@ -18,6 +18,35 @@ export interface Project {
   requires_auth?: boolean
 }
 
+export type ProjectUpdateStatus = 'idea' | 'planned' | 'in_progress' | 'done'
+export type ProjectEventType = 'launch' | 'update' | 'sunset' | 'milestone'
+
+export interface ProjectUpdateEntry {
+  id: string
+  title: string
+  summary: string
+  status: ProjectUpdateStatus
+  target_date?: string | null
+  created_at: string
+  impact?: 'low' | 'medium' | 'high'
+}
+
+export interface ProjectEvent {
+  id: string
+  title: string
+  type: ProjectEventType
+  date: string
+  note?: string
+}
+
+export interface ProjectAdminData {
+  projectId: string
+  notes: string
+  updates: ProjectUpdateEntry[]
+  events: ProjectEvent[]
+  last_updated: string
+}
+
 export interface Admin {
   id: string
   email: string

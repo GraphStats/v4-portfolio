@@ -133,7 +133,7 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                         {[
                             { label: "Performance", value: "100", icon: Cpu },
                             { label: "Stability", value: "99.8%", icon: Globe },
-                            { label: "Modern Tech", value: "V4.2", icon: Code2 },
+                            { label: "Modern Tech", value: "V4.3", icon: Code2 },
                             { label: "Interaction", value: "Modern Tech", icon: MousePointer2 },
                         ].map((stat, i) => (
                             <div key={i} className="flex flex-col items-center gap-2">

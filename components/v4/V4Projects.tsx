@@ -19,6 +19,19 @@ interface V4ProjectsProps {
     projects: Project[]
 }
 
+const FavoriteStarIcon = ({
+    className,
+    filled = false,
+}: {
+    className?: string
+    filled?: boolean
+}) => (
+    <Star
+        className={cn(className, filled ? "fill-current" : "fill-transparent")}
+        strokeWidth={1.5}
+    />
+)
+
 export function V4Projects({ projects }: V4ProjectsProps) {
     const [filter, setFilter] = useState<string>("all")
     const [query, setQuery] = useState<string>("")
@@ -182,7 +195,7 @@ export function V4Projects({ projects }: V4ProjectsProps) {
                                 : "bg-white/5 text-muted-foreground border-white/10 hover:text-white hover:border-white/30"
                         )}
                     >
-                        <Star className={cn("w-3 h-3", filter === "favorites" ? "fill-current" : "")} />
+                        <FavoriteStarIcon className="w-3.5 h-3.5" filled={filter === "favorites"} />
                         Favorites
                         <span className="ml-1 text-[9px] font-black opacity-70">{favoriteCount}</span>
                     </button>
@@ -303,7 +316,7 @@ function ProjectCard({
                     isFavorite ? "bg-primary text-primary-foreground" : "bg-white/5 text-muted-foreground hover:text-white hover:border-white/30"
                 )}
             >
-                <Star className={cn("w-4 h-4", isFavorite && "fill-current")} />
+                <FavoriteStarIcon className="w-4 h-4" filled={isFavorite} />
                 <span className="sr-only">{isFavorite ? "Remove from favorites" : "Add to favorites"}</span>
             </button>
             <div className="relative w-full md:w-2/5 md:min-w-[280px] lg:min-w-[320px] aspect-[16/10] md:aspect-square rounded-xl overflow-hidden mb-4 md:mb-0 md:mr-6 bg-muted/20 flex-shrink-0">
@@ -495,7 +508,7 @@ function ProjectCard({
                                             className="rounded-xl text-[10px] font-black uppercase tracking-widest"
                                             onClick={() => onToggleFavorite(project.id)}
                                         >
-                                            <Star className={cn("w-3 h-3 mr-2", isFavorite && "fill-current")} />
+                                            <FavoriteStarIcon className="w-3.5 h-3.5 mr-2" filled={isFavorite} />
                                             {isFavorite ? "Favorited" : "Add to favorites"}
                                         </Button>
                                         <Badge className="rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
