@@ -57,6 +57,22 @@ export default async function RootLayout({
             </div>
             <Analytics />
             <SpeedInsights />
+            <Script id="statcounter-config" strategy="afterInteractive">
+              {`var sc_project=13204241; var sc_invisible=1; var sc_security="4d852cb5";`}
+            </Script>
+            <Script id="statcounter-loader" strategy="afterInteractive" src="https://www.statcounter.com/counter/counter.js" />
+            <noscript>
+              <div className="statcounter">
+                <a title="site stats" href="https://statcounter.com/" target="_blank" rel="noreferrer">
+                  <img
+                    className="statcounter"
+                    src="https://c.statcounter.com/13204241/0/4d852cb5/1/"
+                    alt="site stats"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </a>
+              </div>
+            </noscript>
           </ClerkThemeProvider>
         </ThemeProvider>
       </body>
