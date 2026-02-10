@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
+import Script from "next/script"
 import { collection, doc, getDoc, getDocs, orderBy, query, setDoc, updateDoc } from "firebase/firestore"
 import { toast } from "sonner"
 import { CalendarDays, Home, LayoutDashboard, Save, Trash2 } from "lucide-react"
@@ -373,6 +374,22 @@ export default function AdminProjectsPage() {
 
   return (
     <div className="min-h-screen bg-background relative">
+      <Script id="statcounter-config" strategy="afterInteractive">
+        {`var sc_project=13204241; var sc_invisible=1; var sc_security="4d852cb5";`}
+      </Script>
+      <Script id="statcounter-loader" strategy="afterInteractive" src="https://www.statcounter.com/counter/counter.js" />
+      <noscript>
+        <div className="statcounter">
+          <a title="site stats" href="https://statcounter.com/" target="_blank" rel="noreferrer">
+            <img
+              className="statcounter"
+              src="https://c.statcounter.com/13204241/0/4d852cb5/1/"
+              alt="site stats"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </a>
+        </div>
+      </noscript>
       <div className="noise-v4" />
       <div className="mesh-v4 fixed inset-0 pointer-events-none z-0" />
       <header className="sticky top-0 z-40 border-b bg-background/70 backdrop-blur">
