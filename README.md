@@ -36,7 +36,7 @@ Prerequis: Node.js recent + npm.
 1. Installer les deps:
    - `npm install`
 2. Configurer les variables d'environnement:
-   - copier `.env.example` vers `.env.local`
+   - copier `.env.example` vers `.env`
    - remplir les valeurs
 3. Lancer en dev:
    - `npm run dev`

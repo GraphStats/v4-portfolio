@@ -44,9 +44,9 @@ echo.
 
 :SKIP_CLONE
 
-if not exist ".env.local" goto CONFIGURE_ENV
+if not exist ".env" goto CONFIGURE_ENV
 
-echo [INFO] Le fichier .env.local existe deja.
+echo [INFO] Le fichier .env existe deja.
 set /p "overwrite=Voulez-vous le remplacer ? (y/n): "
 if /i not "%overwrite%"=="y" goto SKIP_CONFIG
 
@@ -73,25 +73,25 @@ set /p "cf_zone_id=Zone ID: "
 set /p "cf_api_token=API Token: "
 
 echo.
-echo Ecriture du fichier .env.local...
-echo # Firebase config> .env.local
-echo NEXT_PUBLIC_FIREBASE_API_KEY=%fb_api_key%>> .env.local
-echo NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=%fb_auth_domain%>> .env.local
-echo NEXT_PUBLIC_FIREBASE_PROJECT_ID=%fb_project_id%>> .env.local
-echo NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=%fb_storage_bucket%>> .env.local
-echo NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=%fb_msg_sender_id%>> .env.local
-echo NEXT_PUBLIC_FIREBASE_APP_ID=%fb_app_id%>> .env.local
-echo NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=%fb_measurement_id%>> .env.local
-echo.>> .env.local
-echo # Clerk>> .env.local
-echo NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=%clerk_pub_key%>> .env.local
-echo CLERK_SECRET_KEY=%clerk_secret_key%>> .env.local
-echo.>> .env.local
-echo # Cloudflare>> .env.local
-echo CLOUDFLARE_ZONE_ID=%cf_zone_id%>> .env.local
-echo CLOUDFLARE_API_TOKEN=%cf_api_token%>> .env.local
+echo Ecriture du fichier .env...
+echo # Firebase config> .env
+echo NEXT_PUBLIC_FIREBASE_API_KEY=%fb_api_key%>> .env
+echo NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=%fb_auth_domain%>> .env
+echo NEXT_PUBLIC_FIREBASE_PROJECT_ID=%fb_project_id%>> .env
+echo NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=%fb_storage_bucket%>> .env
+echo NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=%fb_msg_sender_id%>> .env
+echo NEXT_PUBLIC_FIREBASE_APP_ID=%fb_app_id%>> .env
+echo NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=%fb_measurement_id%>> .env
+echo.>> .env
+echo # Clerk>> .env
+echo NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=%clerk_pub_key%>> .env
+echo CLERK_SECRET_KEY=%clerk_secret_key%>> .env
+echo.>> .env
+echo # Cloudflare>> .env
+echo CLOUDFLARE_ZONE_ID=%cf_zone_id%>> .env
+echo CLOUDFLARE_API_TOKEN=%cf_api_token%>> .env
 
-echo [OK] .env.local cree avec succes !
+echo [OK] .env cree avec succes !
 
 :SKIP_CONFIG
 echo.

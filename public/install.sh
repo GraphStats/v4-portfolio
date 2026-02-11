@@ -42,10 +42,10 @@ if [ ! -f "package.json" ]; then
     echo ""
 fi
 
-# Check if .env.local exists
+# Check if .env exists
 SETUP_ENV=true
-if [ -f .env.local ]; then
-    echo "[INFO] .env.local file already exists."
+if [ -f .env ]; then
+    echo "[INFO] .env file already exists."
     read -p "Do you want to overwrite it? (y/n): " overwrite_env
     if [[ "$overwrite_env" != "y" && "$overwrite_env" != "Y" ]]; then
         SETUP_ENV=false
@@ -79,9 +79,9 @@ if [ "$SETUP_ENV" = true ]; then
     read -p "Zone ID: " cf_zone_id
     read -p "API Token: " cf_api_token
 
-    # Write to .env.local
-    echo "Writing to .env.local..."
-    cat > .env.local <<EOL
+    # Write to .env
+    echo "Writing to .env..."
+    cat > .env <<EOL
 # Firebase config
 NEXT_PUBLIC_FIREBASE_API_KEY=$fb_api_key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=$fb_auth_domain
@@ -100,7 +100,7 @@ CLOUDFLARE_ZONE_ID=$cf_zone_id
 CLOUDFLARE_API_TOKEN=$cf_api_token
 EOL
 
-    echo "[OK] .env.local created successfully!"
+    echo "[OK] .env created successfully!"
 fi
 
 echo ""
@@ -127,5 +127,5 @@ echo "      [OK] Installation Complete!"
 echo "=================================================="
 echo ""
 echo "To start the application, run:"
-echo "  cd $install_dir && npm start"
+echo "  npm start"
 echo ""
