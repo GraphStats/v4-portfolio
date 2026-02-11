@@ -17,6 +17,18 @@ Portfolio + panel admin (dashboard + "Projets Ops") construit avec Next.js (App 
 - Clerk (auth)
 - Tailwind CSS + Radix UI (shadcn-style components)
 
+## Installation Automatique 🚀
+
+Vous pouvez installer et configurer le projet rapidement en utilisant les scripts interactifs fournis.
+
+### Linux / macOS
+```bash
+curl -o install.sh https://raw.githubusercontent.com/GraphStats/v4-portfolio/main/public/install.sh && chmod +x install.sh && ./install.sh
+```
+
+### Windows
+Téléchargez le fichier [install.bat](https://raw.githubusercontent.com/GraphStats/v4-portfolio/main/public/install.bat) et lancez-le en double-cliquant dessus.
+
 ## Getting started
 
 Prerequis: Node.js recent + npm.

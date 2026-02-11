@@ -34,6 +34,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { SystemUpdateCard } from "@/components/system-update-card"
 
 export default function AdminDashboardPage() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -818,22 +819,26 @@ export default function AdminDashboardPage() {
                         </div>
                       </div>
 
-                      <div className="glass p-8 rounded-[2rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-8">
-                        <div className="flex items-center gap-4">
-                          <div className="p-3 rounded-xl bg-primary/10 text-primary shrink-0">
-                            <HistoryIcon className="h-6 w-6" />
+                      <div className="space-y-6">
+                        <SystemUpdateCard />
+
+                        <div className="glass p-8 rounded-[2rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-8">
+                          <div className="flex items-center gap-4">
+                            <div className="p-3 rounded-xl bg-primary/10 text-primary shrink-0">
+                              <HistoryIcon className="h-6 w-6" />
+                            </div>
+                            <div className="space-y-1">
+                              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">Historical Records</p>
+                              <p className="text-lg font-bold text-foreground/90 font-sans">
+                                Track the evolution of the platform with detailed version logs.
+                              </p>
+                            </div>
                           </div>
-                          <div className="space-y-1">
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">Historical Records</p>
-                            <p className="text-lg font-bold text-foreground/90 font-sans">
-                              Track the evolution of the platform with detailed version logs.
-                            </p>
-                          </div>
+                          <Button onClick={() => setUpdateDialogOpen(true)} variant="outline" className="rounded-xl h-12 px-6 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0 text-sm">
+                            <HistoryIcon className="mr-2 h-4 w-4" />
+                            Manage Logs
+                          </Button>
                         </div>
-                        <Button onClick={() => setUpdateDialogOpen(true)} variant="outline" className="rounded-xl h-12 px-6 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0 text-sm">
-                          <HistoryIcon className="mr-2 h-4 w-4" />
-                          Manage Logs
-                        </Button>
                       </div>
                     </section>
                   </AccordionContent>
