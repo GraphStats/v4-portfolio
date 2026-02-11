@@ -23,6 +23,27 @@ if %errorlevel% neq 0 (
 echo [OK] Node.js et Git detectes.
 echo.
 
+REM Clone the repository if package.json is not present
+if exist "package.json" goto SKIP_CLONE
+
+echo [CLONE] Telechargement du projet depuis GitHub...
+echo ---------------------------------------------------
+set /p "install_dir=Nom du dossier d'installation (defaut: v4-portfolio): "
+if "%install_dir%"=="" set "install_dir=v4-portfolio"
+
+git clone https://github.com/GraphStats/v4-portfolio.git "%install_dir%"
+if %errorlevel% neq 0 (
+    echo [ERROR] Le clonage du repo a echoue.
+    pause
+    exit /b 1
+)
+
+cd "%install_dir%"
+echo [OK] Projet clone dans le dossier %install_dir%.
+echo.
+
+:SKIP_CLONE
+
 if not exist ".env.local" goto CONFIGURE_ENV
 
 echo [INFO] Le fichier .env.local existe deja.

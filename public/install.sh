@@ -24,6 +24,24 @@ fi
 echo "[OK] Environment check passed (Node.js and Git found)."
 echo ""
 
+# Clone the repository if package.json is not present
+if [ ! -f "package.json" ]; then
+    echo "[CLONE] Downloading project from GitHub..."
+    echo "---------------------------------------------------"
+    read -p "Installation folder name (default: v4-portfolio): " install_dir
+    install_dir=${install_dir:-v4-portfolio}
+
+    git clone https://github.com/GraphStats/v4-portfolio.git "$install_dir"
+    if [ $? -ne 0 ]; then
+        echo "[ERROR] Git clone failed."
+        exit 1
+    fi
+
+    cd "$install_dir"
+    echo "[OK] Project cloned into $install_dir."
+    echo ""
+fi
+
 # Check if .env.local exists
 SETUP_ENV=true
 if [ -f .env.local ]; then
@@ -109,5 +127,5 @@ echo "      [OK] Installation Complete!"
 echo "=================================================="
 echo ""
 echo "To start the application, run:"
-echo "  npm start"
+echo "  cd $install_dir && npm start"
 echo ""
