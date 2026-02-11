@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
-import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon, Activity, ListFilter, NotebookPen, Settings } from "lucide-react"
+import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon, Activity, ListFilter, NotebookPen, Settings, Sparkles, Newspaper, Server } from "lucide-react"
 import { AdminProjectCard } from "@/components/admin-project-card"
 import { ProjectDialog } from "@/components/project-dialog"
 import { AdminDialog } from "@/components/admin-dialog"
@@ -28,7 +28,6 @@ import { ErrorModeToggle } from "@/components/error-mode-toggle"
 import { getFirestoreClient } from "@/lib/firebase/client"
 import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
 import Link from "next/link"
-import { Sparkles, Newspaper } from "lucide-react"
 import {
   Accordion,
   AccordionContent,
@@ -57,6 +56,7 @@ export default function AdminDashboardPage() {
   const [isAvailable, setIsAvailable] = useState(true)
   const [news, setNews] = useState<News[]>([])
   const [addNewsOpen, setAddNewsOpen] = useState(false)
+  const [activeThemeName, setActiveThemeName] = useState<string>("Normal Theme")
 
   const fetchProjects = async () => {
     const db = getFirestoreClient()
@@ -128,6 +128,51 @@ export default function AdminDashboardPage() {
     }
   }
 
+  const fetchSpecialThemes = async () => {
+    try {
+      const db = getFirestoreClient()
+      const docRef = doc(db, "special-themes", "config")
+      const docSnap = await getDoc(docRef)
+
+      if (docSnap.exists()) {
+        const data = docSnap.data()
+        if (data.themes) {
+          const now = new Date()
+          let activeName = "Normal Theme"
+
+          for (const theme of data.themes) {
+            const startDate = new Date(
+              theme.startDate.year,
+              theme.startDate.month - 1,
+              theme.startDate.day,
+              theme.startDate.hour,
+              theme.startDate.minute,
+              theme.startDate.second
+            )
+            const endDate = new Date(
+              theme.endDate.year,
+              theme.endDate.month - 1,
+              theme.endDate.day,
+              theme.endDate.hour,
+              theme.endDate.minute,
+              theme.endDate.second
+            )
+
+            if (now >= startDate && now <= endDate) {
+              const startFormatted = `${theme.startDate.day}/${theme.startDate.month}`
+              const endFormatted = `${theme.endDate.day}/${theme.endDate.month}`
+              activeName = `${theme.name} (${startFormatted} - ${endFormatted})`
+              break
+            }
+          }
+          setActiveThemeName(activeName)
+        }
+      }
+    } catch (e) {
+      console.error("Error fetching special themes:", e)
+    }
+  }
+
   const formatDate = (value?: string | null) => {
     if (!value) return "—"
     const date = new Date(value)
@@ -164,6 +209,7 @@ export default function AdminDashboardPage() {
     fetchV4Mode()
     fetchAvailability()
     fetchNews()
+    fetchSpecialThemes()
   }, [])
 
   const handleProjectDeleted = (projectId: string) => {
@@ -567,187 +613,232 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="v4-glass px-8 pt-12 pb-16 rounded-b-[2rem] border-x border-b border-white/10 space-y-20">
-
-              <section className="space-y-12">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                      <Settings className="h-4 w-4" />
-                      Control Center
+            <AccordionContent className="v4-glass px-8 pt-12 pb-16 rounded-b-[2rem] border-x border-b border-white/10">
+              <Accordion type="multiple" className="space-y-6">
+                {/* SUB-CATEGORY 3.1: IDENTITY & HERO */}
+                <AccordionItem value="identity-hero" className="border-white/5 bg-white/[0.01] rounded-[2rem] overflow-hidden border">
+                  <AccordionTrigger className="px-8 py-6 hover:no-underline group hover:bg-white/[0.02] transition-all">
+                    <div className="flex items-center gap-4">
+                      <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                        <UserPlus className="h-5 w-5" />
+                      </div>
+                      <div className="text-left">
+                        <h4 className="text-sm font-black uppercase tracking-widest italic">Identity & Hero</h4>
+                        <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.2em] mt-0.5">Branding & Headline</p>
+                      </div>
                     </div>
-                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">GLOBAL CONFIGURATION</h2>
-                    <p className="text-muted-foreground font-medium max-w-xl">
-                      Manage your portfolio's identity and core settings that reflect across the entire platform.
-                    </p>
-                  </div>
-                  <Button asChild className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 self-start md:self-auto transition-all">
-                    <Link href="/admin/configure">
-                      <Settings className="mr-2 h-5 w-5" />
-                      Configure Identity
-                    </Link>
-                  </Button>
-                </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-8 pt-8 pb-12 space-y-16">
+                    <section className="space-y-12">
+                      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                            <Settings className="h-4 w-4" />
+                            Control Center
+                          </div>
+                          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">GLOBAL CONFIGURATION</h2>
+                          <p className="text-muted-foreground font-medium max-w-xl text-sm">
+                            Manage your portfolio's identity and core settings that reflect across the entire platform.
+                          </p>
+                        </div>
+                        <Button asChild className="rounded-xl h-12 px-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 self-start md:self-auto transition-all text-sm">
+                          <Link href="/admin/configure">
+                            <Settings className="mr-2 h-4 w-4" />
+                            Configure Identity
+                          </Link>
+                        </Button>
+                      </div>
 
-                <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-8">
-                  <div className="flex items-center gap-4">
-                    <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
-                      <Settings className="h-8 w-8" />
+                      <div className="glass p-8 rounded-[2rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="flex items-center gap-4">
+                          <div className="p-3 rounded-xl bg-primary/10 text-primary shrink-0">
+                            <Settings className="h-6 w-6" />
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">Identity & Branding</p>
+                            <p className="text-lg font-bold text-foreground/90 font-sans">
+                              Change your public name and other global parameters.
+                            </p>
+                          </div>
+                        </div>
+                        <Button asChild variant="outline" className="rounded-xl h-12 px-6 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0 text-sm">
+                          <Link href="/admin/configure">
+                            <Settings className="mr-2 h-4 w-4" />
+                            Open Settings
+                          </Link>
+                        </Button>
+                      </div>
+                    </section>
+
+                    <Separator className="bg-white/5" />
+
+                    <section className="space-y-12">
+                      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                            <Sparkles className="h-4 w-4" />
+                            Hero Communications
+                          </div>
+                          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">HOMEPAGE BADGE</h2>
+                          <p className="text-muted-foreground font-medium max-w-xl text-sm">
+                            Update the headline message that visitors see first when landing on your portfolio.
+                          </p>
+                        </div>
+                        <Button
+                          onClick={() => setBadgeDialogOpen(true)}
+                          className="rounded-xl h-12 px-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 transition-all self-start md:self-auto text-sm"
+                        >
+                          <Sparkles className="mr-2 h-4 w-4" />
+                          Update Headline
+                        </Button>
+                      </div>
+
+                      <div className="glass p-8 rounded-[2rem] border-white/5 bg-white/[0.02] relative overflow-hidden group">
+                        <div className="flex items-center gap-6 relative z-10">
+                          <div className="p-3 rounded-xl bg-primary/10 text-primary shrink-0">
+                            <Sparkles className="h-6 w-6 text-primary shadow-glow shadow-primary/20" />
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">Current Live Badge Content</p>
+                            <p className="text-xl md:text-2xl font-bold text-foreground/90 italic">
+                              "{updateData?.latest_update_text || "Fix database bug and new interface (v3!)"}"
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* SUB-CATEGORY 3.2: INFRASTRUCTURE */}
+                <AccordionItem value="infrastructure" className="border-white/5 bg-white/[0.01] rounded-[2rem] overflow-hidden border">
+                  <AccordionTrigger className="px-8 py-6 hover:no-underline group hover:bg-white/[0.02] transition-all">
+                    <div className="flex items-center gap-4">
+                      <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                        <Server className="h-5 w-5" />
+                      </div>
+                      <div className="text-left">
+                        <h4 className="text-sm font-black uppercase tracking-widest italic">Platform Control</h4>
+                        <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.2em] mt-0.5">Status & Operations</p>
+                      </div>
                     </div>
-                    <div className="space-y-1">
-                      <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Identity & Branding</p>
-                      <p className="text-xl font-bold text-foreground/90 font-sans">
-                        Change your public name and other global parameters.
-                      </p>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-8 pt-8 pb-12 space-y-12">
+                    <section className="space-y-8">
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                          <Shield className="h-4 w-4" />
+                          Availability Control
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">PLATFORM STATUS</h2>
+                        <p className="text-muted-foreground font-medium max-w-xl text-sm">
+                          Manage global site states. Activate maintenance mode or preview upcoming version announcements.
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <div className="glass p-8 rounded-[2rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
+                          <MaintenanceToggle initialState={maintenanceMode} initialMessage={maintenanceMessage} initialProgress={maintenanceProgress} onUpdated={fetchMaintenanceMode} />
+                        </div>
+
+                        <div className="glass p-8 rounded-[2rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
+                          <ErrorModeToggle initialState={errorMode} initialMessage={errorMessage} onUpdated={fetchErrorMode} />
+                        </div>
+
+                        <div className="glass p-8 rounded-[2rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
+                          <V4Toggle initialState={v4Mode} initialMessage={v4Message} initialProgress={v4Progress} onUpdated={fetchV4Mode} />
+                        </div>
+                      </div>
+                    </section>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* SUB-CATEGORY 3.3: ECOSYSTEM */}
+                <AccordionItem value="ecosystem" className="border-white/5 bg-white/[0.01] rounded-[2rem] overflow-hidden border">
+                  <AccordionTrigger className="px-8 py-6 hover:no-underline group hover:bg-white/[0.02] transition-all">
+                    <div className="flex items-center gap-4">
+                      <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                        <Activity className="h-5 w-5" />
+                      </div>
+                      <div className="text-left">
+                        <h4 className="text-sm font-black uppercase tracking-widest italic">Lifecycle & Events</h4>
+                        <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.2em] mt-0.5">Themes & Roadmap</p>
+                      </div>
                     </div>
-                  </div>
-                  <Button asChild variant="outline" className="rounded-2xl h-14 px-8 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0">
-                    <Link href="/admin/configure">
-                      <Settings className="mr-2 h-5 w-5" />
-                      Open Settings
-                    </Link>
-                  </Button>
-                </div>
-              </section>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-8 pt-8 pb-12 space-y-16">
+                    <section className="space-y-12">
+                      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                            <Sparkles className="h-4 w-4" />
+                            Festive Themes
+                          </div>
+                          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">SPECIAL THEMES</h2>
+                          <p className="text-muted-foreground font-medium max-w-xl text-sm">
+                            Configure activation periods for festive themes to create unique experiences.
+                          </p>
+                        </div>
+                        <Button asChild className="rounded-xl h-12 px-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 self-start md:self-auto transition-all text-sm">
+                          <Link href="/admin/special-themes">
+                            <Sparkles className="mr-2 h-4 w-4" />
+                            Manage Themes
+                          </Link>
+                        </Button>
+                      </div>
 
-              <Separator className="bg-white/5" />
+                      <div className="glass p-8 rounded-[2rem] border-white/5 bg-white/[0.02] relative overflow-hidden group">
+                        <div className="flex items-center gap-6 relative z-10">
+                          <div className="p-3 rounded-xl bg-primary/10 text-primary shrink-0">
+                            <Sparkles className="h-6 w-6 text-primary shadow-glow shadow-primary/20" />
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">Current Theme</p>
+                            <p className="text-xl md:text-2xl font-bold text-foreground/90 italic">
+                              {activeThemeName}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
 
-              <section className="space-y-12">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                    <Shield className="h-4 w-4" />
-                    Availability Control
-                  </div>
-                  <h2 className="text-4xl md:text-5xl font-bold tracking-tight">PLATFORM STATUS</h2>
-                  <p className="text-muted-foreground font-medium max-w-xl">
-                    Manage global site states. Activate maintenance mode or preview upcoming version announcements.
-                  </p>
-                </div>
+                    <Separator className="bg-white/5" />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
-                    <MaintenanceToggle initialState={maintenanceMode} initialMessage={maintenanceMessage} initialProgress={maintenanceProgress} onUpdated={fetchMaintenanceMode} />
-                  </div>
+                    <section className="space-y-12">
+                      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                            <HistoryIcon className="h-4 w-4" />
+                            Evolution & Roadmap
+                          </div>
+                          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">SITE SYSTEM UPDATES</h2>
+                          <p className="text-muted-foreground font-medium max-w-xl text-sm">
+                            Coordinate the release cycle, document breaking changes, and announce future capabilities.
+                          </p>
+                        </div>
+                      </div>
 
-                  <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
-                    <ErrorModeToggle initialState={errorMode} initialMessage={errorMessage} onUpdated={fetchErrorMode} />
-                  </div>
-
-                  <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
-                    <V4Toggle initialState={v4Mode} initialMessage={v4Message} initialProgress={v4Progress} onUpdated={fetchV4Mode} />
-                  </div>
-                </div>
-              </section>
-
-              <Separator className="bg-white/5" />
-
-              <section className="space-y-12">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                      <Sparkles className="h-4 w-4" />
-                      Hero Communications
-                    </div>
-                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">HOMEPAGE BADGE</h2>
-                    <p className="text-muted-foreground font-medium max-w-xl">
-                      Update the headline message that visitors see first when landing on your portfolio.
-                    </p>
-                  </div>
-                  <Button
-                    onClick={() => setBadgeDialogOpen(true)}
-                    className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 transition-all self-start md:self-auto"
-                  >
-                    <Sparkles className="mr-2 h-5 w-5" />
-                    Update Headline
-                  </Button>
-                </div>
-
-                <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] relative overflow-hidden group">
-                  <div className="flex items-center gap-6 relative z-10">
-                    <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
-                      <Sparkles className="h-8 w-8 text-primary shadow-glow shadow-primary/20" />
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Current Live Badge Content</p>
-                      <p className="text-xl md:text-3xl font-bold text-foreground/90 italic">
-                        "{updateData?.latest_update_text || "Fix database bug and new interface (v3!)"}"
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              <Separator className="bg-white/5" />
-
-              <section className="space-y-12">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                      <Sparkles className="h-4 w-4" />
-                      Festive Themes
-                    </div>
-                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">SPECIAL THEMES</h2>
-                    <p className="text-muted-foreground font-medium max-w-xl">
-                      Configure activation periods for festive themes to create unique experiences.
-                    </p>
-                  </div>
-                  <Button asChild className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 self-start md:self-auto transition-all">
-                    <Link href="/admin/special-themes">
-                      <Sparkles className="mr-2 h-5 w-5" />
-                      Manage Themes
-                    </Link>
-                  </Button>
-                </div>
-
-                <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] relative overflow-hidden group">
-                  <div className="flex items-center gap-6 relative z-10">
-                    <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
-                      <Sparkles className="h-8 w-8 text-primary shadow-glow shadow-primary/20" />
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Current Theme</p>
-                      <p className="text-xl md:text-3xl font-bold text-foreground/90 italic">
-                        New Year 2026 (Dec 20 - Jan 2)
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              <Separator className="bg-white/5" />
-
-              <section className="space-y-12">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                      <HistoryIcon className="h-4 w-4" />
-                      Evolution & Roadmap
-                    </div>
-                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">SITE SYSTEM UPDATES</h2>
-                    <p className="text-muted-foreground font-medium max-w-xl">
-                      Coordinate the release cycle, document breaking changes, and announce future capabilities.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-8">
-                  <div className="flex items-center gap-4">
-                    <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
-                      <HistoryIcon className="h-8 w-8" />
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Historical Records</p>
-                      <p className="text-xl font-bold text-foreground/90 font-sans">
-                        Track the evolution of the platform with detailed version logs.
-                      </p>
-                    </div>
-                  </div>
-                  <Button onClick={() => setUpdateDialogOpen(true)} variant="outline" className="rounded-2xl h-14 px-8 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0">
-                    <HistoryIcon className="mr-2 h-5 w-5" />
-                    Manage Ecosystem Logs
-                  </Button>
-                </div>
-              </section>
+                      <div className="glass p-8 rounded-[2rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-8">
+                        <div className="flex items-center gap-4">
+                          <div className="p-3 rounded-xl bg-primary/10 text-primary shrink-0">
+                            <HistoryIcon className="h-6 w-6" />
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">Historical Records</p>
+                            <p className="text-lg font-bold text-foreground/90 font-sans">
+                              Track the evolution of the platform with detailed version logs.
+                            </p>
+                          </div>
+                        </div>
+                        <Button onClick={() => setUpdateDialogOpen(true)} variant="outline" className="rounded-xl h-12 px-6 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0 text-sm">
+                          <HistoryIcon className="mr-2 h-4 w-4" />
+                          Manage Logs
+                        </Button>
+                      </div>
+                    </section>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </AccordionContent>
           </AccordionItem>
 
