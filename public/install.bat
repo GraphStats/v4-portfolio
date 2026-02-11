@@ -41,7 +41,7 @@ if /i "%overwrite%"=="y" (
     echo [CONFIG] Configuring Environment Variables...
     echo --------------------------------------
     
-    :: Firebase
+    REM Firebase
     echo ^>^> Firebase Configuration
     set /p fb_api_key="API Key: "
     set /p fb_auth_domain="Auth Domain: "
@@ -52,18 +52,18 @@ if /i "%overwrite%"=="y" (
     set /p fb_measurement_id="Measurement ID: "
     
     echo.
-    :: Clerk
+    REM Clerk
     echo ^>^> Clerk Configuration (Authentication)
     set /p clerk_pub_key="Publishable Key: "
     set /p clerk_secret_key="Secret Key: "
     
     echo.
-    :: Cloudflare
+    REM Cloudflare
     echo ^>^> Cloudflare Configuration (Optional - Press Enter to skip)
     set /p cf_zone_id="Zone ID: "
     set /p cf_api_token="API Token: "
     
-    :: Write to .env.local
+    REM Write to .env.local
     echo writing to .env.local...
     (
         echo # Firebase config
