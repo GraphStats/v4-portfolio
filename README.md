@@ -23,11 +23,11 @@ Vous pouvez installer et configurer le projet rapidement en utilisant les script
 
 ### Linux / macOS
 ```bash
-curl -o install.sh https://raw.githubusercontent.com/GraphStats/v4-portfolio/main/public/install.sh && chmod +x install.sh && ./install.sh
+curl -o install.sh https://drayko.xyz/install.sh && chmod +x install.sh && ./install.sh
 ```
 
 ### Windows
-Téléchargez le fichier [install.bat](https://raw.githubusercontent.com/GraphStats/v4-portfolio/main/public/install.bat) et lancez-le en double-cliquant dessus.
+Téléchargez le fichier [install.bat](https://drayko.xyz/install.bat) et lancez-le en double-cliquant dessus.
 
 ## Getting started
 
