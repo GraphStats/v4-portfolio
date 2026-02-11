@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { collection, doc, getDoc, getDocs, orderBy, query, setDoc, updateDoc } from "firebase/firestore"
 import { toast } from "sonner"
-import { CalendarDays, Home, LayoutDashboard, Save, Trash2 } from "lucide-react"
+import { CalendarDays, Home, LayoutDashboard, Save, Trash2, Settings } from "lucide-react"
 
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Badge } from "@/components/ui/badge"
@@ -392,6 +392,12 @@ export default function AdminProjectsPage() {
               <Link href="/admin/dashboard">
                 <LayoutDashboard className="h-4 w-4 mr-2" />
                 Dashboard
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm" className="rounded-full hidden sm:inline-flex">
+              <Link href="/admin/configure">
+                <Settings className="h-4 w-4 mr-2" />
+                Configure
               </Link>
             </Button>
             <Button asChild variant="ghost" size="sm" className="rounded-full hidden sm:inline-flex">

@@ -9,6 +9,7 @@ import { Slider } from "@/components/ui/slider"
 import { updateV4Mode } from "@/lib/actions"
 import { Rocket, Loader2, Save, Sparkles } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
+import { useSiteSettings } from "@/components/site-settings-provider"
 
 interface V4ToggleProps {
     initialState: boolean
@@ -23,6 +24,7 @@ export function V4Toggle({ initialState, initialMessage, initialProgress, onUpda
     const [progress, setProgress] = useState(initialProgress)
     const [isPending, startTransition] = useTransition()
     const { toast } = useToast()
+    const { developerName } = useSiteSettings()
 
     // Sync state with props if they change
     useEffect(() => {
@@ -104,7 +106,7 @@ export function V4Toggle({ initialState, initialMessage, initialProgress, onUpda
                         <Input
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
-                            placeholder="Enter teaser message (e.g. Drayko v5 is coming...)"
+                            placeholder={`Enter teaser message (e.g. ${developerName} v5 is coming...)`}
                             className="bg-white/5 border-white/10 text-foreground"
                         />
                     </div>

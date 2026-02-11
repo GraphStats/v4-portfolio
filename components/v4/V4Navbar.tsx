@@ -10,12 +10,14 @@ import { AuthButtons } from "@/components/auth-buttons"
 import { VersionSelector } from "@/components/version-selector"
 import { FaDiscord } from "react-icons/fa"
 import { useRouteTransition } from "@/components/route-transition"
+import { useSiteSettings } from "@/components/site-settings-provider"
 
 export function V4Navbar() {
     const [scrolled, setScrolled] = useState(false)
     const [mobileOpen, setMobileOpen] = useState(false)
     const pathname = usePathname()
     const { loading, progress } = useRouteTransition()
+    const { developerName } = useSiteSettings()
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -61,7 +63,7 @@ export function V4Navbar() {
                             <Command className="w-5 h-5" />
                         </motion.div>
                         <span className="text-xl font-black tracking-tighter uppercase italic">
-                            Drayko<span className="text-primary group-hover:text-white transition-colors">.</span>
+                            {developerName}<span className="text-primary group-hover:text-white transition-colors">.</span>
                         </span>
                     </Link>
 

@@ -2,13 +2,22 @@ import { Cookie, Settings, Info, ToggleLeft, Trash2 } from "lucide-react"
 import { V4Navbar } from "@/components/v4/V4Navbar"
 import { V4Footer } from "@/components/v4/V4Footer"
 import { V4Dock } from "@/components/v4/V4Dock"
+import type { Metadata } from "next"
+import { getSiteSettings } from "@/lib/actions"
+import { normalizeDeveloperName } from "@/lib/site-settings"
 
-export const metadata = {
-    title: "Cookie Policy - Drayko",
-    description: "Learn about how we use cookies and similar technologies."
+export async function generateMetadata(): Promise<Metadata> {
+    const { developerName } = await getSiteSettings()
+    const brand = normalizeDeveloperName(developerName)
+    return {
+        title: `Cookie Policy - ${brand}`,
+        description: `Learn about how ${brand} uses cookies and similar technologies.`
+    }
 }
 
-export default function CookiePolicyPage() {
+export default async function CookiePolicyPage() {
+    const { developerName } = await getSiteSettings()
+    const brand = normalizeDeveloperName(developerName)
     const sections = [
         {
             icon: Info,
@@ -75,7 +84,7 @@ export default function CookiePolicyPage() {
                 <div className="max-w-4xl mx-auto mb-16">
                     <div className="v4-glass p-8 rounded-[2rem] border-white/5">
                         <p className="text-muted-foreground/70 leading-relaxed">
-                            This Cookie Policy explains how Drayko uses cookies and similar technologies to recognize you when you visit our website. It explains what these technologies are and why we use them, as well as your rights to control our use of them.
+                            This Cookie Policy explains how {brand} uses cookies and similar technologies to recognize you when you visit our website. It explains what these technologies are and why we use them, as well as your rights to control our use of them.
                         </p>
                     </div>
                 </div>

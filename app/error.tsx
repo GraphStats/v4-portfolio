@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { RefreshCcw, Home } from 'lucide-react'
 import Link from 'next/link'
+import { useSiteSettings } from '@/components/site-settings-provider'
 
 export default function Error({
     error,
@@ -11,6 +12,8 @@ export default function Error({
     error: Error & { digest?: string }
     reset: () => void
 }) {
+    const { developerName } = useSiteSettings()
+
     useEffect(() => {
         console.error(error)
     }, [error])
@@ -33,7 +36,7 @@ export default function Error({
                         Unstable <span className="text-red-500">Core</span>
                     </h1>
                     <p className="text-muted-foreground text-lg md:text-xl max-w-lg mx-auto font-medium leading-relaxed">
-                        The Drayko portfolio server is experiencing heavy load. Access to my projects is temporarily suspended for corrective maintenance.
+                        The {developerName} portfolio server is experiencing heavy load. Access to my projects is temporarily suspended for corrective maintenance.
                     </p>
                 </div>
 

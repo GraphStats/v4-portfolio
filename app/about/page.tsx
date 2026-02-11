@@ -7,6 +7,8 @@ import { V4Navbar } from "@/components/v4/V4Navbar"
 import { V4Dock } from "@/components/v4/V4Dock"
 import { V4Footer } from "@/components/v4/V4Footer"
 import { Github } from 'lucide-react';
+import { getSiteSettings } from "@/lib/actions"
+import { normalizeDeveloperName } from "@/lib/site-settings"
 
 export const dynamic = "force-dynamic"
 
@@ -18,6 +20,8 @@ export default async function AboutPage() {
             redirect("/maintenance")
         }
     }
+    const { developerName } = await getSiteSettings()
+    const displayName = normalizeDeveloperName(developerName)
     return (
         <div className="min-h-screen bg-background relative overflow-hidden font-sans selection:bg-primary/30 selection:text-primary">
             <div className="noise-v4" />
@@ -35,7 +39,7 @@ export default async function AboutPage() {
                         BEHIND THE <span className="text-primary">SYSTEM.</span>
                     </h1>
                     <p className="text-xl md:text-2xl text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
-                        I'm Drayko, a developer dedicated to pushing the boundaries of
+                        I'm {displayName}, a developer dedicated to pushing the boundaries of
                         <span className="text-white"> web performance </span> and
                         <span className="text-primary italic"> creative engineering</span>.
                     </p>

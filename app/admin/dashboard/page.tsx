@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
-import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon, Activity, ListFilter, NotebookPen } from "lucide-react"
+import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon, Activity, ListFilter, NotebookPen, Settings } from "lucide-react"
 import { AdminProjectCard } from "@/components/admin-project-card"
 import { ProjectDialog } from "@/components/project-dialog"
 import { AdminDialog } from "@/components/admin-dialog"
@@ -201,6 +201,12 @@ export default function AdminDashboardPage() {
               <Link href="/admin/projects">
                 <NotebookPen className="mr-2 h-4 w-4" />
                 Project Ops
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm" className="hidden sm:flex rounded-full border border-white/10 glass hover:bg-white/10 hover:text-foreground transition-all">
+              <Link href="/admin/configure">
+                <Settings className="mr-2 h-4 w-4" />
+                Configure
               </Link>
             </Button>
             <ThemeToggle />
@@ -644,6 +650,49 @@ export default function AdminDashboardPage() {
                 </p>
               </div>
             </div>
+          </div>
+        </section>
+
+        <Separator className="bg-white/5" />
+
+        <section className="space-y-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                <Settings className="h-4 w-4" />
+                Control Center
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">GLOBAL CONFIGURATION</h2>
+              <p className="text-muted-foreground font-medium max-w-xl">
+                Manage your portfolio's identity and core settings that reflect across the entire platform.
+              </p>
+            </div>
+            <Button asChild className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 self-start md:self-auto transition-all">
+              <Link href="/admin/configure">
+                <Settings className="mr-2 h-5 w-5" />
+                Configure Identity
+              </Link>
+            </Button>
+          </div>
+
+          <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex items-center gap-4">
+              <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
+                <Settings className="h-8 w-8" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Identity & Branding</p>
+                <p className="text-xl font-bold text-foreground/90 font-sans">
+                  Change your public name and other global parameters.
+                </p>
+              </div>
+            </div>
+            <Button asChild variant="outline" className="rounded-2xl h-14 px-8 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0">
+              <Link href="/admin/configure">
+                <Settings className="mr-2 h-5 w-5" />
+                Open Settings
+              </Link>
+            </Button>
           </div>
         </section>
 

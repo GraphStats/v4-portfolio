@@ -2,13 +2,22 @@ import { Shield, Lock, Eye, Database, Mail } from "lucide-react"
 import { V4Navbar } from "@/components/v4/V4Navbar"
 import { V4Footer } from "@/components/v4/V4Footer"
 import { V4Dock } from "@/components/v4/V4Dock"
+import type { Metadata } from "next"
+import { getSiteSettings } from "@/lib/actions"
+import { normalizeDeveloperName } from "@/lib/site-settings"
 
-export const metadata = {
-    title: "Privacy Policy - Drayko",
-    description: "Learn how we collect, use, and protect your personal information."
+export async function generateMetadata(): Promise<Metadata> {
+    const { developerName } = await getSiteSettings()
+    const brand = normalizeDeveloperName(developerName)
+    return {
+        title: `Privacy Policy - ${brand}`,
+        description: `Learn how ${brand} collects, uses, and protects your personal information.`
+    }
 }
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+    const { developerName } = await getSiteSettings()
+    const brand = normalizeDeveloperName(developerName)
     const sections = [
         {
             icon: Database,
@@ -75,7 +84,7 @@ export default function PrivacyPolicyPage() {
                 <div className="max-w-4xl mx-auto mb-16">
                     <div className="v4-glass p-8 rounded-[2rem] border-white/5">
                         <p className="text-muted-foreground/70 leading-relaxed">
-                            This Privacy Policy describes how Drayko ("we", "us", or "our") collects, uses, and shares your personal information when you use our website and services. We are committed to protecting your privacy and ensuring the security of your personal data.
+                            This Privacy Policy describes how {brand} ("we", "us", or "our") collects, uses, and shares your personal information when you use our website and services. We are committed to protecting your privacy and ensuring the security of your personal data.
                         </p>
                     </div>
                 </div>

@@ -2,13 +2,22 @@ import { FileText, Scale, UserCheck, AlertTriangle, Ban } from "lucide-react"
 import { V4Navbar } from "@/components/v4/V4Navbar"
 import { V4Footer } from "@/components/v4/V4Footer"
 import { V4Dock } from "@/components/v4/V4Dock"
+import type { Metadata } from "next"
+import { getSiteSettings } from "@/lib/actions"
+import { normalizeDeveloperName } from "@/lib/site-settings"
 
-export const metadata = {
-    title: "Terms of Service - Drayko",
-    description: "Read our terms and conditions for using our services."
+export async function generateMetadata(): Promise<Metadata> {
+    const { developerName } = await getSiteSettings()
+    const brand = normalizeDeveloperName(developerName)
+    return {
+        title: `Terms of Service - ${brand}`,
+        description: `Read the terms and conditions for using ${brand}'s services.`
+    }
 }
 
-export default function TermsPage() {
+export default async function TermsPage() {
+    const { developerName } = await getSiteSettings()
+    const brand = normalizeDeveloperName(developerName)
     const sections = [
         {
             icon: UserCheck,
@@ -23,24 +32,24 @@ export default function TermsPage() {
             icon: Scale,
             title: "Use License",
             content: [
-                "Permission is granted to temporarily download one copy of the materials on Drayko's website for personal, non-commercial transitory viewing only.",
+                `Permission is granted to temporarily download one copy of the materials on ${brand}'s website for personal, non-commercial transitory viewing only.`,
                 "This is the grant of a license, not a transfer of title, and under this license you may not: modify or copy the materials, use the materials for any commercial purpose, or attempt to decompile or reverse engineer any software contained on the website.",
-                "This license shall automatically terminate if you violate any of these restrictions and may be terminated by Drayko at any time."
+                `This license shall automatically terminate if you violate any of these restrictions and may be terminated by ${brand} at any time.`
             ]
         },
         {
             icon: AlertTriangle,
             title: "Disclaimer",
             content: [
-                "The materials on Drayko's website are provided on an 'as is' basis. Drayko makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.",
-                "Further, Drayko does not warrant or make any representations concerning the accuracy, likely results, or reliability of the use of the materials on its website or otherwise relating to such materials or on any sites linked to this site."
+                `The materials on ${brand}'s website are provided on an 'as is' basis. ${brand} makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.`,
+                `${brand} does not warrant or make any representations concerning the accuracy, likely results, or reliability of the use of the materials on its website or otherwise relating to such materials or on any sites linked to this site.`
             ]
         },
         {
             icon: Ban,
             title: "Limitations",
             content: [
-                "In no event shall Drayko or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on Drayko's website.",
+                `In no event shall ${brand} or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on ${brand}'s website.`,
                 "Because some jurisdictions do not allow limitations on implied warranties, or limitations of liability for consequential or incidental damages, these limitations may not apply to you."
             ]
         }
@@ -70,7 +79,7 @@ export default function TermsPage() {
                 <div className="max-w-4xl mx-auto mb-16">
                     <div className="v4-glass p-8 rounded-[2rem] border-white/5">
                         <p className="text-muted-foreground/70 leading-relaxed">
-                            Please read these Terms of Service carefully before using our website. These terms govern your access to and use of Drayko's services. By using our services, you agree to be bound by these terms.
+                            Please read these Terms of Service carefully before using our website. These terms govern your access to and use of {brand}'s services. By using our services, you agree to be bound by these terms.
                         </p>
                     </div>
                 </div>

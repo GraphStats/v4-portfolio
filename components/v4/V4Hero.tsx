@@ -6,6 +6,7 @@ import { ArrowRight, Code2, Cpu, Globe, Zap, MousePointer2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { FaDiscord } from 'react-icons/fa';
+import { useSiteSettings } from "@/components/site-settings-provider"
 
 interface V4HeroProps {
     badgeText?: string
@@ -14,6 +15,8 @@ interface V4HeroProps {
 export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+    const { developerName } = useSiteSettings()
+    const developerNameUpper = developerName.toUpperCase()
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
@@ -81,7 +84,7 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                             className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.85] font-display"
                         >
-                            <span className="block text-foreground drop-shadow-sm uppercase">DRAYKO</span>
+                            <span className="block text-foreground drop-shadow-sm uppercase">{developerNameUpper}</span>
                             <span className="relative inline-block">
                                 <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent italic">VERSION 4.</span>
                             </span>

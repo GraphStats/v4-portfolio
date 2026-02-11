@@ -7,9 +7,13 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { ScrollButton } from "@/components/scroll-button"
 import Link from "next/link"
 import { Lock, ArrowRight, Sparkles } from "lucide-react"
+import { getSiteSettings } from "@/lib/actions"
+import { normalizeDeveloperName } from "@/lib/site-settings"
 
 export default async function HomePage() {
   const supabase = await createClient()
+  const { developerName } = await getSiteSettings()
+  const brand = normalizeDeveloperName(developerName)
 
   const { data: projects, error } = await supabase
     .from("projects")
@@ -25,7 +29,7 @@ export default async function HomePage() {
       <header className="glass-effect sticky top-0 z-50 border-b border-border/50 backdrop-blur-lg bg-background/80 supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent animate-gradient">
-            Drayko
+            {brand}
           </h1>
           <div className="flex items-center gap-3">
             <ThemeToggle />
@@ -94,7 +98,7 @@ export default async function HomePage() {
       <footer className="border-t border-border/50 py-12 mt-32">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <p className="text-muted-foreground">&copy; {new Date().getFullYear()} Drayko. Crafted with passion.</p>
+            <p className="text-muted-foreground">&copy; {new Date().getFullYear()} {brand}. Crafted with passion.</p>
           </div>
         </div>
       </footer>

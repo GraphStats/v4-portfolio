@@ -5,6 +5,7 @@ import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy,
 import { revalidatePath } from "next/cache"
 import { auth as clerkAuth, currentUser } from "@clerk/nextjs/server"
 import type { Project, News, NewsComment } from "@/lib/types"
+import { normalizeDeveloperName, DEFAULT_DEVELOPER_NAME } from "@/lib/site-settings"
 
 export async function createProject(formData: FormData) {
   const db = await getFirestoreServer()
@@ -231,14 +232,29 @@ export async function getV4Mode() {
       return {
         success: true,
         isV4Mode: data.v4_mode || false,
-        message: data.v4_message || "Drayko v4 is coming.",
+        message: data.v4_message || `${normalizeDeveloperName(data.developer_name)} v4 is coming.`,
         progress: data.v4_progress || 0
       }
     }
-    return { success: true, isV4Mode: false, message: "Drayko v4 is coming.", progress: 0 }
+    return { success: true, isV4Mode: false, message: `${DEFAULT_DEVELOPER_NAME} v4 is coming.`, progress: 0 }
   } catch (error: any) {
     console.error("Error fetching v4 mode:", error)
-    return { success: false, error: error.message, isV4Mode: false, message: "Drayko v4 is coming.", progress: 0 }
+    return { success: false, error: error.message, isV4Mode: false, message: `${DEFAULT_DEVELOPER_NAME} v4 is coming.`, progress: 0 }
+  }
+}
+
+export async function getSiteSettings() {
+  const db = await getFirestoreServer()
+  try {
+    const docRef = doc(db, "settings", "general")
+    const docSnap = await getDoc(docRef)
+
+    const developerName = normalizeDeveloperName(docSnap.exists() ? (docSnap.data().developer_name as string | undefined) : undefined)
+
+    return { success: true, developerName }
+  } catch (error: any) {
+    console.error("Error fetching site settings:", error)
+    return { success: false, error: error.message, developerName: DEFAULT_DEVELOPER_NAME }
   }
 }
 
@@ -317,6 +333,40 @@ export async function updateMaintenanceMode(isMaintenance: boolean, message?: st
   } catch (error: any) {
     console.error("Error updating maintenance mode:", error)
     return { success: false, error: error.message }
+  }
+}
+
+export async function updateDeveloperName(name: string) {
+  const db = await getFirestoreServer()
+  try {
+    const developerName = normalizeDeveloperName(name)
+    const docRef = doc(db, "settings", "general")
+    await setDoc(docRef, { developer_name: developerName }, { merge: true })
+
+    const pathsToRevalidate = [
+      "/",
+      "/v2",
+      "/about",
+      "/contact",
+      "/news",
+      "/stats",
+      "/tags-info",
+      "/terms",
+      "/privacy",
+      "/cookies",
+      "/admin/dashboard",
+      "/admin/projects",
+      "/admin/configure",
+    ]
+
+    await Promise.all(pathsToRevalidate.map((path) => revalidatePath(path)))
+    await revalidatePath("/", "layout")
+    await revalidatePath("/v2", "layout")
+
+    return { success: true, developerName }
+  } catch (error: any) {
+    console.error("Error updating developer name:", error)
+    return { success: false, error: error.message, developerName: DEFAULT_DEVELOPER_NAME }
   }
 }
 

@@ -4,9 +4,12 @@ import { Github, Mail, ArrowUp, Command } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { FaDiscord } from "react-icons/fa"
+import { useSiteSettings } from "@/components/site-settings-provider"
 
 
 export function V4Footer() {
+    const { developerName } = useSiteSettings()
+    const brandUpper = developerName.toUpperCase()
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" })
     }
@@ -29,7 +32,7 @@ export function V4Footer() {
                             <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-2xl shadow-primary/20 rotate-6">
                                 <Command className="w-6 h-6" />
                             </div>
-                            <span className="text-3xl font-black tracking-tighter">DRAYKO <span className="text-primary italic">.</span></span>
+                            <span className="text-3xl font-black tracking-tighter">{brandUpper} <span className="text-primary italic">.</span></span>
                         </div>
                         <p className="text-base sm:text-lg text-muted-foreground max-w-sm leading-relaxed">
                             Building the next generation of digital tools and experiences with a focus on human-centric design.
@@ -98,7 +101,7 @@ export function V4Footer() {
 
                 <div className="flex flex-col md:flex-row justify-between items-center py-8 sm:py-10 md:py-12 border-t border-white/5 gap-6 md:gap-8">
                     <p className="text-sm text-muted-foreground font-medium">
-                        © {new Date().getFullYear()} Drayko. All rights reserved. <span className="text-primary">v4.0.0</span>
+                        © {new Date().getFullYear()} {developerName}. All rights reserved. <span className="text-primary">v4.0.0</span>
                     </p>
                     <Button
                         onClick={scrollToTop}
@@ -116,7 +119,7 @@ export function V4Footer() {
             {/* Background Text */}
             <div className="absolute -bottom-10 left-0 right-0 pointer-events-none select-none overflow-hidden whitespace-nowrap opacity-[0.02]">
                 <span className="text-[8rem] sm:text-[12rem] md:text-[20rem] font-black tracking-tighter leading-none italic uppercase">
-                    DRAYKO   DRAYKO   DRAYKO   DRAYKO
+                    {`${brandUpper}   ${brandUpper}   ${brandUpper}   ${brandUpper}`}
                 </span>
             </div>
         </footer>
