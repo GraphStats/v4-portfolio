@@ -31,15 +31,23 @@ if [ ! -f "package.json" ]; then
     read -p "Installation folder name (default: v4-portfolio): " install_dir
     install_dir=${install_dir:-v4-portfolio}
 
-    git clone https://github.com/GraphStats/v4-portfolio.git "$install_dir"
-    if [ $? -ne 0 ]; then
-        echo "[ERROR] Git clone failed."
+    if [ -f "$install_dir/package.json" ]; then
+        echo "[INFO] Folder $install_dir already contains the project. Using existing folder."
+        cd "$install_dir"
+    elif [ -d "$install_dir" ]; then
+        echo "[ERROR] Folder $install_dir already exists but does not seem to contain the project."
+        echo "Please delete the folder or choose a different name."
         exit 1
+    else
+        git clone https://github.com/GraphStats/v4-portfolio.git "$install_dir"
+        if [ $? -ne 0 ]; then
+            echo "[ERROR] Git clone failed."
+            exit 1
+        fi
+        cd "$install_dir"
+        echo "[OK] Project cloned into $install_dir."
+        echo ""
     fi
-
-    cd "$install_dir"
-    echo "[OK] Project cloned into $install_dir."
-    echo ""
 fi
 
 # Check if .env exists

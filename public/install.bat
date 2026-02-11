@@ -31,6 +31,19 @@ echo ---------------------------------------------------
 set /p "install_dir=Nom du dossier d'installation (defaut: v4-portfolio): "
 if "%install_dir%"=="" set "install_dir=v4-portfolio"
 
+if exist "%install_dir%\package.json" (
+    echo [INFO] Le dossier %install_dir% contient deja le projet. Utilisation du dossier existant.
+    cd "%install_dir%"
+    goto SKIP_CLONE
+)
+
+if exist "%install_dir%" (
+    echo [ERROR] Le dossier %install_dir% existe deja mais ne semble pas contenir le projet.
+    echo Veuillez supprimer le dossier ou en choisir un autre.
+    pause
+    exit /b 1
+)
+
 git clone https://github.com/GraphStats/v4-portfolio.git "%install_dir%"
 if %errorlevel% neq 0 (
     echo [ERROR] Le clonage du repo a echoue.
