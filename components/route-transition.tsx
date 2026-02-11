@@ -15,7 +15,7 @@ const VISITED_STORAGE_KEY = "route-visited-paths"
 
 export function useRouteTransition() {
     const context = useContext(RouteTransitionContext)
-    return context ?? { loading: false, progress: 0, startTransition: () => {} }
+    return context ?? { loading: false, progress: 0, startTransition: () => { } }
 }
 
 export function RouteTransitionProvider({ children }: { children: React.ReactNode }) {
@@ -46,6 +46,7 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
         if (timersRef.current.slowTimer) clearTimeout(timersRef.current.slowTimer)
     }
 
+
     const startTransition = useCallback((url: string) => {
         const nextUrl = new URL(url, window.location.href)
         const currentUrl = new URL(window.location.href)
@@ -54,6 +55,13 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
 
         clearTimers()
         latestUrl.current = `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`
+
+        // Remove artificial delay for admin pages
+        if (nextUrl.pathname.startsWith('/admin') || currentUrl.pathname.startsWith('/admin')) {
+            router.push(latestUrl.current)
+            return
+        }
+
         slowToastShown.current = false
 
         const getRootSegment = (pathname: string) => pathname.split("/").filter(Boolean)[0] ?? ""

@@ -29,6 +29,12 @@ import { getFirestoreClient } from "@/lib/firebase/client"
 import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
 import Link from "next/link"
 import { Sparkles, Newspaper } from "lucide-react"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 export default function AdminDashboardPage() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -218,516 +224,581 @@ export default function AdminDashboardPage() {
         </div>
       </header>
 
-      <main className="relative z-10 pt-32 pb-24 container mx-auto px-6 space-y-20">
-
-        <section className="space-y-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                <Database className="h-4 w-4" />
-                Portfolio Management
-              </div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">MANAGE PROJECTS</h2>
-              <p className="text-muted-foreground font-medium max-w-xl">
-                Update your latest achievements, showcase your skills, and keep your professional presence sharp.
-              </p>
-            </div>
-            <Button onClick={() => setAddProjectOpen(true)} className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 group self-start md:self-auto">
-              <Plus className="mr-2 h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
-              New Project Entry
-            </Button>
-          </div>
-
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="h-64 rounded-3xl glass border-white/5 animate-pulse" />
-              ))}
-            </div>
-          ) : projects.length === 0 ? (
-            <div className="glass p-20 rounded-[3.5rem] border-white/5 text-center space-y-6">
-              <div className="w-20 h-20 rounded-full bg-white/5 mx-auto flex items-center justify-center text-muted-foreground">
-                <Database className="h-10 w-10" />
-              </div>
-              <div className="space-y-2">
-                <p className="text-xl font-bold">No projects archived</p>
-                <p className="text-muted-foreground">Deploy your first project to start building your legacy.</p>
-              </div>
-              <Button onClick={() => setAddProjectOpen(true)} variant="outline" className="rounded-full glass border-white/10">
-                <Plus className="mr-2 h-4 w-4" />
-                Get Started
-              </Button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {projects.map((project) => (
-                <AdminProjectCard
-                  key={project.id}
-                  project={project}
-                  onDeleted={handleProjectDeleted}
-                  onUpdated={handleProjectUpdated}
-                />
-              ))}
-            </div>
-          )}
-        </section>
-
-        <Separator className="bg-white/5" />
-
-        <section className="space-y-12">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                <ListFilter className="h-4 w-4" />
-                Global View
-              </div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">PROJECTS OVERVIEW</h2>
-              <p className="text-muted-foreground font-medium max-w-xl">
-                Visualisez tous les projets en un seul endroit, avec des filtres rapides par statut.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {([
-                { id: "all", label: "All", count: projectFilterCounts.all },
-                { id: "in_dev", label: "In Dev", count: projectFilterCounts.in_dev },
-                { id: "finished", label: "Finished", count: projectFilterCounts.finished },
-                { id: "archived", label: "Archived", count: projectFilterCounts.archived },
-              ] as const).map((filter) => (
-                <Button
-                  key={filter.id}
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setProjectFilter(filter.id)}
-                  className={cn(
-                    "rounded-full border border-white/10 glass px-4 text-xs font-bold uppercase tracking-widest transition-all",
-                    projectFilter === filter.id
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                      : "text-muted-foreground hover:text-foreground hover:bg-white/10"
-                  )}
-                >
-                  {filter.label}
-                  <span className={cn(
-                    "ml-2 rounded-full px-2 py-0.5 text-[10px]",
-                    projectFilter === filter.id ? "bg-primary-foreground/20 text-primary-foreground" : "bg-white/10 text-muted-foreground"
-                  )}>
-                    {filter.count}
-                  </span>
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          <div className="glass rounded-[2.5rem] border-white/5 bg-white/[0.02] overflow-hidden">
-            {isLoading ? (
-              <div className="p-12 space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-10 rounded-2xl bg-white/5 animate-pulse" />
-                ))}
-              </div>
-            ) : filteredProjects.length === 0 ? (
-              <div className="p-16 text-center space-y-4">
-                <div className="w-16 h-16 rounded-full bg-white/5 mx-auto flex items-center justify-center text-muted-foreground">
-                  <Database className="h-8 w-8" />
+      <main className="relative z-10 pt-32 pb-24 container mx-auto px-6">
+        <Accordion type="multiple" className="space-y-6">
+          {/* CATEGORY 1: WORK & CONTENT */}
+          <AccordionItem value="content" className="border-none">
+            <AccordionTrigger className="v4-glass px-8 py-6 rounded-[2rem] border border-white/10 hover:no-underline group data-[state=open]:rounded-b-none transition-all">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                  <Database className="h-6 w-6" />
                 </div>
-                <div className="space-y-2">
-                  <p className="text-lg font-bold">Aucun projet trouvé</p>
-                  <p className="text-muted-foreground text-sm">
-                    Ajuste les filtres pour afficher les projets correspondants.
+                <div className="text-left">
+                  <h3 className="text-xl font-black uppercase tracking-tight italic">Work & Content Hub</h3>
+                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest mt-1">Projects, News & Headline</p>
+                </div>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="v4-glass px-8 pt-12 pb-16 rounded-b-[2rem] border-x border-b border-white/10 space-y-20">
+
+              <section className="space-y-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                      <Database className="h-4 w-4" />
+                      Portfolio Management
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">MANAGE PROJECTS</h2>
+                    <p className="text-muted-foreground font-medium max-w-xl">
+                      Update your latest achievements, showcase your skills, and keep your professional presence sharp.
+                    </p>
+                  </div>
+                  <Button onClick={() => setAddProjectOpen(true)} className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 group self-start md:self-auto">
+                    <Plus className="mr-2 h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
+                    New Project Entry
+                  </Button>
+                </div>
+
+                {isLoading ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[1, 2, 3].map(i => (
+                      <div key={i} className="h-64 rounded-3xl glass border-white/5 animate-pulse" />
+                    ))}
+                  </div>
+                ) : projects.length === 0 ? (
+                  <div className="glass p-20 rounded-[3.5rem] border-white/5 text-center space-y-6">
+                    <div className="w-20 h-20 rounded-full bg-white/5 mx-auto flex items-center justify-center text-muted-foreground">
+                      <Database className="h-10 w-10" />
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-xl font-bold">No projects archived</p>
+                      <p className="text-muted-foreground">Deploy your first project to start building your legacy.</p>
+                    </div>
+                    <Button onClick={() => setAddProjectOpen(true)} variant="outline" className="rounded-full glass border-white/10">
+                      <Plus className="mr-2 h-4 w-4" />
+                      Get Started
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {projects.map((project) => (
+                      <AdminProjectCard
+                        key={project.id}
+                        project={project}
+                        onDeleted={handleProjectDeleted}
+                        onUpdated={handleProjectUpdated}
+                      />
+                    ))}
+                  </div>
+                )}
+              </section>
+
+              <Separator className="bg-white/5" />
+
+              <section className="space-y-12">
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                      <ListFilter className="h-4 w-4" />
+                      Global View
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">PROJECTS OVERVIEW</h2>
+                    <p className="text-muted-foreground font-medium max-w-xl">
+                      Visualisez tous les projets en un seul endroit, avec des filtres rapides par statut.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {([
+                      { id: "all", label: "All", count: projectFilterCounts.all },
+                      { id: "in_dev", label: "In Dev", count: projectFilterCounts.in_dev },
+                      { id: "finished", label: "Finished", count: projectFilterCounts.finished },
+                      { id: "archived", label: "Archived", count: projectFilterCounts.archived },
+                    ] as const).map((filter) => (
+                      <Button
+                        key={filter.id}
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setProjectFilter(filter.id)}
+                        className={cn(
+                          "rounded-full border border-white/10 glass px-4 text-xs font-bold uppercase tracking-widest transition-all",
+                          projectFilter === filter.id
+                            ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                            : "text-muted-foreground hover:text-foreground hover:bg-white/10"
+                        )}
+                      >
+                        {filter.label}
+                        <span className={cn(
+                          "ml-2 rounded-full px-2 py-0.5 text-[10px]",
+                          projectFilter === filter.id ? "bg-primary-foreground/20 text-primary-foreground" : "bg-white/10 text-muted-foreground"
+                        )}>
+                          {filter.count}
+                        </span>
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="glass rounded-[2.5rem] border-white/5 bg-white/[0.02] overflow-hidden">
+                  {isLoading ? (
+                    <div className="p-12 space-y-4">
+                      {[1, 2, 3].map((i) => (
+                        <div key={i} className="h-10 rounded-2xl bg-white/5 animate-pulse" />
+                      ))}
+                    </div>
+                  ) : filteredProjects.length === 0 ? (
+                    <div className="p-16 text-center space-y-4">
+                      <div className="w-16 h-16 rounded-full bg-white/5 mx-auto flex items-center justify-center text-muted-foreground">
+                        <Database className="h-8 w-8" />
+                      </div>
+                      <div className="space-y-2">
+                        <p className="text-lg font-bold">Aucun projet trouvé</p>
+                        <p className="text-muted-foreground text-sm">
+                          Ajuste les filtres pour afficher les projets correspondants.
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <Table className="text-xs">
+                      <TableHeader className="bg-white/5">
+                        <TableRow className="border-white/5">
+                          <TableHead className="px-6 py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Projet</TableHead>
+                          <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Statut</TableHead>
+                          <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Tags</TableHead>
+                          <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Dernière MAJ</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredProjects.map((project) => {
+                          const tags = project.tags || []
+                          const visibleTags = tags.slice(0, 3)
+                          const extraTags = tags.length - visibleTags.length
+                          const updatedAt = project.updated_at || project.created_at
+
+                          return (
+                            <TableRow key={project.id} className="border-white/5 hover:bg-white/[0.04]">
+                              <TableCell className="px-6 py-4">
+                                <div className="space-y-1">
+                                  <p className="font-bold text-foreground/90">{project.title}</p>
+                                  <p className="text-[10px] text-muted-foreground/70">{project.slug || "—"}</p>
+                                </div>
+                              </TableCell>
+                              <TableCell className="py-4">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  {project.in_development && (
+                                    <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 text-[10px]">
+                                      In Dev
+                                    </Badge>
+                                  )}
+                                  {project.in_development && project.development_status === "paused" && (
+                                    <Badge variant="secondary" className="bg-orange-500/10 text-orange-400 border-orange-500/20 text-[10px]">
+                                      Paused
+                                    </Badge>
+                                  )}
+                                  {project.is_completed && (
+                                    <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">
+                                      Finished
+                                    </Badge>
+                                  )}
+                                  {project.is_archived && (
+                                    <Badge variant="secondary" className="bg-indigo-500/10 text-indigo-500 border-indigo-500/20 text-[10px]">
+                                      Archived
+                                    </Badge>
+                                  )}
+                                  {!project.in_development && !project.is_completed && !project.is_archived && (
+                                    <Badge variant="secondary" className="bg-white/10 text-muted-foreground border-white/10 text-[10px]">
+                                      Active
+                                    </Badge>
+                                  )}
+                                  {project.in_development && typeof project.development_progress === "number" && (
+                                    <span className="text-[10px] text-muted-foreground">{project.development_progress}%</span>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell className="py-4">
+                                <div className="flex flex-wrap items-center gap-1.5">
+                                  {visibleTags.map((tag) => (
+                                    <Badge key={tag} variant="outline" className="rounded-full bg-white/5 border-white/10 text-[9px] uppercase tracking-tighter">
+                                      {tag}
+                                    </Badge>
+                                  ))}
+                                  {extraTags > 0 && (
+                                    <span className="text-[10px] text-muted-foreground">+{extraTags}</span>
+                                  )}
+                                  {tags.length === 0 && (
+                                    <span className="text-[10px] text-muted-foreground">—</span>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell className="py-4 text-[10px] text-muted-foreground">
+                                {formatDate(updatedAt)}
+                              </TableCell>
+                            </TableRow>
+                          )
+                        })}
+                      </TableBody>
+                    </Table>
+                  )}
+                </div>
+              </section>
+
+              <Separator className="bg-white/5" />
+
+              <section className="space-y-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                      <Newspaper className="h-4 w-4" />
+                      News Hub
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">MANAGE NEWS</h2>
+                    <p className="text-muted-foreground font-medium max-w-xl">
+                      Keep your audience engaged with the latest news, updates, and announcements.
+                    </p>
+                  </div>
+                  <Button onClick={() => setAddNewsOpen(true)} className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 group self-start md:self-auto">
+                    <Plus className="mr-2 h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
+                    New Article
+                  </Button>
+                </div>
+
+                {isLoading ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[1, 2, 3, 4].map(i => (
+                      <div key={i} className="h-64 rounded-3xl glass border-white/5 animate-pulse" />
+                    ))}
+                  </div>
+                ) : news.length === 0 ? (
+                  <div className="glass p-20 rounded-[3.5rem] border-white/5 text-center space-y-6">
+                    <div className="w-20 h-20 rounded-full bg-white/5 mx-auto flex items-center justify-center text-muted-foreground">
+                      <Newspaper className="h-10 w-10" />
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-xl font-bold">No news published</p>
+                      <p className="text-muted-foreground">Start by writing your first article to share with your audience.</p>
+                    </div>
+                    <Button onClick={() => setAddNewsOpen(true)} variant="outline" className="rounded-full glass border-white/10">
+                      <Plus className="mr-2 h-4 w-4" />
+                      Write News
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {news.map((item) => (
+                      <AdminNewsCard
+                        key={item.id}
+                        news={item}
+                        onDeleted={() => fetchNews()}
+                        onUpdated={() => fetchNews()}
+                      />
+                    ))}
+                  </div>
+                )}
+              </section>
+
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* CATEGORY 2: ENGAGEMENT & PULSE */}
+          <AccordionItem value="engagement" className="border-none">
+            <AccordionTrigger className="v4-glass px-8 py-6 rounded-[2rem] border border-white/10 hover:no-underline group data-[state=open]:rounded-b-none transition-all">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                  <Activity className="h-6 w-6" />
+                </div>
+                <div className="text-left">
+                  <h3 className="text-xl font-black uppercase tracking-tight italic">Engagement & Pulse</h3>
+                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest mt-1">Stats & Communications</p>
+                </div>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="v4-glass px-8 pt-12 pb-16 rounded-b-[2rem] border-x border-b border-white/10 space-y-20">
+
+              <section className="space-y-8">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                    <Activity className="h-4 w-4" />
+                    Performance Overview
+                  </div>
+                  <h2 className="text-4xl md:text-5xl font-bold tracking-tight">NETWORK PULSE</h2>
+                  <p className="text-muted-foreground font-medium max-w-xl">
+                    Real-time insights into traffic, security, and performance across the global edge network.
                   </p>
                 </div>
+                <AdminStats />
+              </section>
+
+              <Separator className="bg-white/5" />
+
+              <section className="space-y-8">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                      <Activity className="h-4 w-4" />
+                      Communications
+                    </div>
+                    <div className="flex items-baseline gap-4">
+                      <h2 className="text-4xl md:text-5xl font-bold tracking-tight">MESSAGES</h2>
+                    </div>
+                    <p className="text-muted-foreground font-medium max-w-xl">
+                      Manage incoming contact requests and respond to opportunities.
+                    </p>
+                  </div>
+                  <div className="w-full md:w-auto">
+                    <AvailabilityToggle initialState={isAvailable} />
+                  </div>
+                </div>
+
+                <AdminMessages />
+              </section>
+
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* CATEGORY 3: SYSTEM & IDENTITY */}
+          <AccordionItem value="system" className="border-none">
+            <AccordionTrigger className="v4-glass px-8 py-6 rounded-[2rem] border border-white/10 hover:no-underline group data-[state=open]:rounded-b-none transition-all">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                  <Shield className="h-6 w-6" />
+                </div>
+                <div className="text-left">
+                  <h3 className="text-xl font-black uppercase tracking-tight italic">System & Identity</h3>
+                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest mt-1">Status, Identity & Themes</p>
+                </div>
               </div>
-            ) : (
-              <Table className="text-xs">
-                <TableHeader className="bg-white/5">
-                  <TableRow className="border-white/5">
-                    <TableHead className="px-6 py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Projet</TableHead>
-                    <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Statut</TableHead>
-                    <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Tags</TableHead>
-                    <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Dernière MAJ</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredProjects.map((project) => {
-                    const tags = project.tags || []
-                    const visibleTags = tags.slice(0, 3)
-                    const extraTags = tags.length - visibleTags.length
-                    const updatedAt = project.updated_at || project.created_at
+            </AccordionTrigger>
+            <AccordionContent className="v4-glass px-8 pt-12 pb-16 rounded-b-[2rem] border-x border-b border-white/10 space-y-20">
 
-                    return (
-                      <TableRow key={project.id} className="border-white/5 hover:bg-white/[0.04]">
-                        <TableCell className="px-6 py-4">
-                          <div className="space-y-1">
-                            <p className="font-bold text-foreground/90">{project.title}</p>
-                            <p className="text-[10px] text-muted-foreground/70">{project.slug || "—"}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-4">
-                          <div className="flex flex-wrap items-center gap-2">
-                            {project.in_development && (
-                              <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 text-[10px]">
-                                In Dev
-                              </Badge>
-                            )}
-                            {project.in_development && project.development_status === "paused" && (
-                              <Badge variant="secondary" className="bg-orange-500/10 text-orange-400 border-orange-500/20 text-[10px]">
-                                Paused
-                              </Badge>
-                            )}
-                            {project.is_completed && (
-                              <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">
-                                Finished
-                              </Badge>
-                            )}
-                            {project.is_archived && (
-                              <Badge variant="secondary" className="bg-indigo-500/10 text-indigo-500 border-indigo-500/20 text-[10px]">
-                                Archived
-                              </Badge>
-                            )}
-                            {!project.in_development && !project.is_completed && !project.is_archived && (
-                              <Badge variant="secondary" className="bg-white/10 text-muted-foreground border-white/10 text-[10px]">
-                                Active
-                              </Badge>
-                            )}
-                            {project.in_development && typeof project.development_progress === "number" && (
-                              <span className="text-[10px] text-muted-foreground">{project.development_progress}%</span>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-4">
-                          <div className="flex flex-wrap items-center gap-1.5">
-                            {visibleTags.map((tag) => (
-                              <Badge key={tag} variant="outline" className="rounded-full bg-white/5 border-white/10 text-[9px] uppercase tracking-tighter">
-                                {tag}
-                              </Badge>
-                            ))}
-                            {extraTags > 0 && (
-                              <span className="text-[10px] text-muted-foreground">+{extraTags}</span>
-                            )}
-                            {tags.length === 0 && (
-                              <span className="text-[10px] text-muted-foreground">—</span>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-4 text-[10px] text-muted-foreground">
-                          {formatDate(updatedAt)}
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })}
-                </TableBody>
-              </Table>
-            )}
-          </div>
-        </section>
+              <section className="space-y-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                      <Settings className="h-4 w-4" />
+                      Control Center
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">GLOBAL CONFIGURATION</h2>
+                    <p className="text-muted-foreground font-medium max-w-xl">
+                      Manage your portfolio's identity and core settings that reflect across the entire platform.
+                    </p>
+                  </div>
+                  <Button asChild className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 self-start md:self-auto transition-all">
+                    <Link href="/admin/configure">
+                      <Settings className="mr-2 h-5 w-5" />
+                      Configure Identity
+                    </Link>
+                  </Button>
+                </div>
 
-        <Separator className="bg-white/5" />
+                <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-8">
+                  <div className="flex items-center gap-4">
+                    <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
+                      <Settings className="h-8 w-8" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Identity & Branding</p>
+                      <p className="text-xl font-bold text-foreground/90 font-sans">
+                        Change your public name and other global parameters.
+                      </p>
+                    </div>
+                  </div>
+                  <Button asChild variant="outline" className="rounded-2xl h-14 px-8 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0">
+                    <Link href="/admin/configure">
+                      <Settings className="mr-2 h-5 w-5" />
+                      Open Settings
+                    </Link>
+                  </Button>
+                </div>
+              </section>
 
-        <section className="space-y-8">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-              <Activity className="h-4 w-4" />
-              Performance Overview
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">NETWORK PULSE</h2>
-            <p className="text-muted-foreground font-medium max-w-xl">
-              Real-time insights into traffic, security, and performance across the global edge network.
-            </p>
-          </div>
-          <AdminStats />
-        </section>
+              <Separator className="bg-white/5" />
 
-        <Separator className="bg-white/5" />
+              <section className="space-y-12">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                    <Shield className="h-4 w-4" />
+                    Availability Control
+                  </div>
+                  <h2 className="text-4xl md:text-5xl font-bold tracking-tight">PLATFORM STATUS</h2>
+                  <p className="text-muted-foreground font-medium max-w-xl">
+                    Manage global site states. Activate maintenance mode or preview upcoming version announcements.
+                  </p>
+                </div>
 
-        <section className="space-y-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                <Newspaper className="h-4 w-4" />
-                News Hub
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
+                    <MaintenanceToggle initialState={maintenanceMode} initialMessage={maintenanceMessage} initialProgress={maintenanceProgress} onUpdated={fetchMaintenanceMode} />
+                  </div>
+
+                  <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
+                    <ErrorModeToggle initialState={errorMode} initialMessage={errorMessage} onUpdated={fetchErrorMode} />
+                  </div>
+
+                  <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
+                    <V4Toggle initialState={v4Mode} initialMessage={v4Message} initialProgress={v4Progress} onUpdated={fetchV4Mode} />
+                  </div>
+                </div>
+              </section>
+
+              <Separator className="bg-white/5" />
+
+              <section className="space-y-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                      <Sparkles className="h-4 w-4" />
+                      Hero Communications
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">HOMEPAGE BADGE</h2>
+                    <p className="text-muted-foreground font-medium max-w-xl">
+                      Update the headline message that visitors see first when landing on your portfolio.
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => setBadgeDialogOpen(true)}
+                    className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 transition-all self-start md:self-auto"
+                  >
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Update Headline
+                  </Button>
+                </div>
+
+                <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] relative overflow-hidden group">
+                  <div className="flex items-center gap-6 relative z-10">
+                    <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
+                      <Sparkles className="h-8 w-8 text-primary shadow-glow shadow-primary/20" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Current Live Badge Content</p>
+                      <p className="text-xl md:text-3xl font-bold text-foreground/90 italic">
+                        "{updateData?.latest_update_text || "Fix database bug and new interface (v3!)"}"
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <Separator className="bg-white/5" />
+
+              <section className="space-y-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                      <Sparkles className="h-4 w-4" />
+                      Festive Themes
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">SPECIAL THEMES</h2>
+                    <p className="text-muted-foreground font-medium max-w-xl">
+                      Configure activation periods for festive themes to create unique experiences.
+                    </p>
+                  </div>
+                  <Button asChild className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 self-start md:self-auto transition-all">
+                    <Link href="/admin/special-themes">
+                      <Sparkles className="mr-2 h-5 w-5" />
+                      Manage Themes
+                    </Link>
+                  </Button>
+                </div>
+
+                <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] relative overflow-hidden group">
+                  <div className="flex items-center gap-6 relative z-10">
+                    <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
+                      <Sparkles className="h-8 w-8 text-primary shadow-glow shadow-primary/20" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Current Theme</p>
+                      <p className="text-xl md:text-3xl font-bold text-foreground/90 italic">
+                        New Year 2026 (Dec 20 - Jan 2)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <Separator className="bg-white/5" />
+
+              <section className="space-y-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                      <HistoryIcon className="h-4 w-4" />
+                      Evolution & Roadmap
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">SITE SYSTEM UPDATES</h2>
+                    <p className="text-muted-foreground font-medium max-w-xl">
+                      Coordinate the release cycle, document breaking changes, and announce future capabilities.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-8">
+                  <div className="flex items-center gap-4">
+                    <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
+                      <HistoryIcon className="h-8 w-8" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Historical Records</p>
+                      <p className="text-xl font-bold text-foreground/90 font-sans">
+                        Track the evolution of the platform with detailed version logs.
+                      </p>
+                    </div>
+                  </div>
+                  <Button onClick={() => setUpdateDialogOpen(true)} variant="outline" className="rounded-2xl h-14 px-8 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0">
+                    <HistoryIcon className="mr-2 h-5 w-5" />
+                    Manage Ecosystem Logs
+                  </Button>
+                </div>
+              </section>
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* CATEGORY 4: SECURITY & ACCESS */}
+          <AccordionItem value="security" className="border-none">
+            <AccordionTrigger className="v4-glass px-8 py-6 rounded-[2rem] border border-white/10 hover:no-underline group data-[state=open]:rounded-b-none transition-all">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                  <Shield className="h-6 w-6" />
+                </div>
+                <div className="text-left">
+                  <h3 className="text-xl font-black uppercase tracking-tight italic">Security & Access</h3>
+                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest mt-1">Admin Management</p>
+                </div>
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">MANAGE NEWS</h2>
-              <p className="text-muted-foreground font-medium max-w-xl">
-                Keep your audience engaged with the latest news, updates, and announcements.
-              </p>
-            </div>
-            <Button onClick={() => setAddNewsOpen(true)} className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 group self-start md:self-auto">
-              <Plus className="mr-2 h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
-              New Article
-            </Button>
-          </div>
+            </AccordionTrigger>
+            <AccordionContent className="v4-glass px-8 pt-12 pb-16 rounded-b-[2rem] border-x border-b border-white/10 space-y-20">
 
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className="h-64 rounded-3xl glass border-white/5 animate-pulse" />
-              ))}
-            </div>
-          ) : news.length === 0 ? (
-            <div className="glass p-20 rounded-[3.5rem] border-white/5 text-center space-y-6">
-              <div className="w-20 h-20 rounded-full bg-white/5 mx-auto flex items-center justify-center text-muted-foreground">
-                <Newspaper className="h-10 w-10" />
-              </div>
-              <div className="space-y-2">
-                <p className="text-xl font-bold">No news published</p>
-                <p className="text-muted-foreground">Start by writing your first article to share with your audience.</p>
-              </div>
-              <Button onClick={() => setAddNewsOpen(true)} variant="outline" className="rounded-full glass border-white/10">
-                <Plus className="mr-2 h-4 w-4" />
-                Write News
-              </Button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {news.map((item) => (
-                <AdminNewsCard
-                  key={item.id}
-                  news={item}
-                  onDeleted={() => fetchNews()}
-                  onUpdated={() => fetchNews()}
-                />
-              ))}
-            </div>
-          )}
-        </section>
+              <section className="space-y-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                      <Shield className="h-4 w-4" />
+                      Access Control
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight">PLATFORM ADMINS</h2>
+                    <p className="text-muted-foreground font-medium max-w-xl">
+                      Secure your dashboard by managing authorized personnel with access to the core portfolio data.
+                    </p>
+                  </div>
+                  <Button onClick={() => setAddAdminOpen(true)} variant="ghost" className="rounded-2xl h-14 px-8 border border-white/10 glass hover:bg-white/10 hover:text-foreground self-start md:self-auto transition-all">
+                    <UserPlus className="mr-2 h-5 w-5" />
+                    Register Admin
+                  </Button>
+                </div>
 
-        <Separator className="bg-white/5" />
-
-        <section className="space-y-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                <Activity className="h-4 w-4" />
-                Communications
-              </div>
-              <div className="flex items-baseline gap-4">
-                <h2 className="text-4xl md:text-5xl font-bold tracking-tight">MESSAGES</h2>
-              </div>
-              <p className="text-muted-foreground font-medium max-w-xl">
-                Manage incoming contact requests and respond to opportunities.
-              </p>
-            </div>
-            <div className="w-full md:w-auto">
-              <AvailabilityToggle initialState={isAvailable} />
-            </div>
-          </div>
-
-          <AdminMessages />
-        </section>
-
-        <Separator className="bg-white/5" />
-
-        <section className="space-y-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                <Sparkles className="h-4 w-4" />
-                Hero Communications
-              </div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">HOMEPAGE BADGE</h2>
-              <p className="text-muted-foreground font-medium max-w-xl">
-                Update the headline message that visitors see first when landing on your portfolio.
-              </p>
-            </div>
-            <Button
-              onClick={() => setBadgeDialogOpen(true)}
-              className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 transition-all self-start md:self-auto"
-            >
-              <Sparkles className="mr-2 h-5 w-5" />
-              Update Headline
-            </Button>
-          </div>
-
-          <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] relative overflow-hidden group">
-            <div className="flex items-center gap-6 relative z-10">
-              <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
-                <Sparkles className="h-8 w-8 text-primary shadow-glow shadow-primary/20" />
-              </div>
-              <div className="space-y-1">
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Current Live Badge Content</p>
-                <p className="text-xl md:text-3xl font-bold text-foreground/90 italic">
-                  "{updateData?.latest_update_text || "Fix database bug and new interface (v3!)"}"
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <Separator className="bg-white/5" />
-
-        <section className="space-y-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                <HistoryIcon className="h-4 w-4" />
-                Evolution & Roadmap
-              </div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">SITE SYSTEM UPDATES</h2>
-              <p className="text-muted-foreground font-medium max-w-xl">
-                Coordinate the release cycle, document breaking changes, and announce future capabilities.
-              </p>
-            </div>
-          </div>
-
-          <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="flex items-center gap-4">
-              <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
-                <HistoryIcon className="h-8 w-8" />
-              </div>
-              <div className="space-y-1">
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Historical Records</p>
-                <p className="text-xl font-bold text-foreground/90 font-sans">
-                  Track the evolution of the platform with detailed version logs.
-                </p>
-              </div>
-            </div>
-            <Button onClick={() => setUpdateDialogOpen(true)} variant="outline" className="rounded-2xl h-14 px-8 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0">
-              <HistoryIcon className="mr-2 h-5 w-5" />
-              Manage Ecosystem Logs
-            </Button>
-          </div>
-        </section>
-
-        <Separator className="bg-white/5" />
-
-        <section className="space-y-12">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-              <Shield className="h-4 w-4" />
-              Availability Control
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">PLATFORM STATUS</h2>
-            <p className="text-muted-foreground font-medium max-w-xl">
-              Manage global site states. Activate maintenance mode or preview upcoming version announcements.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
-              <MaintenanceToggle initialState={maintenanceMode} initialMessage={maintenanceMessage} initialProgress={maintenanceProgress} onUpdated={fetchMaintenanceMode} />
-            </div>
-
-            <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
-              <ErrorModeToggle initialState={errorMode} initialMessage={errorMessage} onUpdated={fetchErrorMode} />
-            </div>
-
-            <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex items-center justify-center">
-              <V4Toggle initialState={v4Mode} initialMessage={v4Message} initialProgress={v4Progress} onUpdated={fetchV4Mode} />
-            </div>
-          </div>
-        </section>
-
-        <Separator className="bg-white/5" />
-
-        <section className="space-y-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                <Sparkles className="h-4 w-4" />
-                Festive Themes
-              </div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">SPECIAL THEMES</h2>
-              <p className="text-muted-foreground font-medium max-w-xl">
-                Configure activation periods for festive themes to create unique experiences.
-              </p>
-            </div>
-            <Button asChild className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 self-start md:self-auto transition-all">
-              <Link href="/admin/special-themes">
-                <Sparkles className="mr-2 h-5 w-5" />
-                Manage Themes
-              </Link>
-            </Button>
-          </div>
-
-          <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] relative overflow-hidden group">
-            <div className="flex items-center gap-6 relative z-10">
-              <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
-                <Sparkles className="h-8 w-8 text-primary shadow-glow shadow-primary/20" />
-              </div>
-              <div className="space-y-1">
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Current Theme</p>
-                <p className="text-xl md:text-3xl font-bold text-foreground/90 italic">
-                  New Year 2026 (Dec 20 - Jan 2)
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <Separator className="bg-white/5" />
-
-        <section className="space-y-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                <Settings className="h-4 w-4" />
-                Control Center
-              </div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">GLOBAL CONFIGURATION</h2>
-              <p className="text-muted-foreground font-medium max-w-xl">
-                Manage your portfolio's identity and core settings that reflect across the entire platform.
-              </p>
-            </div>
-            <Button asChild className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 self-start md:self-auto transition-all">
-              <Link href="/admin/configure">
-                <Settings className="mr-2 h-5 w-5" />
-                Configure Identity
-              </Link>
-            </Button>
-          </div>
-
-          <div className="glass p-10 rounded-[2.5rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="flex items-center gap-4">
-              <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
-                <Settings className="h-8 w-8" />
-              </div>
-              <div className="space-y-1">
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/70">Identity & Branding</p>
-                <p className="text-xl font-bold text-foreground/90 font-sans">
-                  Change your public name and other global parameters.
-                </p>
-              </div>
-            </div>
-            <Button asChild variant="outline" className="rounded-2xl h-14 px-8 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0">
-              <Link href="/admin/configure">
-                <Settings className="mr-2 h-5 w-5" />
-                Open Settings
-              </Link>
-            </Button>
-          </div>
-        </section>
-
-        <Separator className="bg-white/5" />
-
-        <section className="space-y-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                <Shield className="h-4 w-4" />
-                Access Control
-              </div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight">PLATFORM ADMINS</h2>
-              <p className="text-muted-foreground font-medium max-w-xl">
-                Secure your dashboard by managing authorized personnel with access to the core portfolio data.
-              </p>
-            </div>
-            <Button onClick={() => setAddAdminOpen(true)} variant="ghost" className="rounded-2xl h-14 px-8 border border-white/10 glass hover:bg-white/10 hover:text-foreground self-start md:self-auto transition-all">
-              <UserPlus className="mr-2 h-5 w-5" />
-              Register Admin
-            </Button>
-          </div>
-
-          {admins.length === 0 ? (
-            <div className="glass p-20 rounded-[3.5rem] border-white/5 text-center">
-              <p className="text-muted-foreground font-medium italic">Scanning for authorized accounts...</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {admins.map((admin) => (
-                <AdminCard key={admin.id} admin={admin} onDeleted={handleAdminDeleted} />
-              ))}
-            </div>
-          )}
-        </section>
+                {admins.length === 0 ? (
+                  <div className="glass p-20 rounded-[3.5rem] border-white/5 text-center">
+                    <p className="text-muted-foreground font-medium italic">Scanning for authorized accounts...</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {admins.map((admin) => (
+                      <AdminCard key={admin.id} admin={admin} onDeleted={handleAdminDeleted} />
+                    ))}
+                  </div>
+                )}
+              </section>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </main>
 
       <ProjectDialog open={addProjectOpen} onOpenChange={setAddProjectOpen} onSuccess={fetchProjects} />
