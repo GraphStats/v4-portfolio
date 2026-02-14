@@ -41,7 +41,7 @@ export default function AdminLoginForm() {
       </Link>
 
       <div className="w-full max-w-md relative z-10 px-6 animate-scale-in">
-        <div className="glass p-10 rounded-[2.5rem] border-white/5 space-y-8 shadow-2xl">
+        <div className="glass bg-gradient-to-b from-slate-900/90 via-slate-950/80 to-slate-950/70 p-10 rounded-[2.5rem] border border-white/10 space-y-8 shadow-2xl shadow-black/40">
           <div className="text-center space-y-4">
             <div className="mx-auto w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-2xl shadow-primary/40 rotate-6 group-hover:rotate-0 transition-transform duration-500">
               <Lock className="h-8 w-8" />
