@@ -582,6 +582,34 @@ export async function deleteConversation(id: string) {
 }
 
 // Feedback Actions
+async function verifyTurnstileToken(token: string) {
+  const secret = process.env.TURNSTILE_SECRET_KEY
+  if (!secret) {
+    console.error("TURNSTILE_SECRET_KEY is missing")
+    return false
+  }
+
+  try {
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        secret,
+        response: token,
+      }),
+      cache: "no-store",
+    })
+
+    const data = await response.json() as { success?: boolean }
+    return !!data.success
+  } catch (error) {
+    console.error("Turnstile verification failed:", error)
+    return false
+  }
+}
+
 export async function submitFeedback(formData: FormData) {
   const db = await getFirestoreServer()
 
@@ -592,9 +620,15 @@ export async function submitFeedback(formData: FormData) {
   const additional_comment = ((formData.get("additional_comment") as string) || "").trim()
   const ratingValue = Number(formData.get("rating"))
   const rating = Number.isFinite(ratingValue) ? Math.max(1, Math.min(5, Math.floor(ratingValue))) : 5
+  const turnstileToken = ((formData.get("cf-turnstile-response") as string) || "").trim()
 
-  if (!positive_points || !negative_points) {
+  if (!positive_points || !negative_points || !turnstileToken) {
     return { success: false, error: "Feedback incomplet" }
+  }
+
+  const isHuman = await verifyTurnstileToken(turnstileToken)
+  if (!isHuman) {
+    return { success: false, error: "Verification Cloudflare invalide" }
   }
 
   try {
