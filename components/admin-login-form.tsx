@@ -30,13 +30,8 @@ export default function AdminLoginForm() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background relative selection:bg-primary/30 selection:text-primary overflow-hidden font-sans">
-      <div className="noise-overlay" />
-
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full blur-[120px] animate-pulse-glow" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/20 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: "-3s" }} />
-        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-secondary/10 rounded-full blur-[100px] animate-float" />
-      </div>
+      <div className="noise-v4" />
+      <div className="mesh-v4 fixed inset-0 pointer-events-none z-0" />
 
       <Link href="/" className="absolute top-8 left-8 flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors group z-50">
         <div className="p-2 rounded-xl glass border-white/10 group-hover:border-primary/50 transition-all">
