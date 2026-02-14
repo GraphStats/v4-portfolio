@@ -653,6 +653,18 @@ export async function markFeedbackAsCorrected(id: string, corrected = true) {
   }
 }
 
+export async function deleteFeedback(id: string) {
+  const db = await getFirestoreServer()
+  try {
+    await deleteDoc(doc(db, "feedback", id))
+    revalidatePath("/admin/feedback")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error deleting feedback:", error)
+    return { success: false, error: error.message }
+  }
+}
+
 export async function submitContactMessage(formData: FormData) {
   return createConversation(formData)
 }

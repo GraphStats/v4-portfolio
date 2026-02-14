@@ -79,7 +79,7 @@ export function V4Dock() {
                     animate={{ y: hideDock ? 30 : 0, opacity: hideDock ? 0 : 1 }}
                     transition={{ duration: 0.25 }}
                     className={cn(
-                        "flex items-center gap-2 p-2 rounded-3xl v4-glass border border-white/10",
+                        "flex items-center gap-2 p-2 rounded-3xl v4-glass bg-background/70 backdrop-blur-xl border border-white/15 shadow-2xl shadow-black/30",
                         hideDock && "pointer-events-none"
                     )}
                 >
@@ -92,10 +92,10 @@ export function V4Dock() {
                                 whileTap={{ scale: 0.9 }}
                                 className={cn(
                                     "relative p-4 rounded-2xl transition-colors",
-                                    hovered === i ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                                    hovered === i ? "bg-primary text-primary-foreground" : "text-foreground/75 hover:text-foreground hover:bg-white/10"
                                 )}
                             >
-                                <item.icon className="w-6 h-6" />
+                                <item.icon className="w-6 h-6 drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]" />
                                 <AnimatePresence>
                                     {hovered === i && (
                                         <motion.span
@@ -118,7 +118,7 @@ export function V4Dock() {
                         whileHover={{ y: -10, scale: 1.2 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                        className="p-4 rounded-2xl text-muted-foreground hover:text-foreground transition-colors"
+                        className="p-4 rounded-2xl text-foreground/75 hover:text-foreground hover:bg-white/10 transition-colors"
                         aria-label="Toggle theme"
                     >
                         {theme === "dark" ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
@@ -132,7 +132,7 @@ export function V4Dock() {
                     animate={{ y: hideDock ? 20 : 0, opacity: hideDock ? 0 : 1 }}
                     transition={{ duration: 0.25 }}
                     className={cn(
-                        "flex items-center justify-between gap-2 px-3 py-2 rounded-2xl v4-glass border border-white/10",
+                        "flex items-center justify-between gap-2 px-3 py-2 rounded-2xl v4-glass bg-background/75 backdrop-blur-xl border border-white/15 shadow-xl shadow-black/25",
                         hideDock && "pointer-events-none"
                     )}
                 >
@@ -140,15 +140,15 @@ export function V4Dock() {
                         <Link
                             key={item.label}
                             href={item.href}
-                            className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+                            className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-[9px] font-black uppercase tracking-widest text-foreground/75 hover:text-foreground hover:bg-white/10 transition-colors"
                         >
-                            <item.icon className="w-5 h-5" />
+                            <item.icon className="w-5 h-5 drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]" />
                             <span>{item.label}</span>
                         </Link>
                     ))}
                     <button
                         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                        className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+                        className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-[9px] font-black uppercase tracking-widest text-foreground/75 hover:text-foreground hover:bg-white/10 transition-colors"
                         aria-label="Toggle theme"
                     >
                         {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}

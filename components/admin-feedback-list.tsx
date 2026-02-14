@@ -1,13 +1,13 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { CheckCircle2, Clock3, Loader2, Search } from "lucide-react"
+import { CheckCircle2, Clock3, Loader2, Search, Trash2 } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import { fr } from "date-fns/locale"
 import { toast } from "sonner"
 
 import type { Feedback } from "@/lib/types"
-import { markFeedbackAsCorrected } from "@/lib/actions"
+import { deleteFeedback, markFeedbackAsCorrected } from "@/lib/actions"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -21,6 +21,7 @@ export function AdminFeedbackList({ initialFeedbacks }: AdminFeedbackListProps) 
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState<"all" | "new" | "corrected">("all")
   const [updatingId, setUpdatingId] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const filteredFeedbacks = useMemo(() => {
     return feedbacks.filter((item) => {
@@ -71,6 +72,28 @@ export function AdminFeedbackList({ initialFeedbacks }: AdminFeedbackListProps) 
       toast.error("Une erreur est survenue")
     } finally {
       setUpdatingId(null)
+    }
+  }
+
+  const handleDeleteFeedback = async (item: Feedback) => {
+    const confirmed = window.confirm("Supprimer ce feedback definitivement ?")
+    if (!confirmed) return
+
+    setDeletingId(item.id)
+    try {
+      const result = await deleteFeedback(item.id)
+      if (!result.success) {
+        toast.error("Suppression impossible")
+        return
+      }
+
+      setFeedbacks((prev) => prev.filter((entry) => entry.id !== item.id))
+      toast.success("Feedback supprime")
+    } catch (error) {
+      console.error("Feedback delete error:", error)
+      toast.error("Une erreur est survenue")
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -156,26 +179,47 @@ export function AdminFeedbackList({ initialFeedbacks }: AdminFeedbackListProps) 
                   ) : null}
                 </div>
 
-                <Button
-                  variant={isCorrected ? "outline" : "default"}
-                  onClick={() => handleToggleStatus(item)}
-                  disabled={updatingId === item.id}
-                  className="w-full"
-                >
-                  {updatingId === item.id ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Mise a jour...
-                    </>
-                  ) : isCorrected ? (
-                    "Remettre en nouveau"
-                  ) : (
-                    <>
-                      <CheckCircle2 className="w-4 h-4 mr-2" />
-                      Marquer comme corrige
-                    </>
-                  )}
-                </Button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <Button
+                    variant={isCorrected ? "outline" : "default"}
+                    onClick={() => handleToggleStatus(item)}
+                    disabled={updatingId === item.id || deletingId === item.id}
+                    className="w-full"
+                  >
+                    {updatingId === item.id ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Mise a jour...
+                      </>
+                    ) : isCorrected ? (
+                      "Remettre en nouveau"
+                    ) : (
+                      <>
+                        <CheckCircle2 className="w-4 h-4 mr-2" />
+                        Marquer comme corrige
+                      </>
+                    )}
+                  </Button>
+
+                  <Button
+                    variant="destructive"
+                    onClick={() => handleDeleteFeedback(item)}
+                    disabled={deletingId === item.id || updatingId === item.id}
+                    className="w-full"
+                  >
+                    {deletingId === item.id ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Suppression...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Supprimer
+                      </>
+                    )}
+                  </Button>
+                </div>
               </article>
             )
           })}
