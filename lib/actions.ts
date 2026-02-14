@@ -4,7 +4,7 @@ import { getFirestoreServer } from "@/lib/firebase/server"
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy, where, getDoc, setDoc } from "firebase/firestore"
 import { revalidatePath } from "next/cache"
 import { auth as clerkAuth, currentUser } from "@clerk/nextjs/server"
-import type { Project, News, NewsComment } from "@/lib/types"
+import type { Project, News, NewsComment, Feedback } from "@/lib/types"
 import { normalizeDeveloperName, DEFAULT_DEVELOPER_NAME } from "@/lib/site-settings"
 
 export async function createProject(formData: FormData) {
@@ -577,6 +577,78 @@ export async function deleteConversation(id: string) {
     return { success: true }
   } catch (error: any) {
     console.error("Error deleting conversation:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+// Feedback Actions
+export async function submitFeedback(formData: FormData) {
+  const db = await getFirestoreServer()
+
+  const name = ((formData.get("name") as string) || "").trim()
+  const email = ((formData.get("email") as string) || "").trim()
+  const positive_points = ((formData.get("positive_points") as string) || "").trim()
+  const negative_points = ((formData.get("negative_points") as string) || "").trim()
+  const additional_comment = ((formData.get("additional_comment") as string) || "").trim()
+  const ratingValue = Number(formData.get("rating"))
+  const rating = Number.isFinite(ratingValue) ? Math.max(1, Math.min(5, Math.floor(ratingValue))) : 5
+
+  if (!positive_points || !negative_points) {
+    return { success: false, error: "Feedback incomplet" }
+  }
+
+  try {
+    await addDoc(collection(db, "feedback"), {
+      name: name || "Anonymous",
+      email,
+      rating,
+      positive_points,
+      negative_points,
+      additional_comment,
+      status: "new",
+      created_at: new Date().toISOString(),
+      corrected_at: null,
+    })
+
+    revalidatePath("/feedback")
+    revalidatePath("/admin/feedback")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error submitting feedback:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+export async function getFeedbacks() {
+  const db = await getFirestoreServer()
+  try {
+    const q = query(collection(db, "feedback"), orderBy("created_at", "desc"))
+    const querySnapshot = await getDocs(q)
+
+    const data = querySnapshot.docs.map((feedbackDoc) => ({
+      id: feedbackDoc.id,
+      ...feedbackDoc.data(),
+    })) as Feedback[]
+
+    return { success: true, data }
+  } catch (error: any) {
+    console.error("Error fetching feedbacks:", error)
+    return { success: false, error: error.message, data: [] }
+  }
+}
+
+export async function markFeedbackAsCorrected(id: string, corrected = true) {
+  const db = await getFirestoreServer()
+  try {
+    await updateDoc(doc(db, "feedback", id), {
+      status: corrected ? "corrected" : "new",
+      corrected_at: corrected ? new Date().toISOString() : null,
+    })
+
+    revalidatePath("/admin/feedback")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error updating feedback status:", error)
     return { success: false, error: error.message }
   }
 }

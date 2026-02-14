@@ -46,6 +46,7 @@ export function V4Navbar() {
     const navItems = [
         { label: "Projects", href: "/#projects" },
         { label: "News", href: "/news" },
+        { label: "Feedback", href: "/feedback" },
         { label: "Stats", href: "/stats" },
         { label: "About", href: "/about" },
         { label: "Contact", href: "/contact" },

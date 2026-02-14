@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { Home, User, Briefcase, Mail, BarChart3, Settings, Moon, Sun } from "lucide-react"
+import { Home, User, Briefcase, Mail, BarChart3, Settings, Moon, Sun, MessageSquare } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useTheme } from "next-themes"
 import Link from "next/link"
@@ -12,6 +12,7 @@ const items = [
     { icon: Home, label: "Home", href: "/" },
     { icon: Briefcase, label: "Projects", href: "/#projects" },
     { icon: BarChart3, label: "Stats", href: "/stats" },
+    { icon: MessageSquare, label: "Feedback", href: "/feedback" },
     { icon: User, label: "About", href: "/about" },
     { icon: Mail, label: "Contact", href: "/contact" },
     { icon: FaDiscord, label: "Discord", href: "https://discord.gg/nZwFrnEW" },
@@ -22,6 +23,7 @@ const mobileItems = [
     { icon: Home, label: "Home", href: "/" },
     { icon: Briefcase, label: "Projects", href: "/#projects" },
     { icon: BarChart3, label: "Stats", href: "/stats" },
+    { icon: MessageSquare, label: "Feedback", href: "/feedback" },
     { icon: Mail, label: "Contact", href: "/contact" },
 ]
 
@@ -58,20 +60,12 @@ export function V4Dock() {
         window.addEventListener("scroll", handleVisibility, { passive: true })
         window.addEventListener("resize", handleVisibility)
 
-        if (mediaQuery.addEventListener) {
-            mediaQuery.addEventListener("change", handleVisibility)
-        } else {
-            mediaQuery.addListener(handleVisibility)
-        }
+        mediaQuery.addEventListener("change", handleVisibility)
 
         return () => {
             window.removeEventListener("scroll", handleVisibility)
             window.removeEventListener("resize", handleVisibility)
-            if (mediaQuery.addEventListener) {
-                mediaQuery.removeEventListener("change", handleVisibility)
-            } else {
-                mediaQuery.removeListener(handleVisibility)
-            }
+            mediaQuery.removeEventListener("change", handleVisibility)
         }
     }, [])
 

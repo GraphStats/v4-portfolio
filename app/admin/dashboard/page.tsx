@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
-import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon, Activity, ListFilter, NotebookPen, Settings, Sparkles, Newspaper, Server } from "lucide-react"
+import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon, Activity, ListFilter, NotebookPen, Settings, Sparkles, Newspaper, Server, MessageSquare } from "lucide-react"
 import { AdminProjectCard } from "@/components/admin-project-card"
 import { ProjectDialog } from "@/components/project-dialog"
 import { AdminDialog } from "@/components/admin-dialog"
@@ -260,6 +260,12 @@ export default function AdminDashboardPage() {
               <Link href="/admin/configure">
                 <Settings className="mr-2 h-4 w-4" />
                 Configure
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm" className="hidden sm:flex rounded-full border border-white/10 glass hover:bg-white/10 hover:text-foreground transition-all">
+              <Link href="/admin/feedback">
+                <MessageSquare className="mr-2 h-4 w-4" />
+                Feedback
               </Link>
             </Button>
             <ThemeToggle />

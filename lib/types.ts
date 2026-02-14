@@ -124,3 +124,16 @@ export interface NewsComment {
   created_at: string
 }
 
+export interface Feedback {
+  id: string
+  name: string
+  email: string
+  rating: number
+  positive_points: string
+  negative_points: string
+  additional_comment: string
+  status: "new" | "corrected"
+  created_at: string
+  corrected_at?: string | null
+}
+
