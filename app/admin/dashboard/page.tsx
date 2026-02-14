@@ -251,21 +251,9 @@ export default function AdminDashboardPage() {
               </Link>
             </Button>
             <Button asChild variant="ghost" size="sm" className="hidden sm:flex rounded-full border border-white/10 glass hover:bg-white/10 hover:text-foreground transition-all">
-              <Link href="/admin/projects">
-                <NotebookPen className="mr-2 h-4 w-4" />
-                Project Ops
-              </Link>
-            </Button>
-            <Button asChild variant="ghost" size="sm" className="hidden sm:flex rounded-full border border-white/10 glass hover:bg-white/10 hover:text-foreground transition-all">
               <Link href="/admin/configure">
                 <Settings className="mr-2 h-4 w-4" />
                 Configure
-              </Link>
-            </Button>
-            <Button asChild variant="ghost" size="sm" className="hidden sm:flex rounded-full border border-white/10 glass hover:bg-white/10 hover:text-foreground transition-all">
-              <Link href="/admin/feedback">
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Feedback
               </Link>
             </Button>
             <ThemeToggle />
@@ -306,10 +294,18 @@ export default function AdminDashboardPage() {
                       Update your latest achievements, showcase your skills, and keep your professional presence sharp.
                     </p>
                   </div>
-                  <Button onClick={() => setAddProjectOpen(true)} className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 group self-start md:self-auto">
-                    <Plus className="mr-2 h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
-                    New Project Entry
-                  </Button>
+                  <div className="flex flex-wrap gap-3 self-start md:self-auto">
+                    <Button asChild variant="outline" className="rounded-2xl h-14 px-6 border border-white/10 glass hover:bg-white/10 hover:text-foreground transition-all">
+                      <Link href="/admin/projects">
+                        <NotebookPen className="mr-2 h-5 w-5" />
+                        Project Ops
+                      </Link>
+                    </Button>
+                    <Button onClick={() => setAddProjectOpen(true)} className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/25 group">
+                      <Plus className="mr-2 h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
+                      New Project Entry
+                    </Button>
+                  </div>
                 </div>
 
                 {isLoading ? (
@@ -602,8 +598,44 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <AdminMessages />
-              </section>
 
+<Separator className="bg-white/5" />
+
+              </section>
+                    <section className="space-y-12">
+                      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
+                            <Settings className="h-4 w-4" />
+                            Feedbacks
+                          </div>
+                          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">USERS FEEDBACKS</h2>
+                          <p className="text-muted-foreground font-medium max-w-xl text-sm">
+                            Review user feedback and adjust your portfolio to better meet your audience's needs.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="glass p-8 rounded-[2rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="flex items-center gap-4">
+                          <div className="p-3 rounded-xl bg-primary/10 text-primary shrink-0">
+                            <Settings className="h-6 w-6" />
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">View Feedbacks</p>
+                            <p className="text-lg font-bold text-foreground/90 font-sans">
+                              Open Feedbacks Section
+                            </p>
+                          </div>
+                        </div>
+                        <Button asChild variant="outline" className="rounded-xl h-12 px-6 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0 text-sm">
+                          <Link href="/admin/feedback">
+                            <Settings className="mr-2 h-4 w-4" />
+                            Open Feedbacks
+                          </Link>
+                        </Button>
+                      </div>
+                    </section>
             </AccordionContent>
           </AccordionItem>
 
