@@ -126,26 +126,6 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                             </Link>
                         </Button>
                     </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.6 }}
-                        className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-12 pt-12 sm:pt-16 md:pt-20 border-t border-white/5"
-                    >
-                        {[
-                            { label: "Performance", value: "100", icon: Cpu },
-                            { label: "Stability", value: "99.8%", icon: Globe },
-                            { label: "Modern Tech", value: "V4.3", icon: Code2 },
-                            { label: "Interaction", value: "Modern Tech", icon: MousePointer2 },
-                        ].map((stat, i) => (
-                            <div key={i} className="flex flex-col items-center gap-2">
-                                <stat.icon className="w-5 h-5 text-primary/60" />
-                                <span className="text-lg sm:text-xl font-black text-foreground">{stat.value}</span>
-                                <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground">{stat.label}</span>
-                            </div>
-                        ))}
-                    </motion.div>
                 </div>
             </div>
         </section>
