@@ -65,7 +65,7 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                 />
             </div>
 
-            <div className="container relative z-10 mx-auto">
+            <div className="container relative z-10 mx-auto -mt-12 sm:-mt-20">
                 <div className="flex flex-col items-center text-center space-y-8 sm:space-y-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
