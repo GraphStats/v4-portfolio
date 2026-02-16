@@ -6,7 +6,7 @@ import { useState, useEffect } from "react"
 import { useTheme } from "next-themes"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { FaDiscord } from "react-icons/fa"
+import { FaCoffee } from "react-icons/fa"
 
 const items = [
     { icon: Home, label: "Home", href: "/" },
@@ -15,7 +15,7 @@ const items = [
     { icon: MessageSquare, label: "Feedback", href: "/feedback" },
     { icon: User, label: "About", href: "/about" },
     { icon: Mail, label: "Contact", href: "/contact" },
-    { icon: FaDiscord, label: "Discord", href: "https://discord.gg/nZwFrnEW" },
+    { icon: FaCoffee, label: "Buy Me a Coffee", href: "https://buymeacoffee.com/drayko_dev" },
     { icon: Settings, label: "Admin", href: "/admin" },
 ]
 
@@ -159,3 +159,4 @@ export function V4Dock() {
         </>
     )
 }
+

@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { Mail, MapPin, ArrowRight, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { FaDiscord } from "react-icons/fa"
+import { FaCoffee } from "react-icons/fa"
 
 export function V4Contact() {
     return (
@@ -71,9 +71,9 @@ export function V4Contact() {
                                         </Link>
                                     </Button>
                                     <Button asChild className="w-full h-14 sm:h-16 rounded-2xl bg-primary text-primary-foreground hover:scale-105 transition-transform shadow-2xl shadow-primary/20 text-sm font-black uppercase tracking-widest">
-                                        <Link href="https://discord.gg/nZwFrnEW">
-                                            <FaDiscord className="w-3.5 h-3.5 mr-2" />
-                                            Discord
+                                        <Link href="https://buymeacoffee.com/drayko_dev">
+                                            <FaCoffee className="w-3.5 h-3.5 mr-2" />
+                                            Buy Me a Coffee
                                         </Link>
                                     </Button>
                                     <p className="text-[10px] text-center text-muted-foreground uppercase font-black tracking-widest">
@@ -91,3 +91,4 @@ export function V4Contact() {
         </section>
     )
 }
+

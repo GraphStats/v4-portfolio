@@ -8,7 +8,7 @@ import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { AuthButtons } from "@/components/auth-buttons"
 import { VersionSelector } from "@/components/version-selector"
-import { FaDiscord } from "react-icons/fa"
+import { FaCoffee } from "react-icons/fa"
 import { useRouteTransition } from "@/components/route-transition"
 import { useSiteSettings } from "@/components/site-settings-provider"
 
@@ -86,9 +86,9 @@ export function V4Navbar() {
                             <AuthButtons />
                         </div>
                         <Button asChild variant="outline" size="sm" className="hidden lg:flex rounded-xl glass border-white/5 text-[10px] font-black uppercase tracking-widest px-6 hover:bg-primary hover:text-primary-foreground transition-all">
-                            <Link href="https://discord.gg/nZwFrnEW">
-                                <FaDiscord className="w-3.5 h-3.5 mr-2" />
-                                Discord
+                            <Link href="https://buymeacoffee.com/drayko_dev">
+                                <FaCoffee className="w-3.5 h-3.5 mr-2" />
+                                Buy Me a Coffee
                             </Link>
                         </Button>
                         <Button
@@ -187,9 +187,9 @@ export function V4Navbar() {
                                         <AuthButtons />
                                     </div>
                                     <Button asChild variant="outline" className="w-full rounded-2xl glass border-white/5 text-[10px] font-black uppercase tracking-widest">
-                                        <Link href="https://discord.gg/nZwFrnEW" className="flex items-center justify-center">
-                                            <FaDiscord className="w-4 h-4 mr-2" />
-                                            Discord
+                                        <Link href="https://buymeacoffee.com/drayko_dev" className="flex items-center justify-center">
+                                            <FaCoffee className="w-4 h-4 mr-2" />
+                                            Buy Me a Coffee
                                         </Link>
                                     </Button>
                                 </div>
@@ -201,3 +201,4 @@ export function V4Navbar() {
         </header>
     )
 }
+

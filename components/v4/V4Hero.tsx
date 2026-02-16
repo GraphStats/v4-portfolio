@@ -5,7 +5,7 @@ import { useRef, useEffect, useState } from "react"
 import { ArrowRight, Code2, Cpu, Globe, Zap, MousePointer2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { FaDiscord } from 'react-icons/fa';
+import { FaCoffee } from "react-icons/fa"
 import { useSiteSettings } from "@/components/site-settings-provider"
 
 interface V4HeroProps {
@@ -120,9 +120,9 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                             </Link>
                         </Button>
                         <Button variant="outline" size="lg" className="h-14 sm:h-16 px-8 sm:px-10 rounded-2xl border-white/10 glass hover:bg-white/5 text-sm sm:text-md font-bold uppercase tracking-widest transition-all w-full sm:w-auto">
-                            <Link href="https://discord.gg/nZwFrnEW" className="flex items-center justify-center">
-                                <FaDiscord className="w-5 h-5 mr-2" />
-                                <span>Discord</span>
+                            <Link href="https://buymeacoffee.com/drayko_dev" className="flex items-center justify-center">
+                                <FaCoffee className="w-5 h-5 mr-2" />
+                                <span>Buy Me a Coffee</span>
                             </Link>
                         </Button>
                     </motion.div>
@@ -131,3 +131,4 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
         </section>
     )
 }
+
