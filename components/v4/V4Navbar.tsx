@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { Command, Menu, X, ChevronRight, Search } from "lucide-react"
+import { Command, Menu, X, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
@@ -11,7 +11,6 @@ import { VersionSelector } from "@/components/version-selector"
 import { FaCoffee } from "react-icons/fa"
 import { useRouteTransition } from "@/components/route-transition"
 import { useSiteSettings } from "@/components/site-settings-provider"
-import { PerformanceToggle } from "@/components/performance-toggle"
 
 export function V4Navbar() {
     const [scrolled, setScrolled] = useState(false)
@@ -46,7 +45,6 @@ export function V4Navbar() {
 
     const navItems = [
         { label: "Projects", href: "/#projects" },
-        { label: "Search", href: "/search" },
         { label: "News", href: "/news" },
         { label: "Feedback", href: "/feedback" },
         { label: "Stats", href: "/stats" },
@@ -84,13 +82,6 @@ export function V4Navbar() {
 
                     <div className="flex items-center gap-3">
                         <div className="hidden md:flex items-center gap-3">
-                            <Button asChild variant="outline" size="sm" className="rounded-xl glass border-white/5 text-[10px] font-black uppercase tracking-widest px-4">
-                                <Link href="/search">
-                                    <Search className="w-3.5 h-3.5 mr-2" />
-                                    Search
-                                </Link>
-                            </Button>
-                            <PerformanceToggle />
                             <VersionSelector />
                             <AuthButtons />
                         </div>
@@ -194,12 +185,6 @@ export function V4Navbar() {
                                             Account
                                         </span>
                                         <AuthButtons />
-                                    </div>
-                                    <div className="flex items-center justify-between rounded-2xl px-4 py-3 bg-white/5 border border-white/10">
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                                            Performance
-                                        </span>
-                                        <PerformanceToggle />
                                     </div>
                                     <Button asChild variant="outline" className="w-full rounded-2xl glass border-white/5 text-[10px] font-black uppercase tracking-widest">
                                         <Link href="https://buymeacoffee.com/drayko_dev" className="flex items-center justify-center">
