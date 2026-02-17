@@ -37,6 +37,7 @@ export function V4Projects({ projects }: V4ProjectsProps) {
     const [query, setQuery] = useState<string>("")
     const [sortBy, setSortBy] = useState<string>("newest")
     const [favorites, setFavorites] = useState<string[]>([])
+    const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
     const { user } = useUser()
     const isSignedIn = !!user
 
@@ -113,14 +114,28 @@ export function V4Projects({ projects }: V4ProjectsProps) {
         }
     }, [filteredProjects, sortBy])
 
-    const allTags = Array.from(new Set(projects.flatMap(p => p.tags || []))).sort((a, b) => a.localeCompare(b))
-    const tagCounts = projects.reduce<Record<string, number>>((acc, project) => {
-        (project.tags || []).forEach((tag) => {
-            acc[tag] = (acc[tag] || 0) + 1
-        })
-        return acc
-    }, {})
-    const favoriteCount = projects.filter(project => favoriteSet.has(project.id)).length
+    const allTags = useMemo(
+        () => Array.from(new Set(projects.flatMap((p) => p.tags || []))).sort((a, b) => a.localeCompare(b)),
+        [projects]
+    )
+    const tagCounts = useMemo(
+        () =>
+            projects.reduce<Record<string, number>>((acc, project) => {
+                (project.tags || []).forEach((tag) => {
+                    acc[tag] = (acc[tag] || 0) + 1
+                })
+                return acc
+            }, {}),
+        [projects]
+    )
+    const favoriteCount = useMemo(
+        () => projects.filter((project) => favoriteSet.has(project.id)).length,
+        [projects, favoriteSet]
+    )
+    const selectedProject = useMemo(
+        () => (selectedProjectId ? projects.find((project) => project.id === selectedProjectId) ?? null : null),
+        [projects, selectedProjectId]
+    )
     const hasFilters = filter !== "all" || normalizedQuery.length > 0
     const clearFilters = () => {
         setFilter("all")
@@ -267,12 +282,22 @@ export function V4Projects({ projects }: V4ProjectsProps) {
                             isSignedIn={isSignedIn}
                             isFavorite={favoriteSet.has(project.id)}
                             onToggleFavorite={toggleFavorite}
+                            onOpenQuickView={setSelectedProjectId}
                         />
                     ))
                 ) : (
                     <EmptyState onReset={clearFilters} hasFilters={hasFilters} />
                 )}
             </HorizontalScrollSection>
+            <ProjectQuickViewDialog
+                project={selectedProject}
+                isOpen={!!selectedProject}
+                isFavorite={selectedProject ? favoriteSet.has(selectedProject.id) : false}
+                onOpenChange={(open) => {
+                    if (!open) setSelectedProjectId(null)
+                }}
+                onToggleFavorite={toggleFavorite}
+            />
         </section>
     )
 }
@@ -283,12 +308,14 @@ function ProjectCard({
     isSignedIn,
     isFavorite,
     onToggleFavorite,
+    onOpenQuickView,
 }: {
     project: Project
     index: number
     isSignedIn: boolean
     isFavorite: boolean
     onToggleFavorite: (projectId: string) => void
+    onOpenQuickView: (projectId: string) => void
 }) {
     const isLocked = project.requires_auth && !isSignedIn
 
