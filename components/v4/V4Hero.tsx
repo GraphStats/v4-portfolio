@@ -1,8 +1,8 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useRef, useEffect, useState } from "react"
-import { ArrowRight, Code2, Cpu, Globe, Zap, MousePointer2 } from "lucide-react"
+import { useRef, useEffect } from "react"
+import { ArrowRight, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { FaCoffee } from "react-icons/fa"
@@ -14,25 +14,49 @@ interface V4HeroProps {
 
 export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps) {
     const containerRef = useRef<HTMLDivElement>(null)
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
     const { developerName } = useSiteSettings()
     const developerNameUpper = developerName.toUpperCase()
 
     useEffect(() => {
+        let frameId: number | null = null
+        let lastX = 0
+        let lastY = 0
+
+        const updateMouseGradient = () => {
+            frameId = null
+            if (!containerRef.current) return
+            containerRef.current.style.setProperty("--mouse-x", `${lastX}px`)
+            containerRef.current.style.setProperty("--mouse-y", `${lastY}px`)
+        }
+
         const handleMouseMove = (e: MouseEvent) => {
             if (!containerRef.current) return
             const rect = containerRef.current.getBoundingClientRect()
-            setMousePosition({
-                x: e.clientX - rect.left,
-                y: e.clientY - rect.top,
-            })
+            lastX = e.clientX - rect.left
+            lastY = e.clientY - rect.top
+            if (frameId === null) {
+                frameId = requestAnimationFrame(updateMouseGradient)
+            }
         }
+
         window.addEventListener("mousemove", handleMouseMove)
-        return () => window.removeEventListener("mousemove", handleMouseMove)
+        return () => {
+            window.removeEventListener("mousemove", handleMouseMove)
+            if (frameId !== null) {
+                cancelAnimationFrame(frameId)
+            }
+        }
     }, [])
 
     return (
-        <section ref={containerRef} className="relative min-h-[90vh] sm:min-h-screen flex items-center justify-center overflow-hidden bg-background py-20 sm:py-24 px-4 sm:px-6">
+        <section
+            ref={containerRef}
+            className="relative min-h-[90vh] sm:min-h-screen flex items-center justify-center overflow-hidden bg-background py-20 sm:py-24 px-4 sm:px-6"
+            style={{
+                ["--mouse-x" as string]: "50%",
+                ["--mouse-y" as string]: "50%",
+            }}
+        >
             <div className="absolute inset-0 opacity-[0.15] pointer-events-none">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
             </div>
@@ -40,7 +64,7 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
             <div
                 className="absolute inset-0 pointer-events-none transition-opacity duration-1000"
                 style={{
-                    background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, oklch(0.7 0.25 260 / 0.08), transparent 40%)`
+                    background: "radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), oklch(0.7 0.25 260 / 0.08), transparent 40%)"
                 }}
             />
 

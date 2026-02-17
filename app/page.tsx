@@ -6,14 +6,27 @@ import { getMaintenanceMode } from "@/lib/actions"
 import { redirect } from "next/navigation"
 import { getCloudflareStats } from "@/lib/cloudflare"
 import { isLocalRequest } from "@/lib/server-utils"
+import dynamic from "next/dynamic"
 
 import { V4Navbar } from "@/components/v4/V4Navbar"
 import { V4Hero } from "@/components/v4/V4Hero"
-import { V4Projects } from "@/components/v4/V4Projects"
-import { V4TechStack } from "@/components/v4/V4TechStack"
-import { V4Contact } from "@/components/v4/V4Contact"
-import { V4Footer } from "@/components/v4/V4Footer"
-import { V4Dock } from "@/components/v4/V4Dock"
+
+const V4Projects = dynamic(() =>
+  import("@/components/v4/V4Projects").then((mod) => mod.V4Projects)
+)
+const V4TechStack = dynamic(() =>
+  import("@/components/v4/V4TechStack").then((mod) => mod.V4TechStack)
+)
+const V4Contact = dynamic(() =>
+  import("@/components/v4/V4Contact").then((mod) => mod.V4Contact)
+)
+const V4Footer = dynamic(() =>
+  import("@/components/v4/V4Footer").then((mod) => mod.V4Footer)
+)
+const V4Dock = dynamic(() =>
+  import("@/components/v4/V4Dock").then((mod) => mod.V4Dock),
+  { ssr: false }
+)
 
 export const dynamic = "force-dynamic"
 
