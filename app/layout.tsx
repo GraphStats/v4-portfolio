@@ -13,6 +13,8 @@ import { getErrorMode, getSiteSettings } from "@/lib/actions"
 import { ErrorModeScreen } from "@/components/error-mode-screen"
 import { RouteTransitionProvider } from "@/components/route-transition"
 import { SiteSettingsProvider } from "@/components/site-settings-provider"
+import { PerformanceModeProvider } from "@/components/performance-mode-provider"
+import { PWAInstaller } from "@/components/pwa-installer"
 
 import "./globals.css"
 
@@ -26,6 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `${name} - Creative Developer`,
     description: `Portfolio of ${name}, a Creative Developer & Designer specializing in high-performance digital experiences.`,
+    manifest: "/manifest.webmanifest",
     generator: "v0.app",
     other: {
       "google-adsense-account": "ca-pub-3145023750951462",
@@ -51,19 +54,21 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${outfit.variable}`}>
       <body className="font-sans antialiased selection:bg-primary/30 selection:text-primary transition-colors duration-300" suppressHydrationWarning>
         <SiteSettingsProvider developerName={developerName}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange storageKey="theme">
-            <ClerkThemeProvider>
-              <SpecialThemeHandler />
-              <Toaster position="top-right" richColors />
-              <div className="relative flex min-h-screen flex-col">
-                <main className="flex-1">
-                  {showErrorMode ? (
-                    <ErrorModeScreen message={errorMode.message} pathname={pathname} />
-                  ) : (
-                    <RouteTransitionProvider>{children}</RouteTransitionProvider>
-                  )}
-                </main>
-              </div>
+          <PerformanceModeProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange storageKey="theme">
+              <ClerkThemeProvider>
+                <SpecialThemeHandler />
+                <PWAInstaller />
+                <Toaster position="top-right" richColors />
+                <div className="relative flex min-h-screen flex-col">
+                  <main className="flex-1">
+                    {showErrorMode ? (
+                      <ErrorModeScreen message={errorMode.message} pathname={pathname} />
+                    ) : (
+                      <RouteTransitionProvider>{children}</RouteTransitionProvider>
+                    )}
+                  </main>
+                </div>
               {isProd && (
                 <>
                   <Analytics />
@@ -101,8 +106,9 @@ export default async function RootLayout({
                   </noscript>
                 </>
               )}
-            </ClerkThemeProvider>
-          </ThemeProvider>
+              </ClerkThemeProvider>
+            </ThemeProvider>
+          </PerformanceModeProvider>
         </SiteSettingsProvider>
       </body>
     </html>

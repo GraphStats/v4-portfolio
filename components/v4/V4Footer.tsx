@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { FaCoffee } from "react-icons/fa"
 import { useSiteSettings } from "@/components/site-settings-provider"
+import { NewsletterForm } from "@/components/newsletter-form"
 
 
 export function V4Footer() {
@@ -97,6 +98,10 @@ export function V4Footer() {
                                 </Link>
                             </li>
                         </ul>
+                        <div className="pt-2 space-y-2">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-primary">Newsletter</h4>
+                            <NewsletterForm />
+                        </div>
                     </div>
                 </div>
 

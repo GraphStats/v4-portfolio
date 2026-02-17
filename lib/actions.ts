@@ -1,10 +1,10 @@
 "use server"
 
 import { getFirestoreServer } from "@/lib/firebase/server"
-import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy, where, getDoc, setDoc } from "firebase/firestore"
+import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy, where, getDoc, setDoc, limit } from "firebase/firestore"
 import { revalidatePath } from "next/cache"
 import { auth as clerkAuth, currentUser } from "@clerk/nextjs/server"
-import type { Project, News, NewsComment, Feedback } from "@/lib/types"
+import type { Project, News, NewsComment, Feedback, SearchItem } from "@/lib/types"
 import { normalizeDeveloperName, DEFAULT_DEVELOPER_NAME } from "@/lib/site-settings"
 
 export async function createProject(formData: FormData) {
@@ -748,6 +748,93 @@ export async function markMessageAsReplied(id: string) {
   }
 }
 
+export async function getSearchIndex() {
+  const db = await getFirestoreServer()
+  try {
+    const [projectsSnap, newsSnap] = await Promise.all([
+      getDocs(query(collection(db, "portfolio"), orderBy("created_at", "desc"), limit(200))),
+      getDocs(query(collection(db, "news"), orderBy("created_at", "desc"), limit(200))),
+    ])
+
+    const projects: SearchItem[] = projectsSnap.docs.map((projectDoc) => {
+      const data = projectDoc.data() as Partial<Project>
+      return {
+        id: projectDoc.id,
+        type: "project",
+        title: data.title || "Untitled Project",
+        description: data.description || "No description",
+        href: (data.slug === "my-portfolio-this-web-site" || data.title === "My portfolio (this web site)")
+          ? "/update"
+          : `/${data.slug || (data.title || "").toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "")}/update`,
+        tags: data.tags || [],
+        created_at: data.created_at || new Date().toISOString(),
+      }
+    })
+
+    const news: SearchItem[] = newsSnap.docs.map((newsDoc) => {
+      const data = newsDoc.data() as Partial<News>
+      return {
+        id: newsDoc.id,
+        type: "news",
+        title: data.title || "Untitled News",
+        description: (data.content || "").slice(0, 180),
+        href: `/news/${newsDoc.id}`,
+        tags: ["news"],
+        created_at: data.created_at || new Date().toISOString(),
+      }
+    })
+
+    const staticPages: SearchItem[] = [
+      { id: "home", type: "page", title: "Home", description: "Main portfolio landing page", href: "/", tags: ["page"] },
+      { id: "about", type: "page", title: "About", description: "Learn more about the developer", href: "/about", tags: ["page"] },
+      { id: "contact", type: "page", title: "Contact", description: "Send a message or collaboration request", href: "/contact", tags: ["page"] },
+      { id: "feedback", type: "page", title: "Feedback", description: "Share product feedback", href: "/feedback", tags: ["page"] },
+      { id: "stats", type: "page", title: "Stats", description: "Public analytics and metrics", href: "/stats", tags: ["page"] },
+      { id: "news-list", type: "page", title: "News", description: "Latest updates and articles", href: "/news", tags: ["page"] },
+      { id: "update", type: "page", title: "Updates", description: "Portfolio updates and changelog", href: "/update", tags: ["page"] },
+      { id: "tags-info", type: "page", title: "Tags Info", description: "Project tags reference", href: "/tags-info", tags: ["page"] },
+    ]
+
+    return { success: true, data: [...projects, ...news, ...staticPages] }
+  } catch (error: any) {
+    console.error("Error building search index:", error)
+    return { success: false, error: error.message, data: [] as SearchItem[] }
+  }
+}
+
+export async function subscribeNewsletter(formData: FormData) {
+  const db = await getFirestoreServer()
+  const email = ((formData.get("email") as string) || "").trim().toLowerCase()
+  const name = ((formData.get("name") as string) || "").trim()
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(email)) {
+    return { success: false, error: "Invalid email address" }
+  }
+
+  try {
+    const existingQuery = query(collection(db, "newsletter_subscribers"), where("email", "==", email), limit(1))
+    const existingSnapshot = await getDocs(existingQuery)
+
+    if (!existingSnapshot.empty) {
+      return { success: true, alreadySubscribed: true }
+    }
+
+    await addDoc(collection(db, "newsletter_subscribers"), {
+      email,
+      name: name || null,
+      created_at: new Date().toISOString(),
+      source: "portfolio-site",
+    })
+
+    revalidatePath("/")
+    return { success: true, alreadySubscribed: false }
+  } catch (error: any) {
+    console.error("Error subscribing to newsletter:", error)
+    return { success: false, error: error.message }
+  }
+}
+
 // News Actions
 
 export async function createNews(formData: FormData) {
@@ -894,7 +981,7 @@ export async function toggleLikeNews(newsId: string) {
   }
 }
 
-export async function addComment(newsId: string, content: string) {
+export async function addComment(newsId: string, content: string, honeypot = "") {
   const session = await clerkAuth()
   const user = await currentUser()
 
@@ -903,14 +990,54 @@ export async function addComment(newsId: string, content: string) {
     return { success: false, error: "Authentication required" }
   }
 
+  const trimmedContent = content.trim()
+  if (!trimmedContent) {
+    return { success: false, error: "Comment cannot be empty" }
+  }
+
+  if (trimmedContent.length > 1000) {
+    return { success: false, error: "Comment is too long" }
+  }
+
+  if (honeypot.trim().length > 0) {
+    return { success: false, error: "Spam blocked" }
+  }
+
+  const linkMatches = trimmedContent.match(/https?:\/\/|www\./gi)
+  if (linkMatches && linkMatches.length > 2) {
+    return { success: false, error: "Too many links in comment" }
+  }
+
   const db = await getFirestoreServer()
   try {
+    const recentQuery = query(
+      collection(db, "news_comments"),
+      where("news_id", "==", newsId),
+      where("user_id", "==", user.id),
+      limit(5)
+    )
+    const recentSnapshot = await getDocs(recentQuery)
+    if (!recentSnapshot.empty) {
+      const recentDates = recentSnapshot.docs
+        .map((snapshotDoc) => snapshotDoc.data().created_at as string)
+        .map((dateString) => new Date(dateString).getTime())
+        .filter((time) => !Number.isNaN(time))
+      const lastCreatedAt = Math.max(...recentDates)
+      if (Number.isFinite(lastCreatedAt)) {
+        const elapsedMs = Date.now() - lastCreatedAt
+        if (elapsedMs < 20_000) {
+          return { success: false, error: "Please wait a few seconds before posting again" }
+        }
+      }
+    }
+
     const docRef = await addDoc(collection(db, "news_comments"), {
       news_id: newsId,
       user_id: user.id,
       user_name: user.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : user.username || "Anonymous",
       user_image: user.imageUrl,
-      content,
+      content: trimmedContent,
+      likes: [],
       created_at: new Date().toISOString(),
     })
 
@@ -920,6 +1047,35 @@ export async function addComment(newsId: string, content: string) {
     return { success: true }
   } catch (error: any) {
     console.error("Error adding comment:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+export async function toggleCommentLike(newsId: string, commentId: string) {
+  const session = await clerkAuth()
+  const userId = session.userId
+
+  if (!userId) {
+    return { success: false, error: "Authentication required" }
+  }
+
+  const db = await getFirestoreServer()
+  try {
+    const commentRef = doc(db, "news_comments", commentId)
+    const commentSnap = await getDoc(commentRef)
+    if (!commentSnap.exists()) return { success: false, error: "Comment not found" }
+
+    const commentData = commentSnap.data() as Partial<NewsComment>
+    const likes = commentData.likes || []
+    const hasLiked = likes.includes(userId)
+    const nextLikes = hasLiked ? likes.filter((id) => id !== userId) : [...likes, userId]
+
+    await updateDoc(commentRef, { likes: nextLikes })
+    revalidatePath(`/news/${newsId}`)
+
+    return { success: true, liked: !hasLiked, count: nextLikes.length }
+  } catch (error: any) {
+    console.error("Error toggling comment like:", error)
     return { success: false, error: error.message }
   }
 }

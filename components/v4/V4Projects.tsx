@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, type ChangeEvent } from "react"
 import { useUser, SignInButton } from "@clerk/nextjs"
 import { HorizontalScrollSection } from "@/components/ui/HorizontalScrollSection"
 import { cn } from "@/lib/utils"
@@ -38,6 +38,7 @@ export function V4Projects({ projects }: V4ProjectsProps) {
     const [sortBy, setSortBy] = useState<string>("newest")
     const [favorites, setFavorites] = useState<string[]>([])
     const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
+    const [visibleCount, setVisibleCount] = useState(8)
     const { user } = useUser()
     const isSignedIn = !!user
 
@@ -140,6 +141,43 @@ export function V4Projects({ projects }: V4ProjectsProps) {
     const clearFilters = () => {
         setFilter("all")
         setQuery("")
+    }
+
+    useEffect(() => {
+        setVisibleCount(8)
+    }, [filter, query, sortBy])
+
+    const visibleProjects = sortedProjects.slice(0, visibleCount)
+    const hasMoreProjects = visibleCount < sortedProjects.length
+
+    const exportFavorites = () => {
+        const payload = JSON.stringify({ favorites, exportedAt: new Date().toISOString() }, null, 2)
+        const blob = new Blob([payload], { type: "application/json" })
+        const url = URL.createObjectURL(blob)
+        const anchor = document.createElement("a")
+        anchor.href = url
+        anchor.download = "favorites.json"
+        anchor.click()
+        URL.revokeObjectURL(url)
+    }
+
+    const importFavorites = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0]
+        if (!file) return
+
+        const reader = new FileReader()
+        reader.onload = () => {
+            try {
+                const parsed = JSON.parse(String(reader.result))
+                const imported = Array.isArray(parsed) ? parsed : parsed.favorites
+                if (!Array.isArray(imported)) return
+                setFavorites(imported.filter((id) => typeof id === "string"))
+            } catch {
+                // Ignore malformed files.
+            }
+        }
+        reader.readAsText(file)
+        event.target.value = ""
     }
 
     const headerContent = (
@@ -265,6 +303,20 @@ export function V4Projects({ projects }: V4ProjectsProps) {
                     >
                         Clear filters
                     </Button>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="h-11 rounded-xl glass border-white/10 text-[10px] font-black uppercase tracking-widest"
+                        onClick={exportFavorites}
+                        disabled={favorites.length === 0}
+                    >
+                        Export favorites
+                    </Button>
+                    <label className="h-11 px-4 inline-flex items-center justify-center rounded-xl glass border border-white/10 text-[10px] font-black uppercase tracking-widest cursor-pointer">
+                        Import favorites
+                        <input type="file" accept="application/json" className="hidden" onChange={importFavorites} />
+                    </label>
                 </div>
             </div>
         </div>
@@ -273,8 +325,8 @@ export function V4Projects({ projects }: V4ProjectsProps) {
     return (
         <section id="projects" className="relative scroll-mt-28">
             <HorizontalScrollSection header={headerContent}>
-                {sortedProjects.length > 0 ? (
-                    sortedProjects.map((project, index) => (
+                {visibleProjects.length > 0 ? (
+                    visibleProjects.map((project, index) => (
                         <ProjectCard
                             key={project.id}
                             project={project}
@@ -289,6 +341,18 @@ export function V4Projects({ projects }: V4ProjectsProps) {
                     <EmptyState onReset={clearFilters} hasFilters={hasFilters} />
                 )}
             </HorizontalScrollSection>
+            {hasMoreProjects && (
+                <div className="flex justify-center mt-8">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        className="rounded-xl text-[10px] font-black uppercase tracking-widest"
+                        onClick={() => setVisibleCount((prev) => prev + 8)}
+                    >
+                        Load more
+                    </Button>
+                </div>
+            )}
             <ProjectQuickViewDialog
                 project={selectedProject}
                 isOpen={!!selectedProject}

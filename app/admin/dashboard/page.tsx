@@ -256,6 +256,12 @@ export default function AdminDashboardPage() {
                 Configure
               </Link>
             </Button>
+            <Button asChild variant="ghost" size="sm" className="hidden sm:flex rounded-full border border-white/10 glass hover:bg-white/10 hover:text-foreground transition-all">
+              <Link href="/admin/visitors">
+                <BarChart3 className="mr-2 h-4 w-4" />
+                Visitors
+              </Link>
+            </Button>
             <ThemeToggle />
             <Button onClick={handleLogout} variant="destructive" size="sm" className="rounded-full shadow-lg shadow-destructive/20">
               <LogOut className="mr-2 h-4 w-4" />

@@ -11,8 +11,41 @@ import Link from "next/link"
 import Image from "next/image"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
+import type { Metadata } from "next"
 
 export const dynamic = "force-dynamic"
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+    const { id } = await params
+    const result = await getNewsById(id)
+
+    if (!result.success || !result.news) {
+        return {
+            title: "News Not Found",
+            description: "The requested article does not exist.",
+        }
+    }
+
+    const news = result.news
+    const description = (news.content || "").slice(0, 160)
+
+    return {
+        title: `${news.title} | News`,
+        description,
+        openGraph: {
+            title: news.title,
+            description,
+            type: "article",
+            images: news.image_url ? [{ url: news.image_url }] : [],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: news.title,
+            description,
+            images: news.image_url ? [news.image_url] : [],
+        },
+    }
+}
 
 export default async function NewsDetailPage({ params }: { params: { id: string } }) {
     const { id } = await params

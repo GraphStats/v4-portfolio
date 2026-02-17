@@ -122,6 +122,24 @@ export interface NewsComment {
   user_image?: string
   content: string
   created_at: string
+  likes?: string[]
+}
+
+export interface SearchItem {
+  id: string
+  type: "project" | "news" | "page"
+  title: string
+  description: string
+  href: string
+  tags?: string[]
+  created_at?: string
+}
+
+export interface NewsletterSubscription {
+  id: string
+  email: string
+  name?: string
+  created_at: string
 }
 
 export interface Feedback {

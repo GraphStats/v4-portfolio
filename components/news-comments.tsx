@@ -4,10 +4,10 @@ import { useState } from "react"
 import { useUser, SignInButton } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { addComment, deleteComment } from "@/lib/actions"
+import { addComment, deleteComment, toggleCommentLike } from "@/lib/actions"
 import type { NewsComment } from "@/lib/types"
 import { toast } from "sonner"
-import { MessageCircle, Send, Trash2, User } from "lucide-react"
+import { ArrowUpDown, Heart, MessageCircle, Send, Trash2, User } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import { enUS } from "date-fns/locale"
 import Image from "next/image"
@@ -21,6 +21,8 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
     const { user, isLoaded } = useUser()
     const [comments, setComments] = useState(initialComments)
     const [content, setContent] = useState("")
+    const [honeypot, setHoneypot] = useState("")
+    const [sortBy, setSortBy] = useState<"newest" | "top">("newest")
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -29,7 +31,7 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
         if (!content.trim()) return
 
         setIsSubmitting(true)
-        const result = await addComment(newsId, content)
+        const result = await addComment(newsId, content, honeypot)
 
         if (result.success) {
             // Optimistic update or just refresh
@@ -45,6 +47,7 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
             }
             setComments([newComment, ...comments])
             setContent("")
+            setHoneypot("")
             toast.success("Comment added!")
         } else {
             toast.error(result.error || "An error occurred")
@@ -61,6 +64,36 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
             toast.error(result.error || "An error occurred")
         }
     }
+
+    const handleLike = async (commentId: string) => {
+        if (!user) return
+        const result = await toggleCommentLike(newsId, commentId)
+        if (!result.success) {
+            toast.error(result.error || "Could not like comment")
+            return
+        }
+
+        setComments((prev) =>
+            prev.map((comment) => {
+                if (comment.id !== commentId) return comment
+                const currentLikes = comment.likes || []
+                const hasLiked = currentLikes.includes(user.id)
+                return {
+                    ...comment,
+                    likes: hasLiked ? currentLikes.filter((id) => id !== user.id) : [...currentLikes, user.id],
+                }
+            })
+        )
+    }
+
+    const sortedComments = [...comments].sort((a, b) => {
+        if (sortBy === "top") {
+            const likesA = a.likes?.length || 0
+            const likesB = b.likes?.length || 0
+            if (likesA !== likesB) return likesB - likesA
+        }
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    })
 
     return (
         <section id="comments" className="space-y-12">
@@ -89,6 +122,15 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
                             className="min-h-[120px] rounded-3xl border-white/10 bg-white/5 focus:bg-white/10 transition-colors p-6 text-sm"
                             required
                         />
+                        <input
+                            type="text"
+                            value={honeypot}
+                            onChange={(e) => setHoneypot(e.target.value)}
+                            className="hidden"
+                            tabIndex={-1}
+                            autoComplete="off"
+                            aria-hidden="true"
+                        />
                         <div className="flex justify-end">
                             <Button
                                 type="submit"
@@ -115,12 +157,23 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
                 )}
 
                 <div className="space-y-8 pt-8 border-t border-white/5">
+                    <div className="flex justify-end">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            className="rounded-full text-[10px] font-black uppercase tracking-widest"
+                            onClick={() => setSortBy((prev) => (prev === "newest" ? "top" : "newest"))}
+                        >
+                            <ArrowUpDown className="h-3.5 w-3.5 mr-2" />
+                            {sortBy === "newest" ? "Newest" : "Top"}
+                        </Button>
+                    </div>
                     {comments.length === 0 ? (
                         <p className="text-center text-muted-foreground font-medium py-10 italic">
                             No comments yet. Be the first to respond!
                         </p>
                     ) : (
-                        comments.map((comment) => (
+                        sortedComments.map((comment) => (
                             <div key={comment.id} className="flex gap-6 group">
                                 <div className="grow-0">
                                     <div className="w-12 h-12 rounded-2xl overflow-hidden glass border-white/10 relative">
@@ -153,6 +206,19 @@ export function NewsComments({ newsId, initialComments }: NewsCommentsProps) {
                                     <p className="text-muted-foreground font-medium text-sm leading-relaxed">
                                         {comment.content}
                                     </p>
+                                    <div className="pt-1">
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-8 px-2 rounded-lg text-xs"
+                                            onClick={() => handleLike(comment.id)}
+                                            disabled={!user}
+                                        >
+                                            <Heart className={`h-3.5 w-3.5 mr-1 ${(comment.likes || []).includes(user?.id || "") ? "fill-current text-primary" : ""}`} />
+                                            {(comment.likes || []).length}
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         ))
