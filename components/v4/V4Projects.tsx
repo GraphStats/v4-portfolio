@@ -352,6 +352,7 @@ function ProjectCard({
                         src={project.image_url}
                         alt={project.title}
                         fill
+                        sizes="(max-width: 768px) 90vw, (max-width: 1200px) 45vw, 33vw"
                         className={`object-cover transition-transform duration-700 group-hover:scale-110 ${isLocked ? "blur-md grayscale scale-110" : ""}`}
                     />
                 ) : (
@@ -472,116 +473,15 @@ function ProjectCard({
                         </div>
                     )}
 
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button
-                                variant="outline"
-                                className="w-full h-10 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5"
-                            >
-                                <Eye className="w-3 h-3 mr-2" />
-                                Quick View
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="bg-background/95 border-white/10 sm:max-w-4xl">
-                            <div className="grid gap-6 md:grid-cols-[1.2fr,1fr]">
-                                <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-muted/20">
-                                    {project.image_url ? (
-                                        <Image
-                                            src={project.image_url}
-                                            alt={project.title}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center opacity-30">
-                                            <Layers className="w-12 h-12" />
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="space-y-5">
-                                    <DialogHeader>
-                                        <DialogTitle className="text-2xl font-black tracking-tight">
-                                            {project.title}
-                                        </DialogTitle>
-                                        <DialogDescription className="text-sm text-muted-foreground leading-relaxed">
-                                            {project.description}
-                                        </DialogDescription>
-                                    </DialogHeader>
-
-                                    <div className="flex flex-wrap gap-2">
-                                        {project.tags?.map(tag => (
-                                            <Badge key={tag} className="rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                                                #{tag}
-                                            </Badge>
-                                        ))}
-                                    </div>
-
-                                    {project.in_development && (
-                                        <div className="space-y-2">
-                                            <div className="flex justify-between text-[10px] uppercase font-black tracking-widest text-muted-foreground">
-                                                <span>Progress</span>
-                                                <span>{project.development_progress || 0}%</span>
-                                            </div>
-                                            <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                                                <div className="h-full bg-primary" style={{ width: `${project.development_progress || 0}%` }} />
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <div className="flex flex-wrap gap-2">
-                                        <Button
-                                            type="button"
-                                            variant={isFavorite ? "default" : "outline"}
-                                            className="rounded-xl text-[10px] font-black uppercase tracking-widest"
-                                            onClick={() => onToggleFavorite(project.id)}
-                                        >
-                                            <FavoriteStarIcon className="w-3.5 h-3.5 mr-2" filled={isFavorite} />
-                                            {isFavorite ? "Favorited" : "Add to favorites"}
-                                        </Button>
-                                        <Badge className="rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                                            {getStatusText()}
-                                        </Badge>
-                                    </div>
-
-                                    {!isLocked && (project.project_url || project.github_url) && (
-                                        <div className="flex flex-col sm:flex-row gap-3">
-                                            {project.project_url && (
-                                                <Button asChild size="sm" className="rounded-xl">
-                                                    <Link href={project.project_url} target="_blank" rel="noopener noreferrer">
-                                                        <ExternalLink className="w-3 h-3 mr-2" />
-                                                        Live Demo
-                                                    </Link>
-                                                </Button>
-                                            )}
-                                            {project.github_url && (
-                                                <Button asChild size="sm" variant="outline" className="rounded-xl">
-                                                    <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
-                                                        <Github className="w-3 h-3 mr-2" />
-                                                        GitHub
-                                                    </Link>
-                                                </Button>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    <Button
-                                        asChild
-                                        variant="ghost"
-                                        className="w-full h-10 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5"
-                                    >
-                                        <Link href={
-                                            (project.slug === "my-portfolio-this-web-site" || project.title === "My portfolio (this web site)")
-                                                ? "/update"
-                                                : `/${project.slug || project.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}/update`
-                                        }>
-                                            <History className="w-3 h-3 mr-2" />
-                                            View Updates
-                                        </Link>
-                                    </Button>
-                                </div>
-                            </div>
-                        </DialogContent>
-                    </Dialog>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full h-10 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5"
+                        onClick={() => onOpenQuickView(project.id)}
+                    >
+                        <Eye className="w-3 h-3 mr-2" />
+                        Quick View
+                    </Button>
 
                     <Button
                         asChild
