@@ -6,7 +6,7 @@ import { Project } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Image from "next/image"
 import Link from "next/link"
@@ -488,11 +488,7 @@ function ProjectCard({
                         variant="ghost"
                         className="w-full h-10 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5"
                     >
-                        <Link href={
-                            (project.slug === "my-portfolio-this-web-site" || project.title === "My portfolio (this web site)")
-                                ? "/update"
-                                : `/${project.slug || project.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}/update`
-                        }>
+                        <Link href={getProjectUpdateUrl(project)}>
                             <History className="w-3 h-3 mr-2" />
                             View Updates
                         </Link>
@@ -502,6 +498,138 @@ function ProjectCard({
 
             {!isLocked && <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/2 to-primary/20 rounded-2xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity -z-10" />}
         </motion.div>
+    )
+}
+
+function getProjectUpdateUrl(project: Project) {
+    return (project.slug === "my-portfolio-this-web-site" || project.title === "My portfolio (this web site)")
+        ? "/update"
+        : `/${project.slug || project.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}/update`
+}
+
+function ProjectQuickViewDialog({
+    project,
+    isOpen,
+    isFavorite,
+    onOpenChange,
+    onToggleFavorite,
+}: {
+    project: Project | null
+    isOpen: boolean
+    isFavorite: boolean
+    onOpenChange: (open: boolean) => void
+    onToggleFavorite: (projectId: string) => void
+}) {
+    if (!project) return null
+
+    const isLocked = project.requires_auth
+    const statusText = project.in_development
+        ? project.development_status === 'paused' ? "Paused" : "In Development"
+        : project.is_archived
+            ? "Archived"
+            : project.is_completed
+                ? "Completed"
+                : "Active"
+
+    return (
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+            <DialogContent className="bg-background/95 border-white/10 sm:max-w-4xl">
+                <div className="grid gap-6 md:grid-cols-[1.2fr,1fr]">
+                    <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-muted/20">
+                        {project.image_url ? (
+                            <Image
+                                src={project.image_url}
+                                alt={project.title}
+                                fill
+                                sizes="(max-width: 768px) 90vw, 60vw"
+                                className="object-cover"
+                            />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center opacity-30">
+                                <Layers className="w-12 h-12" />
+                            </div>
+                        )}
+                    </div>
+                    <div className="space-y-5">
+                        <DialogHeader>
+                            <DialogTitle className="text-2xl font-black tracking-tight">
+                                {project.title}
+                            </DialogTitle>
+                            <DialogDescription className="text-sm text-muted-foreground leading-relaxed">
+                                {project.description}
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        <div className="flex flex-wrap gap-2">
+                            {project.tags?.map(tag => (
+                                <Badge key={tag} className="rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                                    #{tag}
+                                </Badge>
+                            ))}
+                        </div>
+
+                        {project.in_development && (
+                            <div className="space-y-2">
+                                <div className="flex justify-between text-[10px] uppercase font-black tracking-widest text-muted-foreground">
+                                    <span>Progress</span>
+                                    <span>{project.development_progress || 0}%</span>
+                                </div>
+                                <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                                    <div className="h-full bg-primary" style={{ width: `${project.development_progress || 0}%` }} />
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="flex flex-wrap gap-2">
+                            <Button
+                                type="button"
+                                variant={isFavorite ? "default" : "outline"}
+                                className="rounded-xl text-[10px] font-black uppercase tracking-widest"
+                                onClick={() => onToggleFavorite(project.id)}
+                            >
+                                <FavoriteStarIcon className="w-3.5 h-3.5 mr-2" filled={isFavorite} />
+                                {isFavorite ? "Favorited" : "Add to favorites"}
+                            </Button>
+                            <Badge className="rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                                {statusText}
+                            </Badge>
+                        </div>
+
+                        {!isLocked && (project.project_url || project.github_url) && (
+                            <div className="flex flex-col sm:flex-row gap-3">
+                                {project.project_url && (
+                                    <Button asChild size="sm" className="rounded-xl">
+                                        <Link href={project.project_url} target="_blank" rel="noopener noreferrer">
+                                            <ExternalLink className="w-3 h-3 mr-2" />
+                                            Live Demo
+                                        </Link>
+                                    </Button>
+                                )}
+                                {project.github_url && (
+                                    <Button asChild size="sm" variant="outline" className="rounded-xl">
+                                        <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
+                                            <Github className="w-3 h-3 mr-2" />
+                                            GitHub
+                                        </Link>
+                                    </Button>
+                                )}
+                            </div>
+                        )}
+
+                        <Button
+                            asChild
+                            variant="ghost"
+                            className="w-full h-10 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/5"
+                        >
+                            <Link href={getProjectUpdateUrl(project)}>
+                                <History className="w-3 h-3 mr-2" />
+                                View Updates
+                            </Link>
+                        </Button>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
     )
 }
 
