@@ -45,6 +45,7 @@ export default async function RootLayout({
   const errorMode = await getErrorMode()
   const showErrorMode = !isAdminRoute && errorMode.isErrorMode
   const { developerName } = await getSiteSettings()
+  const isProd = process.env.NODE_ENV === "production"
 
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${outfit.variable}`}>
@@ -63,39 +64,43 @@ export default async function RootLayout({
                   )}
                 </main>
               </div>
-              <Analytics />
-              <SpeedInsights />
-              <Script
-                id="umami"
-                strategy="afterInteractive"
-                defer
-                src="https://cloud.umami.is/script.js"
-                data-website-id="43ced19b-1c79-4c9a-abff-4f4e0b5dd798"
-              />
-              <Script
-                id="gtag-loader"
-                strategy="afterInteractive"
-                src="https://www.googletagmanager.com/gtag/js?id=G-HN2Q6BTFCB"
-              />
-              <Script id="gtag-init" strategy="afterInteractive">
-                {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-HN2Q6BTFCB');`}
-              </Script>
-              <Script id="statcounter-config" strategy="afterInteractive">
-                {`var sc_project=13204241; var sc_invisible=1; var sc_security="4d852cb5";`}
-              </Script>
-              <Script id="statcounter-loader" strategy="afterInteractive" src="https://www.statcounter.com/counter/counter.js" />
-              <noscript>
-                <div className="statcounter" style={{ position: "absolute", left: "-9999px", width: 0, height: 0, overflow: "hidden" }}>
-                  <a title="site stats" href="https://statcounter.com/" target="_blank" rel="noreferrer">
-                    <img
-                      className="statcounter"
-                      src="https://c.statcounter.com/13204241/0/4d852cb5/1/"
-                      alt="site stats"
-                      referrerPolicy="no-referrer-when-downgrade"
-                    />
-                  </a>
-                </div>
-              </noscript>
+              {isProd && (
+                <>
+                  <Analytics />
+                  <SpeedInsights />
+                  <Script
+                    id="umami"
+                    strategy="afterInteractive"
+                    defer
+                    src="https://cloud.umami.is/script.js"
+                    data-website-id="43ced19b-1c79-4c9a-abff-4f4e0b5dd798"
+                  />
+                  <Script
+                    id="gtag-loader"
+                    strategy="afterInteractive"
+                    src="https://www.googletagmanager.com/gtag/js?id=G-HN2Q6BTFCB"
+                  />
+                  <Script id="gtag-init" strategy="afterInteractive">
+                    {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-HN2Q6BTFCB');`}
+                  </Script>
+                  <Script id="statcounter-config" strategy="afterInteractive">
+                    {`var sc_project=13204241; var sc_invisible=1; var sc_security="4d852cb5";`}
+                  </Script>
+                  <Script id="statcounter-loader" strategy="afterInteractive" src="https://www.statcounter.com/counter/counter.js" />
+                  <noscript>
+                    <div className="statcounter" style={{ position: "absolute", left: "-9999px", width: 0, height: 0, overflow: "hidden" }}>
+                      <a title="site stats" href="https://statcounter.com/" target="_blank" rel="noreferrer">
+                        <img
+                          className="statcounter"
+                          src="https://c.statcounter.com/13204241/0/4d852cb5/1/"
+                          alt="site stats"
+                          referrerPolicy="no-referrer-when-downgrade"
+                        />
+                      </a>
+                    </div>
+                  </noscript>
+                </>
+              )}
             </ClerkThemeProvider>
           </ThemeProvider>
         </SiteSettingsProvider>
