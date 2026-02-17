@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { Command, Menu, X, ChevronRight } from "lucide-react"
+import { Command, Menu, X, ChevronRight, Search } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
@@ -46,8 +46,6 @@ export function V4Navbar() {
     const navItems = [
         { label: "Projects", href: "/#projects" },
         { label: "News", href: "/news" },
-        { label: "Feedback", href: "/feedback" },
-        { label: "Stats", href: "/stats" },
         { label: "About", href: "/about" },
         { label: "Contact", href: "/contact" },
     ]
@@ -82,6 +80,12 @@ export function V4Navbar() {
 
                     <div className="flex items-center gap-3">
                         <div className="hidden md:flex items-center gap-3">
+                            <Button asChild variant="outline" size="sm" className="rounded-xl glass border-white/5 text-[10px] font-black uppercase tracking-widest px-4">
+                                <Link href="/search">
+                                    <Search className="w-3.5 h-3.5 mr-2" />
+                                    Search
+                                </Link>
+                            </Button>
                             <VersionSelector />
                             <AuthButtons />
                         </div>

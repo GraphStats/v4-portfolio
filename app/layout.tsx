@@ -15,6 +15,7 @@ import { RouteTransitionProvider } from "@/components/route-transition"
 import { SiteSettingsProvider } from "@/components/site-settings-provider"
 import { PerformanceModeProvider } from "@/components/performance-mode-provider"
 import { PWAInstaller } from "@/components/pwa-installer"
+import { PerformanceFloatingToggle } from "@/components/performance-floating-toggle"
 
 import "./globals.css"
 
@@ -59,6 +60,7 @@ export default async function RootLayout({
               <ClerkThemeProvider>
                 <SpecialThemeHandler />
                 <PWAInstaller />
+                <PerformanceFloatingToggle />
                 <Toaster position="top-right" richColors />
                 <div className="relative flex min-h-screen flex-col">
                   <main className="flex-1">

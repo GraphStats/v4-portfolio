@@ -38,7 +38,6 @@ export function V4Projects({ projects }: V4ProjectsProps) {
     const [sortBy, setSortBy] = useState<string>("newest")
     const [favorites, setFavorites] = useState<string[]>([])
     const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
-    const [visibleCount, setVisibleCount] = useState(8)
     const { user } = useUser()
     const isSignedIn = !!user
 
@@ -142,13 +141,6 @@ export function V4Projects({ projects }: V4ProjectsProps) {
         setFilter("all")
         setQuery("")
     }
-
-    useEffect(() => {
-        setVisibleCount(8)
-    }, [filter, query, sortBy])
-
-    const visibleProjects = sortedProjects.slice(0, visibleCount)
-    const hasMoreProjects = visibleCount < sortedProjects.length
 
     const exportFavorites = () => {
         const payload = JSON.stringify({ favorites, exportedAt: new Date().toISOString() }, null, 2)
@@ -325,8 +317,8 @@ export function V4Projects({ projects }: V4ProjectsProps) {
     return (
         <section id="projects" className="relative scroll-mt-28">
             <HorizontalScrollSection header={headerContent}>
-                {visibleProjects.length > 0 ? (
-                    visibleProjects.map((project, index) => (
+                {sortedProjects.length > 0 ? (
+                    sortedProjects.map((project, index) => (
                         <ProjectCard
                             key={project.id}
                             project={project}
@@ -341,18 +333,6 @@ export function V4Projects({ projects }: V4ProjectsProps) {
                     <EmptyState onReset={clearFilters} hasFilters={hasFilters} />
                 )}
             </HorizontalScrollSection>
-            {hasMoreProjects && (
-                <div className="flex justify-center mt-8">
-                    <Button
-                        type="button"
-                        variant="outline"
-                        className="rounded-xl text-[10px] font-black uppercase tracking-widest"
-                        onClick={() => setVisibleCount((prev) => prev + 8)}
-                    >
-                        Load more
-                    </Button>
-                </div>
-            )}
             <ProjectQuickViewDialog
                 project={selectedProject}
                 isOpen={!!selectedProject}
