@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ExternalLink, Github, ArrowRight, Layers, Lock, History, Pause, Play, Search, X, Star, Eye } from "lucide-react"
+import { ExternalLink, Github, ArrowRight, Layers, Lock, History, Pause, Play, Search, X, Star, Eye, AlertTriangle } from "lucide-react"
 import { Project } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils"
 
 interface V4ProjectsProps {
     projects: Project[]
+    incidentProjectMarkers?: string[]
 }
 
 const FavoriteStarIcon = ({
@@ -32,7 +33,7 @@ const FavoriteStarIcon = ({
     />
 )
 
-export function V4Projects({ projects }: V4ProjectsProps) {
+export function V4Projects({ projects, incidentProjectMarkers = [] }: V4ProjectsProps) {
     const [filter, setFilter] = useState<string>("all")
     const [query, setQuery] = useState<string>("")
     const [sortBy, setSortBy] = useState<string>("newest")
@@ -325,6 +326,7 @@ export function V4Projects({ projects }: V4ProjectsProps) {
                             index={index}
                             isSignedIn={isSignedIn}
                             isFavorite={favoriteSet.has(project.id)}
+                            incidentProjectMarkers={incidentProjectMarkers}
                             onToggleFavorite={toggleFavorite}
                             onOpenQuickView={setSelectedProjectId}
                         />
@@ -351,6 +353,7 @@ function ProjectCard({
     index,
     isSignedIn,
     isFavorite,
+    incidentProjectMarkers,
     onToggleFavorite,
     onOpenQuickView,
 }: {
@@ -358,10 +361,12 @@ function ProjectCard({
     index: number
     isSignedIn: boolean
     isFavorite: boolean
+    incidentProjectMarkers: string[]
     onToggleFavorite: (projectId: string) => void
     onOpenQuickView: (projectId: string) => void
 }) {
     const isLocked = project.requires_auth && !isSignedIn
+    const hasIncidentIssue = doesProjectMatchIncident(project, incidentProjectMarkers)
 
     const getStatusText = () => {
         if (project.in_development) return project.development_status === 'paused' ? "Paused" : "In Development"
@@ -439,6 +444,15 @@ function ProjectCard({
                 </p>
 
                 <div className="flex flex-wrap gap-2">
+                    {hasIncidentIssue && (
+                        <Link
+                            href="/status"
+                            className="inline-flex items-center rounded-full bg-red-500/15 border border-red-500/40 px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest text-red-200 hover:bg-red-500/25 transition-colors"
+                        >
+                            <AlertTriangle className="w-3 h-3 mr-1" />
+                            Incident Issue
+                        </Link>
+                    )}
                     {project.requires_auth && (
                         <Badge className="rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
                             Members
@@ -543,6 +557,47 @@ function ProjectCard({
             {!isLocked && <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/2 to-primary/20 rounded-2xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity -z-10" />}
         </motion.div>
     )
+}
+
+function normalizeText(value: string): string {
+    return value
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim()
+}
+
+function compactText(value: string): string {
+    return normalizeText(value).replace(/\s+/g, "")
+}
+
+function doesProjectMatchIncident(project: Project, markers: string[]): boolean {
+    if (!markers.length) return false
+
+    const haystack = normalizeText([
+        project.title,
+        project.slug,
+        project.description,
+        ...(project.tags || []),
+        project.project_url || "",
+        project.github_url || "",
+    ]
+        .filter(Boolean)
+        .join(" "))
+    const haystackCompact = compactText(haystack)
+
+    return markers.some((marker) => {
+        const normalizedMarker = normalizeText(marker)
+        if (!normalizedMarker || normalizedMarker.length < 4) return false
+        const compactMarker = compactText(normalizedMarker)
+        if (compactMarker && haystackCompact.includes(compactMarker)) return true
+        if (normalizedMarker.includes(" ")) {
+            return haystack.includes(normalizedMarker)
+        }
+        const wholeWord = new RegExp(`(^|\\s)${normalizedMarker}(\\s|$)`, "i")
+        return wholeWord.test(haystack)
+    })
 }
 
 function getProjectUpdateUrl(project: Project) {

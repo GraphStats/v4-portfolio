@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { useRef, useEffect } from "react"
-import { ArrowRight, Zap } from "lucide-react"
+import { ArrowRight, X, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { FaCoffee } from "react-icons/fa"
@@ -10,12 +10,19 @@ import { useSiteSettings } from "@/components/site-settings-provider"
 
 interface V4HeroProps {
     badgeText?: string
+    badgeHref?: string
+    badgeIcon?: "zap" | "x"
 }
 
-export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps) {
+export function V4Hero({
+    badgeText = "Experience v4.0.0 is Live",
+    badgeHref = "/update",
+    badgeIcon = "zap",
+}: V4HeroProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const { developerName } = useSiteSettings()
     const developerNameUpper = developerName.toUpperCase()
+    const isOutage = badgeIcon === "x"
 
     useEffect(() => {
         let frameId: number | null = null
@@ -95,8 +102,19 @@ export function V4Hero({ badgeText = "Experience v4.0.0 is Live" }: V4HeroProps)
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                     >
-                        <Link href="/update" className="group inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border-white/10 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-primary hover:border-primary/50 transition-colors cursor-pointer">
-                            <Zap className="w-3.5 h-3.5 fill-current animate-pulse" />
+                        <Link
+                            href={badgeHref}
+                            className={`group inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-colors cursor-pointer ${
+                                isOutage
+                                    ? "border-red-500/35 text-red-300 hover:border-red-400/70"
+                                    : "border-white/10 text-primary hover:border-primary/50"
+                            }`}
+                        >
+                            {isOutage ? (
+                                <X className="w-3.5 h-3.5 animate-pulse" />
+                            ) : (
+                                <Zap className="w-3.5 h-3.5 fill-current animate-pulse" />
+                            )}
                             <span>{badgeText}</span>
                         </Link>
                     </motion.div>

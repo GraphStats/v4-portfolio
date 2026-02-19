@@ -7,10 +7,10 @@ import { redirect } from "next/navigation"
 import { getCloudflareStats } from "@/lib/cloudflare"
 import { isLocalRequest } from "@/lib/server-utils"
 import dynamicImport from "next/dynamic"
+import { getActiveIncident, getIncidentProjectMarkers, getStatusSummary } from "@/lib/status-summary"
 
 import { V4Navbar } from "@/components/v4/V4Navbar"
 import { V4Hero } from "@/components/v4/V4Hero"
-import { V4StatusBanner } from "@/components/v4/V4StatusBanner"
 
 const V4Projects = dynamicImport(() =>
   import("@/components/v4/V4Projects").then((mod) => mod.V4Projects)
@@ -40,8 +40,18 @@ export default async function HomePage() {
   }
 
   let projects: Project[] = []
-  let fetchError = false
   let badgeText = "Experience v4.0.0 is Live"
+  let badgeHref = "/update"
+  let badgeIcon: "zap" | "x" = "zap"
+
+  const statusSummary = await getStatusSummary()
+  const activeIncident = getActiveIncident(statusSummary)
+  const incidentProjectMarkers = getIncidentProjectMarkers(activeIncident)
+  if (activeIncident) {
+    badgeText = "OUTRAGE NOW"
+    badgeHref = "/status"
+    badgeIcon = "x"
+  }
 
   try {
     const db = await getFirestoreServer()
@@ -55,13 +65,12 @@ export default async function HomePage() {
 
     const updateDocRef = doc(db, "update-p", "main")
     const updateDocSnap = await getDoc(updateDocRef)
-    if (updateDocSnap.exists()) {
+    if (updateDocSnap.exists() && !activeIncident) {
       const updateData = updateDocSnap.data() as SiteUpdate
       badgeText = updateData.latest_update_text || badgeText
     }
   } catch (e) {
     console.error("Firebase fetch error:", e)
-    fetchError = true
   }
 
   return (
@@ -72,12 +81,11 @@ export default async function HomePage() {
       <V4Navbar />
 
       <main className="relative z-10">
-        <V4Hero badgeText={badgeText} />
-        <V4StatusBanner />
+        <V4Hero badgeText={badgeText} badgeHref={badgeHref} badgeIcon={badgeIcon} />
 
         <div className="relative">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-          <V4Projects projects={projects} />
+          <V4Projects projects={projects} incidentProjectMarkers={incidentProjectMarkers} />
         </div>
         <V4TechStack />
 
@@ -90,4 +98,3 @@ export default async function HomePage() {
     </div >
   )
 }
-
