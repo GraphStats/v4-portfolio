@@ -14,7 +14,7 @@ function formatDate(input?: string) {
   if (!input) return null
   const date = new Date(input)
   if (Number.isNaN(date.getTime())) return null
-  return date.toLocaleString("fr-FR", {
+  return date.toLocaleString("en-US", {
     dateStyle: "medium",
     timeStyle: "short",
   })
@@ -78,7 +78,7 @@ export default async function StatusPage() {
 
                 {impactedComponents.length > 0 ? (
                   <div className="space-y-3">
-                    <p className="text-xs font-black uppercase tracking-[0.3em] text-red-300">Services impactes</p>
+                    <p className="text-xs font-black uppercase tracking-[0.3em] text-red-300">Impacted services</p>
                     <div className="flex flex-wrap gap-2">
                       {impactedComponents.map((component) => (
                         <span
@@ -121,7 +121,7 @@ export default async function StatusPage() {
                   <CheckCircle2 className="w-4 h-4" />
                   No active incidents
                 </div>
-                <p className="text-muted-foreground text-lg">Tous les services declares sur la status page sont operationnels.</p>
+                <p className="text-muted-foreground text-lg">All services listed on the status page are operational.</p>
                 <Link
                   href={summary?.page_url || "https://status.drayko.xyz/"}
                   target="_blank"

@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
@@ -33,23 +33,23 @@ const formatDate = (value?: string | null) => {
   if (!value) return "-"
   const d = new Date(value)
   if (Number.isNaN(d.getTime())) return "-"
-  return d.toLocaleDateString("fr-FR", { year: "numeric", month: "2-digit", day: "2-digit" })
+  return d.toLocaleDateString("en-US", { year: "numeric", month: "2-digit", day: "2-digit" })
 }
 
 const todayYmd = () => new Date().toISOString().slice(0, 10)
 
 const updateStatusLabel: Record<ProjectUpdateStatus, string> = {
-  idea: "Idee",
-  planned: "Planifie",
-  in_progress: "En cours",
-  done: "Fait",
+  idea: "Idea",
+  planned: "Planned",
+  in_progress: "In progress",
+  done: "Done",
 }
 
 const eventTypeLabel: Record<ProjectEventType, string> = {
-  launch: "Lancement",
-  update: "Mise a jour",
+  launch: "Launch",
+  update: "Update",
   milestone: "Milestone",
-  sunset: "Fin de service",
+  sunset: "End of service",
 }
 
 type OpsMode = "single" | "general"
@@ -181,7 +181,7 @@ export default function AdminProjectsPage() {
       setAllAdminData(rows)
     } catch (e) {
       console.error("[admin/projects] load general failed", e)
-      toast.error("Echec chargement mode general")
+      toast.error("Failed to load general mode")
       setAllAdminData([])
     } finally {
       setLoadingGeneral(false)
@@ -243,7 +243,7 @@ export default function AdminProjectsPage() {
       if (success) toast.success(success)
     } catch (e) {
       console.error("[admin/projects] persist failed", e)
-      toast.error("Echec enregistrement")
+      toast.error("Save failed")
     } finally {
       setSaving(false)
     }
@@ -251,13 +251,13 @@ export default function AdminProjectsPage() {
 
   const saveNotes = async () => {
     if (!selectedProjectId || !currentData) return
-    await persist(selectedProjectId, { ...currentData, notes: notesDraft }, "Notes enregistrees")
+    await persist(selectedProjectId, { ...currentData, notes: notesDraft }, "Notes saved")
   }
 
   const addUpdate = async () => {
     if (!selectedProjectId || !currentData) return
-    if (!updateDraft.title.trim()) return toast.warning("Titre manquant")
-    if (!updateDraft.summary.trim()) return toast.warning("Resume manquant")
+    if (!updateDraft.title.trim()) return toast.warning("Missing title")
+    if (!updateDraft.summary.trim()) return toast.warning("Missing summary")
 
     // Create a changelog entry so it shows up in the normal admin dashboard project updates tab.
     const changes = updateDraft.summary
@@ -291,10 +291,10 @@ export default function AdminProjectsPage() {
       const nextChangelog = [changelogEntry, ...currentChangelog]
       await updateDoc(doc(db, "portfolio", selectedProjectId), { changelog: nextChangelog })
       setProjectChangelogById((prev) => ({ ...prev, [selectedProjectId]: nextChangelog }))
-      toast.success("Roadmap mise a jour (sync dashboard OK)")
+      toast.success("Roadmap updated (dashboard sync OK)")
     } catch (e) {
       console.error("[admin/projects] changelog sync failed", e)
-      toast.error("Roadmap ajoutee, mais sync dashboard KO")
+      toast.error("Roadmap added, but dashboard sync failed")
     }
 
     setUpdateDraft({ title: "", summary: "", status: "planned", target_date: "" })
@@ -326,7 +326,7 @@ export default function AdminProjectsPage() {
       ]
     }
 
-    await persist(selectedProjectId, { ...currentData, updates }, "Statut mis a jour")
+    await persist(selectedProjectId, { ...currentData, updates }, "Status updated")
   }
 
   const deleteUpdate = async (id: string) => {
@@ -340,17 +340,17 @@ export default function AdminProjectsPage() {
       const nextChangelog = currentChangelog.filter((c) => c.id !== id)
       await updateDoc(doc(db, "portfolio", selectedProjectId), { changelog: nextChangelog })
       setProjectChangelogById((prev) => ({ ...prev, [selectedProjectId]: nextChangelog }))
-      toast.success("Supprime (sync dashboard OK)")
+      toast.success("Deleted (dashboard sync OK)")
     } catch (e) {
       console.error("[admin/projects] changelog delete sync failed", e)
-      toast.error("Supprime, mais sync dashboard KO")
+      toast.error("Deleted, but dashboard sync failed")
     }
   }
 
   const addEvent = async () => {
     if (!selectedProjectId || !currentData) return
-    if (!eventDraft.title.trim()) return toast.warning("Titre manquant")
-    if (!eventDraft.date) return toast.warning("Date manquante")
+    if (!eventDraft.title.trim()) return toast.warning("Missing title")
+    if (!eventDraft.date) return toast.warning("Missing date")
 
     const event: ProjectEvent = {
       id: uid(),
@@ -361,7 +361,7 @@ export default function AdminProjectsPage() {
     }
 
     const events = [...(currentData.events || []), event].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    await persist(selectedProjectId, { ...currentData, events }, "Calendrier mis a jour")
+    await persist(selectedProjectId, { ...currentData, events }, "Calendar updated")
     setEventDraft({ title: "", type: "launch", date: eventDraft.date, note: "" })
   }
 
@@ -383,7 +383,7 @@ export default function AdminProjectsPage() {
             </div>
             <div>
               <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Admin</p>
-              <p className="font-semibold leading-tight">Gestion projets</p>
+              <p className="font-semibold leading-tight">Project management</p>
             </div>
           </div>
 
@@ -416,7 +416,7 @@ export default function AdminProjectsPage() {
           <CardContent className="py-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-widest text-muted-foreground">Mode</p>
-              <p className="font-semibold">Projets Ops</p>
+              <p className="font-semibold">Project Ops</p>
             </div>
             <div className="flex items-center gap-2">
               <Button
@@ -441,18 +441,18 @@ export default function AdminProjectsPage() {
           <>
           <Card className="v4-card">
             <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl">Vue generale</CardTitle>
-              <CardDescription>Dernieres mises a jour et derniers evenements.</CardDescription>
+              <CardTitle className="text-2xl">Overview</CardTitle>
+              <CardDescription>Latest updates and latest events.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <p className="font-semibold">Dernieres mises a jour</p>
+                    <p className="font-semibold">Latest updates</p>
                     <Badge variant="secondary">{latestUpdates.length}</Badge>
                   </div>
                   {latestUpdates.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">Aucune mise a jour.</p>
+                    <p className="text-sm text-muted-foreground">No updates.</p>
                   ) : (
                     <div className="space-y-2">
                       {latestUpdates.map(({ projectId, projectTitle, entry }) => (
@@ -477,7 +477,7 @@ export default function AdminProjectsPage() {
                                 setIsProjectConfirmed(true)
                               }}
                             >
-                              Ouvrir
+                              Open
                             </Button>
                           </div>
                         </div>
@@ -488,13 +488,13 @@ export default function AdminProjectsPage() {
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <p className="font-semibold">Derniers evenements</p>
+                    <p className="font-semibold">Latest events</p>
                     <Badge variant="secondary">{latestEvents.length}</Badge>
                   </div>
                   {loadingGeneral ? (
-                    <p className="text-sm text-muted-foreground">Chargement...</p>
+                    <p className="text-sm text-muted-foreground">Loading...</p>
                   ) : latestEvents.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">Aucun evenement.</p>
+                    <p className="text-sm text-muted-foreground">No events.</p>
                   ) : (
                     <div className="space-y-2">
                       {latestEvents.map(({ projectId, projectTitle, event }) => (
@@ -519,7 +519,7 @@ export default function AdminProjectsPage() {
                                 setIsProjectConfirmed(true)
                               }}
                             >
-                              Ouvrir
+                              Open
                             </Button>
                           </div>
                         </div>
@@ -533,8 +533,8 @@ export default function AdminProjectsPage() {
 
           <Card className="v4-card">
             <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl">Calendrier</CardTitle>
-              <CardDescription>Tous les evenements (mode grille).</CardDescription>
+              <CardTitle className="text-2xl">Calendar</CardTitle>
+              <CardDescription>All events (grid view).</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -547,7 +547,7 @@ export default function AdminProjectsPage() {
                     Prev
                   </Button>
                   <Badge variant="secondary">
-                    {generalMonth.toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}
+                    {generalMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
                   </Badge>
                   <Button
                     variant="outline"
@@ -560,7 +560,7 @@ export default function AdminProjectsPage() {
               </div>
 
               <div className="grid grid-cols-7 gap-2 text-xs text-muted-foreground">
-                {["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"].map((d) => (
+                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
                   <div key={d} className="px-2">
                     {d}
                   </div>
@@ -602,7 +602,7 @@ export default function AdminProjectsPage() {
                           </div>
                         ))}
                         {dayEvents.length > 3 ? (
-                          <p className="text-[11px] text-muted-foreground px-2">+{dayEvents.length - 3} autres</p>
+                          <p className="text-[11px] text-muted-foreground px-2">+{dayEvents.length - 3} more</p>
                         ) : null}
                       </div>
                     </div>
@@ -615,15 +615,15 @@ export default function AdminProjectsPage() {
         ) : opsMode === "single" && !isProjectConfirmed ? (
           <Card>
             <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl">Sur quel projet tu travailles ?</CardTitle>
-              <CardDescription>Choisis un projet, puis on affiche Notes, Roadmap et Calendrier.</CardDescription>
+              <CardTitle className="text-2xl">Which project are you working on?</CardTitle>
+              <CardDescription>Choose a project, then Notes, Roadmap, and Calendar will appear.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="project">Projet</Label>
+                <Label htmlFor="project">Project</Label>
                 <Select value={selectedProjectId} onValueChange={setSelectedProjectId} disabled={loadingProjects}>
                   <SelectTrigger className="w-full h-10">
-                    <SelectValue placeholder={loadingProjects ? "Chargement..." : "Choisir un projet"} />
+                    <SelectValue placeholder={loadingProjects ? "Loading..." : "Choose a project"} />
                   </SelectTrigger>
                   <SelectContent>
                     {projects.map((p) => (
@@ -637,10 +637,10 @@ export default function AdminProjectsPage() {
 
               <div className="flex items-center justify-between gap-3">
                 <p className="text-sm text-muted-foreground">
-                  {selectedProjectId ? "OK, on part la-dessus." : "Selection obligatoire."}
+                  {selectedProjectId ? "Great, we will use this one." : "Selection required."}
                 </p>
                 <Button onClick={() => setIsProjectConfirmed(true)} disabled={!selectedProjectId}>
-                  Continuer
+                  Continue
                 </Button>
               </div>
             </CardContent>
@@ -650,17 +650,17 @@ export default function AdminProjectsPage() {
             <Card className="v4-card">
               <CardContent className="py-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-xs uppercase tracking-widest text-muted-foreground">Projet courant</p>
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">Current project</p>
                   <p className="font-semibold truncate">{currentProject?.title || "-"}</p>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-end gap-3">
                   <div className="space-y-1">
                     <Label htmlFor="project" className="text-xs">
-                      Changer
+                      Switch
                     </Label>
                     <Select value={selectedProjectId} onValueChange={setSelectedProjectId} disabled={loadingProjects}>
                       <SelectTrigger className="w-full sm:w-[320px] h-10">
-                        <SelectValue placeholder={loadingProjects ? "Chargement..." : "Choisir un projet"} />
+                        <SelectValue placeholder={loadingProjects ? "Loading..." : "Choose a project"} />
                       </SelectTrigger>
                       <SelectContent>
                         {projects.map((p) => (
@@ -672,7 +672,7 @@ export default function AdminProjectsPage() {
                     </Select>
                   </div>
                   <Badge variant="secondary" className="h-10 flex items-center justify-center px-3">
-                    Derniere sync: {formatDate(currentData?.last_updated)}
+                    Last sync: {formatDate(currentData?.last_updated)}
                   </Badge>
                 </div>
               </CardContent>
@@ -682,30 +682,30 @@ export default function AdminProjectsPage() {
               <TabsList className="grid grid-cols-3 w-full md:w-[520px]">
                 <TabsTrigger value="notes">Notes</TabsTrigger>
                 <TabsTrigger value="roadmap">Roadmap</TabsTrigger>
-                <TabsTrigger value="calendar">Calendrier</TabsTrigger>
+                <TabsTrigger value="calendar">Calendar</TabsTrigger>
               </TabsList>
 
           <TabsContent value="notes">
             <Card>
               <CardHeader className="space-y-1">
-                <CardTitle>Notes internes</CardTitle>
-                <CardDescription>Un seul champ, tu ecris, tu sauvegardes. Simple.</CardDescription>
+                <CardTitle>Internal notes</CardTitle>
+                <CardDescription>One field, write and save. Simple.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Textarea
                   value={notesDraft}
                   onChange={(e) => setNotesDraft(e.target.value)}
-                  placeholder="Idees, risques, liens, todo rapide..."
+                  placeholder="Ideas, risks, links, quick todo..."
                   className="min-h-[240px]"
                   disabled={!currentProject}
                 />
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-sm text-muted-foreground">
-                    Projet: {currentProject ? currentProject.title : "-"}
+                    Project: {currentProject ? currentProject.title : "-"}
                   </p>
                   <Button onClick={saveNotes} disabled={!currentProject || saving}>
                     <Save className="h-4 w-4 mr-2" />
-                    Enregistrer
+                    Save
                   </Button>
                 </div>
               </CardContent>
@@ -716,23 +716,23 @@ export default function AdminProjectsPage() {
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
               <Card className="v4-card">
                 <CardHeader className="space-y-1">
-                  <CardTitle>Nouvelle mise a jour</CardTitle>
-                  <CardDescription>Cree une entree (sync avec le dashboard).</CardDescription>
+                  <CardTitle>New update</CardTitle>
+                  <CardDescription>Create an entry (synced with the dashboard).</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="u-title">Titre</Label>
+                    <Label htmlFor="u-title">Title</Label>
                     <Input
                       id="u-title"
                       value={updateDraft.title}
                       onChange={(e) => setUpdateDraft((p) => ({ ...p, title: e.target.value }))}
-                      placeholder="Ex: v1.2, refacto auth, beta publique..."
+                      placeholder="Ex: v1.2, auth refactor, public beta..."
                       disabled={!currentProject}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="u-date">Date cible (optionnel)</Label>
+                    <Label htmlFor="u-date">Target date (optional)</Label>
                     <Input
                       id="u-date"
                       type="date"
@@ -745,18 +745,18 @@ export default function AdminProjectsPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-end">
                   <div className="space-y-2">
-                    <Label htmlFor="u-summary">Resume</Label>
+                    <Label htmlFor="u-summary">Summary</Label>
                     <Textarea
                       id="u-summary"
                       value={updateDraft.summary}
                       onChange={(e) => setUpdateDraft((p) => ({ ...p, summary: e.target.value }))}
-                      placeholder="Une phrase ou deux."
+                      placeholder="One or two sentences."
                       className="min-h-[96px]"
                       disabled={!currentProject}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="u-status">Statut</Label>
+                    <Label htmlFor="u-status">Status</Label>
                     <Select
                       value={updateDraft.status}
                       onValueChange={(v) => setUpdateDraft((p) => ({ ...p, status: v as ProjectUpdateStatus }))}
@@ -774,7 +774,7 @@ export default function AdminProjectsPage() {
                       </SelectContent>
                     </Select>
                     <Button className="w-full" onClick={addUpdate} disabled={!currentProject || saving}>
-                      Ajouter
+                      Add
                     </Button>
                   </div>
                 </div>
@@ -783,12 +783,12 @@ export default function AdminProjectsPage() {
 
               <Card className="v4-card">
                 <CardHeader className="space-y-1">
-                  <CardTitle>Mises a jour publiees</CardTitle>
-                  <CardDescription>Liste basee sur le changelog du projet.</CardDescription>
+                  <CardTitle>Published updates</CardTitle>
+                  <CardDescription>List based on the project changelog.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3 max-h-[70vh] overflow-auto pr-1">
                   {currentChangelog.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">Aucune entree.</p>
+                    <p className="text-sm text-muted-foreground">No entries.</p>
                   ) : (
                     currentChangelog.map((c) => {
                       const meta = (currentData?.updates || []).find((u) => u.id === c.id)
@@ -807,7 +807,7 @@ export default function AdminProjectsPage() {
                           </div>
 
                           <div className="flex flex-wrap items-center gap-2">
-                            <Badge variant="secondary">Statut: {updateStatusLabel[status]}</Badge>
+                            <Badge variant="secondary">Status: {updateStatusLabel[status]}</Badge>
                             <Badge variant="secondary">Date: {formatDate(c.date)}</Badge>
                           </div>
 
@@ -837,18 +837,18 @@ export default function AdminProjectsPage() {
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               <Card className="v4-card">
                 <CardHeader className="space-y-1">
-                  <CardTitle>Nouvel evenement</CardTitle>
-                  <CardDescription>Ajoute un evenement (date + type + note).</CardDescription>
+                  <CardTitle>New event</CardTitle>
+                  <CardDescription>Add an event (date + type + note).</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="e-title">Titre</Label>
+                    <Label htmlFor="e-title">Title</Label>
                     <Input
                       id="e-title"
                       value={eventDraft.title}
                       onChange={(e) => setEventDraft((p) => ({ ...p, title: e.target.value }))}
-                      placeholder="Ex: lancement public, fin support v1..."
+                      placeholder="Ex: public launch, end of v1 support..."
                       disabled={!currentProject}
                     />
                   </div>
@@ -885,7 +885,7 @@ export default function AdminProjectsPage() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="e-note">Note (optionnel)</Label>
+                    <Label htmlFor="e-note">Note (optional)</Label>
                     <Input
                       id="e-note"
                       value={eventDraft.note}
@@ -895,7 +895,7 @@ export default function AdminProjectsPage() {
                     />
                   </div>
                   <Button onClick={addEvent} disabled={!currentProject || saving}>
-                    Ajouter
+                    Add
                   </Button>
                 </div>
                 </CardContent>
@@ -903,12 +903,12 @@ export default function AdminProjectsPage() {
 
               <Card className="v4-card">
                 <CardHeader className="space-y-1">
-                  <CardTitle>Evenements planifies</CardTitle>
-                  <CardDescription>Liste triee par date.</CardDescription>
+                  <CardTitle>Planned events</CardTitle>
+                  <CardDescription>Sorted by date.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {(currentData?.events || []).length === 0 ? (
-                    <p className="text-sm text-muted-foreground">Aucun evenement.</p>
+                    <p className="text-sm text-muted-foreground">No events.</p>
                   ) : (
                     (currentData?.events || [])
                       .slice()
@@ -938,3 +938,4 @@ export default function AdminProjectsPage() {
     </div>
   )
 }
+

@@ -41,7 +41,7 @@ export function AdminProjectCard({ project, onDeleted, onUpdated }: AdminProject
                 <ImageOff className="h-8 w-8 text-muted-foreground/40 group-hover:text-primary/40 transition-colors duration-500" />
               </div>
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/30 group-hover:text-primary/40 transition-colors duration-500">
-                Projet sans visuel
+                No preview image
               </span>
             </div>
           )}

@@ -10,7 +10,7 @@ import { NewsComments } from "@/components/news-comments"
 import Link from "next/link"
 import Image from "next/image"
 import { format } from "date-fns"
-import { fr } from "date-fns/locale"
+import { enUS } from "date-fns/locale"
 import type { Metadata } from "next"
 
 export const dynamic = "force-dynamic"
@@ -87,7 +87,7 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full v4-glass border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-primary">
                                 <Calendar className="w-3 h-3" />
-                                {format(new Date(news.created_at), "dd MMMM yyyy", { locale: fr })}
+                                {format(new Date(news.created_at), "dd MMMM yyyy", { locale: enUS })}
                             </div>
                         </div>
                         <h1 className="text-4xl md:text-7xl font-black tracking-tighter leading-none uppercase italic">

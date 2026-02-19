@@ -1,4 +1,4 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 import { Home, LayoutDashboard, MessageSquare } from "lucide-react"
 
 import { getFeedbacks } from "@/lib/actions"
@@ -51,7 +51,7 @@ export default async function AdminFeedbackPage() {
         <div className="v4-card p-6 md:p-8 border-white/5 rounded-[2rem]">
           <h1 className="text-3xl md:text-4xl font-black tracking-tight">Feedback Management</h1>
           <p className="text-muted-foreground mt-2">
-            Lis les retours publics et marque-les comme corriges quand le point a ete traite.
+            Review public feedback and mark items as fixed once they are addressed.
           </p>
         </div>
 
@@ -60,3 +60,4 @@ export default async function AdminFeedbackPage() {
     </div>
   )
 }
+

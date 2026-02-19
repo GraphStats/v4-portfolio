@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -175,10 +175,10 @@ export default function AdminDashboardPage() {
   }
 
   const formatDate = (value?: string | null) => {
-    if (!value) return "—"
+    if (!value) return "-"
     const date = new Date(value)
-    if (Number.isNaN(date.getTime())) return "—"
-    return date.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })
+    if (Number.isNaN(date.getTime())) return "-"
+    return date.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })
   }
 
   const projectFilterCounts = {
@@ -359,7 +359,7 @@ export default function AdminDashboardPage() {
                     </div>
                     <h2 className="text-4xl md:text-5xl font-bold tracking-tight">PROJECTS OVERVIEW</h2>
                     <p className="text-muted-foreground font-medium max-w-xl">
-                      Visualisez tous les projets en un seul endroit, avec des filtres rapides par statut.
+                      View all projects in one place with quick status filters.
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -406,9 +406,9 @@ export default function AdminDashboardPage() {
                         <Database className="h-8 w-8" />
                       </div>
                       <div className="space-y-2">
-                        <p className="text-lg font-bold">Aucun projet trouvé</p>
+                        <p className="text-lg font-bold">No project found</p>
                         <p className="text-muted-foreground text-sm">
-                          Ajuste les filtres pour afficher les projets correspondants.
+                          Adjust filters to display matching projects.
                         </p>
                       </div>
                     </div>
@@ -416,10 +416,10 @@ export default function AdminDashboardPage() {
                     <Table className="text-xs">
                       <TableHeader className="bg-white/5">
                         <TableRow className="border-white/5">
-                          <TableHead className="px-6 py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Projet</TableHead>
-                          <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Statut</TableHead>
+                          <TableHead className="px-6 py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Project</TableHead>
+                          <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Status</TableHead>
                           <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Tags</TableHead>
-                          <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Dernière MAJ</TableHead>
+                          <TableHead className="py-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Last update</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -434,7 +434,7 @@ export default function AdminDashboardPage() {
                               <TableCell className="px-6 py-4">
                                 <div className="space-y-1">
                                   <p className="font-bold text-foreground/90">{project.title}</p>
-                                  <p className="text-[10px] text-muted-foreground/70">{project.slug || "—"}</p>
+                                  <p className="text-[10px] text-muted-foreground/70">{project.slug || "-"}</p>
                                 </div>
                               </TableCell>
                               <TableCell className="py-4">
@@ -480,7 +480,7 @@ export default function AdminDashboardPage() {
                                     <span className="text-[10px] text-muted-foreground">+{extraTags}</span>
                                   )}
                                   {tags.length === 0 && (
-                                    <span className="text-[10px] text-muted-foreground">—</span>
+                                    <span className="text-[10px] text-muted-foreground">-</span>
                                   )}
                                 </div>
                               </TableCell>
@@ -949,3 +949,4 @@ export default function AdminDashboardPage() {
     </div>
   )
 }
+

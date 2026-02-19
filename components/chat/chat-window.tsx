@@ -8,7 +8,7 @@ import { sendMessage } from "@/lib/actions"
 import { Send, User as UserIcon, Shield, Loader2, RefreshCw } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
-import { fr } from "date-fns/locale"
+import { enUS } from "date-fns/locale"
 
 interface ChatWindowProps {
     conversation: Conversation
@@ -66,7 +66,7 @@ export function ChatWindow({ conversation, currentUserType, onRefresh }: ChatWin
                             )}>
                                 {msg.content}
                                 <div className={cn("text-[9px] mt-1 opacity-50 font-bold uppercase tracking-wider", isMe ? "text-primary-foreground" : "text-muted-foreground")}>
-                                    {format(new Date(msg.createdAt), "HH:mm", { locale: fr })}
+                                    {format(new Date(msg.createdAt), "HH:mm", { locale: enUS })}
                                 </div>
                             </div>
                         </div>
@@ -80,7 +80,7 @@ export function ChatWindow({ conversation, currentUserType, onRefresh }: ChatWin
                     <Input
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
-                        placeholder="Votre message..."
+                        placeholder="Your message..."
                         className="flex-1 h-12 rounded-xl bg-background/50 border-white/10 focus:border-primary/50"
                     />
                     <Button type="submit" size="icon" disabled={isSending} className="h-12 w-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 shrink-0">

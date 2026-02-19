@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState, useTransition } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -26,14 +26,14 @@ export function AdminConfigureForm({ initialDeveloperName }: AdminConfigureFormP
 
       if (result.success) {
         toast({
-          title: "Nom mis à jour",
-          description: `Le nom affiché est maintenant « ${nextName} ».`,
+          title: "Name updated",
+          description: `Displayed name is now "${nextName}".`,
         })
         setDeveloperName(nextName)
       } else {
         toast({
-          title: "Erreur",
-          description: result.error || "Impossible d'enregistrer le nom.",
+          title: "Error",
+          description: result.error || "Unable to save the name.",
           variant: "destructive",
         })
       }
@@ -48,12 +48,12 @@ export function AdminConfigureForm({ initialDeveloperName }: AdminConfigureFormP
     <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6">
       <Card className="v4-card">
         <CardHeader className="space-y-2">
-          <CardTitle className="text-2xl">Identité publique</CardTitle>
-          <CardDescription>Ce nom s'affiche dans la nav bar, le footer et toutes les pages publiques.</CardDescription>
+          <CardTitle className="text-2xl">Public identity</CardTitle>
+          <CardDescription>This name appears in the navbar, footer, and all public pages.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="developer-name">Nom du développeur</Label>
+            <Label htmlFor="developer-name">Developer name</Label>
             <Input
               id="developer-name"
               value={developerName}
@@ -64,18 +64,18 @@ export function AdminConfigureForm({ initialDeveloperName }: AdminConfigureFormP
               disabled={isPending}
             />
             <p className="text-sm text-muted-foreground">
-              Valeur par défaut : <span className="font-semibold">{DEFAULT_DEVELOPER_NAME}</span>
+              Default value: <span className="font-semibold">{DEFAULT_DEVELOPER_NAME}</span>
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             <Button onClick={handleSave} disabled={isPending} className="rounded-xl">
               {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-              Enregistrer
+              Save
             </Button>
             <Button variant="outline" onClick={handleReset} disabled={isPending} className="rounded-xl">
               <RotateCcw className="mr-2 h-4 w-4" />
-              Réinitialiser
+              Reset
             </Button>
           </div>
         </CardContent>
@@ -85,9 +85,9 @@ export function AdminConfigureForm({ initialDeveloperName }: AdminConfigureFormP
         <CardHeader className="space-y-1">
           <CardTitle className="text-xl flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Aperçu instantané
+            Live preview
           </CardTitle>
-          <CardDescription>Ce que les visiteurs verront après enregistrement.</CardDescription>
+          <CardDescription>What visitors will see after saving.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-2xl border border-white/10 p-4 bg-white/5">
@@ -100,10 +100,11 @@ export function AdminConfigureForm({ initialDeveloperName }: AdminConfigureFormP
           </div>
           <div className="rounded-2xl border border-white/10 p-4 bg-white/5">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Badge / Hero</p>
-            <p className="text-xl font-black uppercase mt-2 tracking-tight">{liveName} — version 4</p>
+            <p className="text-xl font-black uppercase mt-2 tracking-tight">{liveName} - version 4</p>
           </div>
         </CardContent>
       </Card>
     </div>
   )
 }
+

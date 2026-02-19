@@ -1,4 +1,4 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 import { Home, LayoutDashboard, Settings, Wrench } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
@@ -51,11 +51,11 @@ export default async function AdminConfigurePage() {
             <div className="space-y-2">
               <p className="text-xs uppercase tracking-[0.3em] text-primary font-black flex items-center gap-2">
                 <Wrench className="h-4 w-4" />
-                Configuration globale
+                Global configuration
               </p>
-              <h1 className="text-3xl md:text-4xl font-black tracking-tight">Identité du portfolio</h1>
+              <h1 className="text-3xl md:text-4xl font-black tracking-tight">Portfolio identity</h1>
               <p className="text-muted-foreground max-w-2xl">
-                Choisis le nom affiché partout sur le site public (navbar, footer, pages légales, hero...). Par défaut : {initialDeveloperName}.
+                Choose the name shown across the public site (navbar, footer, legal pages, hero...). Default: {initialDeveloperName}.
               </p>
             </div>
           </div>
@@ -66,3 +66,4 @@ export default async function AdminConfigurePage() {
     </div>
   )
 }
+

@@ -623,7 +623,7 @@ export async function submitFeedback(formData: FormData) {
   const turnstileToken = ((formData.get("cf-turnstile-response") as string) || "").trim()
 
   if (!positive_points || !negative_points || !turnstileToken) {
-    return { success: false, error: "Feedback incomplet" }
+    return { success: false, error: "Incomplete feedback" }
   }
 
   const isHuman = await verifyTurnstileToken(turnstileToken)

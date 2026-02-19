@@ -1,4 +1,4 @@
-import { MessageSquare, Sparkles } from "lucide-react"
+﻿import { MessageSquare, Sparkles } from "lucide-react"
 import { redirect } from "next/navigation"
 
 import { getMaintenanceMode } from "@/lib/actions"
@@ -33,10 +33,10 @@ export default async function FeedbackPage() {
             Public Feedback
           </div>
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight italic">
-            Ton avis <span className="text-primary">compte</span>
+            Your feedback <span className="text-primary">matters</span>
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Donne ton avis sur le portfolio: ce qui est bien, ce qui doit etre ameliore, et ce que tu aimerais voir ensuite.
+            Share your thoughts on the portfolio: what works well, what should be improved, and what you would like to see next.
           </p>
         </section>
 
@@ -46,8 +46,8 @@ export default async function FeedbackPage() {
               <MessageSquare className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-xs uppercase tracking-widest text-muted-foreground">Formulaire</p>
-              <p className="font-semibold">Dis moi ce qui peut être amélioré !</p>
+              <p className="text-xs uppercase tracking-widest text-muted-foreground">Form</p>
+              <p className="font-semibold">Tell me what can be improved!</p>
             </div>
           </div>
 
@@ -60,3 +60,4 @@ export default async function FeedbackPage() {
     </div>
   )
 }
+
