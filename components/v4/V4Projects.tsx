@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useMemo, useState, type ChangeEvent } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useUser, SignInButton } from "@clerk/nextjs"
 import { HorizontalScrollSection } from "@/components/ui/HorizontalScrollSection"
 import { cn } from "@/lib/utils"
@@ -143,36 +143,6 @@ export function V4Projects({ projects, incidentProjectMarkers = [] }: V4Projects
         setQuery("")
     }
 
-    const exportFavorites = () => {
-        const payload = JSON.stringify({ favorites, exportedAt: new Date().toISOString() }, null, 2)
-        const blob = new Blob([payload], { type: "application/json" })
-        const url = URL.createObjectURL(blob)
-        const anchor = document.createElement("a")
-        anchor.href = url
-        anchor.download = "favorites.json"
-        anchor.click()
-        URL.revokeObjectURL(url)
-    }
-
-    const importFavorites = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0]
-        if (!file) return
-
-        const reader = new FileReader()
-        reader.onload = () => {
-            try {
-                const parsed = JSON.parse(String(reader.result))
-                const imported = Array.isArray(parsed) ? parsed : parsed.favorites
-                if (!Array.isArray(imported)) return
-                setFavorites(imported.filter((id) => typeof id === "string"))
-            } catch {
-                // Ignore malformed files.
-            }
-        }
-        reader.readAsText(file)
-        event.target.value = ""
-    }
-
     const headerContent = (
         <div className="flex flex-col gap-8 pt-16 md:pt-32">
             <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
@@ -276,7 +246,7 @@ export function V4Projects({ projects, incidentProjectMarkers = [] }: V4Projects
                         />
                     </div>
                     <Select value={sortBy} onValueChange={setSortBy}>
-                        <SelectTrigger className="h-11 w-full sm:w-52 rounded-xl bg-white/5 border-white/10 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                        <SelectTrigger className="h-11 w-full sm:w-52 rounded-xl bg-white/5 border-white/10 text-sm text-foreground">
                             <SelectValue placeholder="Sort by" />
                         </SelectTrigger>
                         <SelectContent className="bg-background/95 border-white/10">
@@ -296,20 +266,6 @@ export function V4Projects({ projects, incidentProjectMarkers = [] }: V4Projects
                     >
                         Clear filters
                     </Button>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="h-11 rounded-xl glass border-white/10 text-[10px] font-black uppercase tracking-widest"
-                        onClick={exportFavorites}
-                        disabled={favorites.length === 0}
-                    >
-                        Export favorites
-                    </Button>
-                    <label className="h-11 px-4 inline-flex items-center justify-center rounded-xl glass border border-white/10 text-[10px] font-black uppercase tracking-widest cursor-pointer">
-                        Import favorites
-                        <input type="file" accept="application/json" className="hidden" onChange={importFavorites} />
-                    </label>
                 </div>
             </div>
         </div>
