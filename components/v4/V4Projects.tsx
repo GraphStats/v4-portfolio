@@ -575,45 +575,20 @@ function compactText(value: string): string {
 function doesProjectMatchIncident(project: Project, markers: string[]): boolean {
     if (!markers.length) return false
 
-    const identityHaystack = normalizeText([
-        project.title,
-        project.slug,
-    ]
-        .filter(Boolean)
-        .join(" "))
-    const identityHaystackCompact = compactText(identityHaystack)
-
-    const haystack = normalizeText([
-        project.title,
-        project.slug,
-        project.description,
-        ...(project.tags || []),
-    ]
-        .filter(Boolean)
-        .join(" "))
-    const haystackCompact = compactText(haystack)
+    const projectName = normalizeText(project.title || "")
+    const projectNameCompact = compactText(projectName)
+    if (!projectName) return false
 
     return markers.some((marker) => {
         const normalizedMarker = normalizeText(marker)
-        if (!normalizedMarker || normalizedMarker.length < 4) return false
+        if (!normalizedMarker || normalizedMarker.length < 3) return false
         const compactMarker = compactText(normalizedMarker)
-
-        // Brand/group markers must match project identity only (title/slug),
-        // not URLs or long text, to avoid global false positives.
-        const isIdentityMarker = normalizedMarker.includes(" ") || normalizedMarker.startsWith("drayko")
-        if (isIdentityMarker) {
-            if (compactMarker && identityHaystackCompact.includes(compactMarker)) return true
-            if (normalizedMarker.includes(" ")) return identityHaystack.includes(normalizedMarker)
-            const identityWholeWord = new RegExp(`(^|\\s)${normalizedMarker}(\\s|$)`, "i")
-            return identityWholeWord.test(identityHaystack)
-        }
-
-        if (compactMarker && haystackCompact.includes(compactMarker)) return true
-        if (normalizedMarker.includes(" ")) {
-            return haystack.includes(normalizedMarker)
-        }
-        const wholeWord = new RegExp(`(^|\\s)${normalizedMarker}(\\s|$)`, "i")
-        return wholeWord.test(haystack)
+        return (
+            projectName.includes(normalizedMarker) ||
+            normalizedMarker.includes(projectName) ||
+            (compactMarker.length >= 3 && projectNameCompact.includes(compactMarker)) ||
+            (projectNameCompact.length >= 3 && compactMarker.includes(projectNameCompact))
+        )
     })
 }
 
