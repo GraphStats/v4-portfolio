@@ -10,6 +10,7 @@ import dynamicImport from "next/dynamic"
 
 import { V4Navbar } from "@/components/v4/V4Navbar"
 import { V4Hero } from "@/components/v4/V4Hero"
+import { V4StatusBanner } from "@/components/v4/V4StatusBanner"
 
 const V4Projects = dynamicImport(() =>
   import("@/components/v4/V4Projects").then((mod) => mod.V4Projects)
@@ -72,6 +73,7 @@ export default async function HomePage() {
 
       <main className="relative z-10">
         <V4Hero badgeText={badgeText} />
+        <V4StatusBanner />
 
         <div className="relative">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
