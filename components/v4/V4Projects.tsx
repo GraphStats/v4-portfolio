@@ -246,7 +246,7 @@ export function V4Projects({ projects, incidentProjectMarkers = [] }: V4Projects
                         />
                     </div>
                     <Select value={sortBy} onValueChange={setSortBy}>
-                        <SelectTrigger className="h-11 w-full sm:w-52 rounded-xl bg-white/5 border-white/10 text-sm text-foreground">
+                        <SelectTrigger className="!h-11 !py-0 w-full sm:w-52 !rounded-xl bg-white/5 border-white/10 text-sm text-foreground">
                             <SelectValue placeholder="Sort by" />
                         </SelectTrigger>
                         <SelectContent className="bg-background/95 border-white/10">
