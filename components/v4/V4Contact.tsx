@@ -38,7 +38,7 @@ export function V4Contact() {
 
                             <div className="space-y-5">
                                 {[
-                                    { icon: Mail, label: "Email Me", value: "projet@drayko.xyz" },
+                                    { icon: Mail, label: "Email Me", value: "project@drayko.xyz" },
                                     { icon: MapPin, label: "Location", value: "Earth, Remote" },
                                 ].map((item, i) => (
                                     <div key={i} className="flex items-center gap-6 group/item">

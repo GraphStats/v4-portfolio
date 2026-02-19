@@ -628,7 +628,7 @@ export async function submitFeedback(formData: FormData) {
 
   const isHuman = await verifyTurnstileToken(turnstileToken)
   if (!isHuman) {
-    return { success: false, error: "Verification Cloudflare invalide" }
+    return { success: false, error: "Invalid Cloudflare verification" }
   }
 
   try {

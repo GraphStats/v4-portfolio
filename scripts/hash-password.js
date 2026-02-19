@@ -1,16 +1,16 @@
-const crypto = require('crypto');
+﻿const crypto = require('crypto');
 
 const password = 'SamCloud2024';
 const hash = crypto.createHash('sha256').update(password).digest('hex');
 
-console.log('\n=== COMPTE ADMIN ===\n');
+console.log('\n=== ADMIN ACCOUNT ===\n');
 console.log('Email: graphstats.pro@gmail.com');
-console.log('Mot de passe: SamCloud2024');
-console.log('Hash SHA-256:', hash);
-console.log('\n=== DOCUMENT FIRESTORE ===\n');
+console.log('Password: SamCloud2024');
+console.log('SHA-256 Hash:', hash);
+console.log('\n=== FIRESTORE DOCUMENT ===\n');
 console.log(JSON.stringify({
-    email: 'graphstats.pro@gmail.com',
-    password: hash,
-    created_at: new Date().toISOString()
+  email: 'graphstats.pro@gmail.com',
+  password: hash,
+  created_at: new Date().toISOString()
 }, null, 2));
-console.log('\n');
+console.log('');

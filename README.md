@@ -1,15 +1,15 @@
-# Drayko - Creative Developer (Next.js)
+﻿# Drayko - Creative Developer (Next.js)
 
-Portfolio + panel admin (dashboard + "Projets Ops") construit avec Next.js (App Router), Firebase/Firestore, Clerk, Tailwind + Radix UI.
+Portfolio and admin panel (dashboard + "Project Ops") built with Next.js (App Router), Firebase/Firestore, Clerk, Tailwind, and Radix UI.
 
 ## Features
 
-- Pages publiques (v4 UI)
-- Admin login + dashboard: gestion projets, news, stats, toggles (maintenance, v4, disponibilite, error mode)
-- Projets Ops: mode "Single project" + mode "General" (updates/events + calendrier global)
-- Firestore comme source de donnees
+- Public pages (v4 UI)
+- Admin login + dashboard: project management, news, stats, and global toggles (maintenance, v4, availability, error mode)
+- Project Ops: "Single project" mode + "General" mode (updates/events + global calendar)
+- Firestore as the main data source
 
-## Tech stack
+## Tech Stack
 
 - Next.js 16 (App Router)
 - React 19
@@ -17,63 +17,65 @@ Portfolio + panel admin (dashboard + "Projets Ops") construit avec Next.js (App 
 - Clerk (auth)
 - Tailwind CSS + Radix UI (shadcn-style components)
 
-## Installation Automatique 🚀
+## Quick Install
 
-Vous pouvez installer et configurer le projet rapidement en utilisant les scripts interactifs fournis.
+You can install and configure the project quickly using the provided interactive scripts.
 
 ### Linux / macOS
+
 ```bash
 curl -o install.sh https://drayko.xyz/install.sh && chmod +x install.sh && ./install.sh
 ```
 
 ### Windows
-Téléchargez le fichier [install.bat](https://drayko.xyz/install.bat) et lancez-le en double-cliquant dessus.
 
-## Getting started
+Download [install.bat](https://drayko.xyz/install.bat) and run it.
 
-Prerequis: Node.js recent + npm.
+## Getting Started
 
-1. Installer les deps:
+Prerequisites: recent Node.js + npm.
+
+1. Install dependencies:
    - `npm install`
-2. Configurer les variables d'environnement:
-   - copier `.env.example` vers `.env`
-   - remplir les valeurs
-3. Lancer en dev:
+2. Configure environment variables:
+   - copy `.env.example` to `.env`
+   - fill values
+3. Start development server:
    - `npm run dev`
 
-## Environment variables
+## Environment Variables
 
-Variables principales:
+Main variables:
 - Firebase (public): `NEXT_PUBLIC_FIREBASE_*`
 - Clerk: `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`
-- Cloudflare (optionnel): `CLOUDFLARE_ZONE_ID`, `CLOUDFLARE_API_TOKEN`
+- Cloudflare (optional): `CLOUDFLARE_ZONE_ID`, `CLOUDFLARE_API_TOKEN`
 
 ## Admin
 
 Routes:
-- `/admin` : page login admin
-- `/admin/dashboard` : dashboard principal
-- `/admin/projects` : Projets Ops (organisation interne)
+- `/admin`: admin login page
+- `/admin/dashboard`: main dashboard
+- `/admin/projects`: Project Ops (internal organization)
 
 Notes:
-- La session admin est geree via un cookie `admin_session` (voir `lib/auth.ts` + `middleware.ts`).
-- Les donnees Projets Ops sont stockees dans `project-admin/{projectId}`.
-- La "Roadmap" Projets Ops est synchronisee avec `portfolio/{projectId}.changelog` (meme systeme que le dashboard).
+- Admin session uses the `admin_session` cookie (see `lib/auth.ts` + `middleware.ts`).
+- Project Ops data is stored in `project-admin/{projectId}`.
+- The Project Ops roadmap is synced with `portfolio/{projectId}.changelog` (same model as dashboard updates).
 
-## Firestore data model
+## Firestore Data Model
 
 - `portfolio` (projects)
-  - champs projet + `changelog: [{ id, version, date, changes[] }]`
+  - project fields + `changelog: [{ id, version, date, changes[] }]`
 - `admins` (admin accounts)
-- `project-admin` (meta interne par projet)
-  - `notes`, `updates` (statuts), `events` (calendrier)
+- `project-admin` (internal project metadata)
+  - `notes`, `updates` (statuses), `events` (calendar)
 - `news` (posts)
-- `update-p/main` (site update badge / changelog global)
+- `update-p/main` (site update badge / global changelog)
 
 ## Scripts
 
-- `npm run dev` : dev server
-- `npm run build` : build production
-- `npm run start` : start production
-- `npm run lint` : eslint (si installe/configure)
-- `npm run sync-themes` : copie des CSS de themes speciaux vers `public/`
+- `npm run dev`: dev server
+- `npm run build`: production build
+- `npm run start`: production server
+- `npm run lint`: eslint (if installed/configured)
+- `npm run sync-themes`: copy special-theme CSS files to `public/`
