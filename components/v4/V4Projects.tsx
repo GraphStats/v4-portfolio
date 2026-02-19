@@ -575,13 +575,19 @@ function compactText(value: string): string {
 function doesProjectMatchIncident(project: Project, markers: string[]): boolean {
     if (!markers.length) return false
 
+    const identityHaystack = normalizeText([
+        project.title,
+        project.slug,
+    ]
+        .filter(Boolean)
+        .join(" "))
+    const identityHaystackCompact = compactText(identityHaystack)
+
     const haystack = normalizeText([
         project.title,
         project.slug,
         project.description,
         ...(project.tags || []),
-        project.project_url || "",
-        project.github_url || "",
     ]
         .filter(Boolean)
         .join(" "))
@@ -591,6 +597,17 @@ function doesProjectMatchIncident(project: Project, markers: string[]): boolean 
         const normalizedMarker = normalizeText(marker)
         if (!normalizedMarker || normalizedMarker.length < 4) return false
         const compactMarker = compactText(normalizedMarker)
+
+        // Brand/group markers must match project identity only (title/slug),
+        // not URLs or long text, to avoid global false positives.
+        const isIdentityMarker = normalizedMarker.includes(" ") || normalizedMarker.startsWith("drayko")
+        if (isIdentityMarker) {
+            if (compactMarker && identityHaystackCompact.includes(compactMarker)) return true
+            if (normalizedMarker.includes(" ")) return identityHaystack.includes(normalizedMarker)
+            const identityWholeWord = new RegExp(`(^|\\s)${normalizedMarker}(\\s|$)`, "i")
+            return identityWholeWord.test(identityHaystack)
+        }
+
         if (compactMarker && haystackCompact.includes(compactMarker)) return true
         if (normalizedMarker.includes(" ")) {
             return haystack.includes(normalizedMarker)
