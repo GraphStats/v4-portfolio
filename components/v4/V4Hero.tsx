@@ -2,27 +2,33 @@
 
 import { motion } from "framer-motion"
 import { useRef, useEffect } from "react"
-import { ArrowRight, X, Zap } from "lucide-react"
+import { AlertTriangle, ArrowRight, CheckCircle2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { FaCoffee } from "react-icons/fa"
 import { useSiteSettings } from "@/components/site-settings-provider"
+import type { SystemStatusLevel } from "@/lib/status-summary"
 
 interface V4HeroProps {
     badgeText?: string
     badgeHref?: string
-    badgeIcon?: "zap" | "x"
+    badgeStatus?: SystemStatusLevel
 }
 
 export function V4Hero({
     badgeText = "Experience v4.0.0 is Live",
     badgeHref = "/update",
-    badgeIcon = "zap",
+    badgeStatus = "operational",
 }: V4HeroProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const { developerName } = useSiteSettings()
     const developerNameUpper = developerName.toUpperCase()
-    const isOutage = badgeIcon === "x"
+    const badgeClassName =
+        badgeStatus === "outage"
+            ? "border-red-500/35 text-red-300 hover:border-red-400/70"
+            : badgeStatus === "degraded"
+                ? "border-orange-500/35 text-orange-300 hover:border-orange-400/70"
+                : "border-emerald-500/35 text-emerald-300 hover:border-emerald-400/70"
 
     useEffect(() => {
         let frameId: number | null = null
@@ -104,17 +110,11 @@ export function V4Hero({
                     >
                         <Link
                             href={badgeHref}
-                            className={`group inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-colors cursor-pointer ${
-                                isOutage
-                                    ? "border-red-500/35 text-red-300 hover:border-red-400/70"
-                                    : "border-white/10 text-primary hover:border-primary/50"
-                            }`}
+                            className={`group inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-colors cursor-pointer ${badgeClassName}`}
                         >
-                            {isOutage ? (
-                                <X className="w-3.5 h-3.5 animate-pulse" />
-                            ) : (
-                                <Zap className="w-3.5 h-3.5 fill-current animate-pulse" />
-                            )}
+                            {badgeStatus === "outage" ? <XCircle className="w-3.5 h-3.5 animate-pulse" /> : null}
+                            {badgeStatus === "degraded" ? <AlertTriangle className="w-3.5 h-3.5 animate-pulse" /> : null}
+                            {badgeStatus === "operational" ? <CheckCircle2 className="w-3.5 h-3.5" /> : null}
                             <span>{badgeText}</span>
                         </Link>
                     </motion.div>

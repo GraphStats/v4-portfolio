@@ -1,13 +1,13 @@
 import type React from "react"
 import { getFirestoreServer } from "@/lib/firebase/server"
-import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
-import type { Project, SiteUpdate } from "@/lib/types"
+import { collection, getDocs, query, orderBy } from "firebase/firestore"
+import type { Project } from "@/lib/types"
 import { getMaintenanceMode } from "@/lib/actions"
 import { redirect } from "next/navigation"
 import { getCloudflareStats } from "@/lib/cloudflare"
 import { isLocalRequest } from "@/lib/server-utils"
 import dynamicImport from "next/dynamic"
-import { getActiveIncident, getIncidentProjectMarkers, getStatusSummary } from "@/lib/status-summary"
+import { getActiveIncident, getIncidentLevel, getIncidentProjectMarkers, getStatusSummary, type SystemStatusLevel } from "@/lib/status-summary"
 
 import { V4Navbar } from "@/components/v4/V4Navbar"
 import { V4Hero } from "@/components/v4/V4Hero"
@@ -40,18 +40,17 @@ export default async function HomePage() {
   }
 
   let projects: Project[] = []
-  let badgeText = "Experience v4.0.0 is Live"
-  let badgeHref = "/update"
-  let badgeIcon: "zap" | "x" = "zap"
+  let badgeText = "ALL SYSTEMS OPERATIONAL"
+  let badgeHref = "/status"
+  let badgeStatus: SystemStatusLevel = "operational"
 
   const statusSummary = await getStatusSummary()
   const activeIncident = getActiveIncident(statusSummary)
+  const incidentLevel = getIncidentLevel(activeIncident)
   const incidentProjectMarkers = getIncidentProjectMarkers(activeIncident)
-  if (activeIncident) {
-    badgeText = "OUTRAGE NOW"
-    badgeHref = "/status"
-    badgeIcon = "x"
-  }
+  badgeStatus = incidentLevel
+  if (incidentLevel === "outage") badgeText = "OUTAGE NOW"
+  if (incidentLevel === "degraded") badgeText = "DEGRADED PERFORMANCE"
 
   try {
     const db = await getFirestoreServer()
@@ -63,12 +62,6 @@ export default async function HomePage() {
       ...doc.data()
     })) as Project[]
 
-    const updateDocRef = doc(db, "update-p", "main")
-    const updateDocSnap = await getDoc(updateDocRef)
-    if (updateDocSnap.exists() && !activeIncident) {
-      const updateData = updateDocSnap.data() as SiteUpdate
-      badgeText = updateData.latest_update_text || badgeText
-    }
   } catch (e) {
     console.error("Firebase fetch error:", e)
   }
@@ -81,7 +74,7 @@ export default async function HomePage() {
       <V4Navbar />
 
       <main className="relative z-10">
-        <V4Hero badgeText={badgeText} badgeHref={badgeHref} badgeIcon={badgeIcon} />
+        <V4Hero badgeText={badgeText} badgeHref={badgeHref} badgeStatus={badgeStatus} />
 
         <div className="relative">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent" />

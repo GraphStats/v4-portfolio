@@ -6,7 +6,7 @@ import { isLocalRequest } from "@/lib/server-utils"
 import { V4Navbar } from "@/components/v4/V4Navbar"
 import { V4Dock } from "@/components/v4/V4Dock"
 import { V4Footer } from "@/components/v4/V4Footer"
-import { getActiveIncident, getStatusSummary } from "@/lib/status-summary"
+import { getActiveIncident, getIncidentLevel, getStatusSummary } from "@/lib/status-summary"
 
 export const dynamic = "force-dynamic"
 
@@ -31,6 +31,7 @@ export default async function StatusPage() {
 
   const summary = await getStatusSummary()
   const incident = getActiveIncident(summary)
+  const incidentLevel = getIncidentLevel(incident)
   const incidentDate = formatDate(incident?.last_update_at)
   const impactedComponents = (incident?.affected_components ?? []).filter((component) => {
     const state = component.current_status?.toLowerCase()
@@ -52,9 +53,13 @@ export default async function StatusPage() {
           </div>
 
           <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-none uppercase italic">
-            {incident ? (
+            {incidentLevel === "outage" ? (
               <>
-                OUTRAGE <span className="text-red-400">NOW</span>
+                OUTAGE <span className="text-red-400">NOW</span>
+              </>
+            ) : incidentLevel === "degraded" ? (
+              <>
+                DEGRADED <span className="text-orange-400">PERFORMANCE</span>
               </>
             ) : (
               <>
@@ -64,7 +69,7 @@ export default async function StatusPage() {
           </h1>
 
           <div className="v4-glass p-8 md:p-10 rounded-[2rem] border-white/10 space-y-6">
-            {incident ? (
+            {incidentLevel !== "operational" && incident ? (
               <>
                 <p className="text-2xl font-black tracking-tight">{incident.name}</p>
                 {incident.last_update_message ? (

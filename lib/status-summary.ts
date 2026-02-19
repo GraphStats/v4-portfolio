@@ -34,6 +34,8 @@ export interface StatusSummary {
   }>
 }
 
+export type SystemStatusLevel = "operational" | "degraded" | "outage"
+
 const STATUS_SUMMARY_URL = "https://status.drayko.xyz/api/v1/summary"
 
 export async function getStatusSummary(): Promise<StatusSummary | null> {
@@ -67,6 +69,38 @@ export function getActiveIncident(summary: StatusSummary | null): StatusIncident
       )
     }) ?? null
   )
+}
+
+function normalizeStatus(value?: string): string {
+  return (value || "").toLowerCase()
+}
+
+export function getIncidentLevel(incident: StatusIncident | null): SystemStatusLevel {
+  if (!incident) return "operational"
+
+  const impact = normalizeStatus(incident.current_worst_impact)
+  if (impact.includes("full_outage") || impact.includes("major_outage") || impact === "outage") {
+    return "outage"
+  }
+  if (impact.includes("degraded") || impact.includes("partial_outage") || impact.includes("minor")) {
+    return "degraded"
+  }
+
+  const incidentStatus = normalizeStatus(incident.status)
+  if (incidentStatus.includes("outage")) return "outage"
+  if (incidentStatus.includes("degraded") || incidentStatus.includes("partial")) return "degraded"
+
+  for (const component of incident.affected_components ?? []) {
+    const componentStatus = normalizeStatus(component.current_status)
+    if (componentStatus.includes("full_outage") || componentStatus.includes("major_outage") || componentStatus === "outage") {
+      return "outage"
+    }
+    if (componentStatus.includes("degraded") || componentStatus.includes("partial_outage") || componentStatus.includes("minor")) {
+      return "degraded"
+    }
+  }
+
+  return "degraded"
 }
 
 function normalizeText(value: string): string {
