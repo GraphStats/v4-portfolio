@@ -1,7 +1,7 @@
 import type React from "react"
 import { getFirestoreServer } from "@/lib/firebase/server"
-import { collection, getDocs, query, orderBy } from "firebase/firestore"
-import type { Project } from "@/lib/types"
+import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
+import type { Project, SiteUpdate } from "@/lib/types"
 import { getMaintenanceMode } from "@/lib/actions"
 import { redirect } from "next/navigation"
 import { getCloudflareStats } from "@/lib/cloudflare"
@@ -61,6 +61,15 @@ export default async function HomePage() {
       id: doc.id,
       ...doc.data()
     })) as Project[]
+
+    if (incidentLevel === "operational") {
+      const updateDocRef = doc(db, "update-p", "main")
+      const updateDocSnap = await getDoc(updateDocRef)
+      if (updateDocSnap.exists()) {
+        const updateData = updateDocSnap.data() as SiteUpdate
+        badgeText = updateData.latest_update_text || badgeText
+      }
+    }
 
   } catch (e) {
     console.error("Firebase fetch error:", e)

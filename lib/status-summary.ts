@@ -52,10 +52,40 @@ export async function getStatusSummary(): Promise<StatusSummary | null> {
   }
 }
 
+function normalizeStatus(value?: string): string {
+  return (value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "")
+}
+
+function getStatusSeverity(status?: string): 0 | 1 | 2 {
+  const key = normalizeStatus(status)
+  if (!key || key === "operational" || key === "up") return 0
+  if (
+    key === "full_outage" ||
+    key === "major_outage" ||
+    key === "outage" ||
+    key === "down"
+  ) {
+    return 2
+  }
+  if (
+    key === "degraded_performance" ||
+    key === "partial_outage" ||
+    key === "minor_outage" ||
+    key.includes("degraded") ||
+    key.includes("partial") ||
+    key.includes("minor")
+  ) {
+    return 1
+  }
+  return 1
+}
+
 function isDegradedOrDown(status?: string): boolean {
-  if (!status) return false
-  const normalized = status.toLowerCase()
-  return normalized !== "operational" && normalized !== "up"
+  return getStatusSeverity(status) > 0
 }
 
 export function getActiveIncident(summary: StatusSummary | null): StatusIncident | null {
@@ -71,35 +101,19 @@ export function getActiveIncident(summary: StatusSummary | null): StatusIncident
   )
 }
 
-function normalizeStatus(value?: string): string {
-  return (value || "").toLowerCase()
-}
-
 export function getIncidentLevel(incident: StatusIncident | null): SystemStatusLevel {
   if (!incident) return "operational"
 
-  const impact = normalizeStatus(incident.current_worst_impact)
-  if (impact.includes("full_outage") || impact.includes("major_outage") || impact === "outage") {
-    return "outage"
-  }
-  if (impact.includes("degraded") || impact.includes("partial_outage") || impact.includes("minor")) {
-    return "degraded"
-  }
-
-  const incidentStatus = normalizeStatus(incident.status)
-  if (incidentStatus.includes("outage")) return "outage"
-  if (incidentStatus.includes("degraded") || incidentStatus.includes("partial")) return "degraded"
+  let maxSeverity: 0 | 1 | 2 = 0
+  maxSeverity = Math.max(maxSeverity, getStatusSeverity(incident.current_worst_impact)) as 0 | 1 | 2
+  maxSeverity = Math.max(maxSeverity, getStatusSeverity(incident.status)) as 0 | 1 | 2
 
   for (const component of incident.affected_components ?? []) {
-    const componentStatus = normalizeStatus(component.current_status)
-    if (componentStatus.includes("full_outage") || componentStatus.includes("major_outage") || componentStatus === "outage") {
-      return "outage"
-    }
-    if (componentStatus.includes("degraded") || componentStatus.includes("partial_outage") || componentStatus.includes("minor")) {
-      return "degraded"
-    }
+    maxSeverity = Math.max(maxSeverity, getStatusSeverity(component.current_status)) as 0 | 1 | 2
   }
 
+  if (maxSeverity === 2) return "outage"
+  if (maxSeverity === 1) return "degraded"
   return "degraded"
 }
 
