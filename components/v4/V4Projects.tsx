@@ -267,7 +267,7 @@ function ProjectCard({
             whileInView={{ opacity: 1 }}
             transition={{ delay: index * 0.1 }}
             viewport={{ once: true }}
-            className={`group relative flex flex-col md:flex-row h-full min-h-[560px] md:min-h-[460px] v4-card p-4 md:p-6 hover:border-primary/50 transition-all duration-500 overflow-hidden ${isLocked ? "scale-[0.98] opacity-90" : ""} w-[calc(100vw-2rem)] sm:w-[90vw] md:w-[74vw] lg:w-[48vw] flex-shrink-0`}
+            className={`group relative flex flex-col md:flex-row h-full min-h-[560px] md:min-h-[460px] v4-card p-4 md:p-6 hover:border-primary/50 transition-all duration-500 overflow-hidden ${isLocked ? "scale-[0.98] opacity-90" : ""} w-[calc(100vw-1.5rem)] sm:w-[92vw] md:w-[76vw] lg:w-[50vw] flex-shrink-0`}
         >
             <button
                 type="button"
@@ -614,7 +614,7 @@ function ProjectQuickViewDialog({
 
 function EmptyState({ onReset, hasFilters }: { onReset: () => void; hasFilters: boolean }) {
     return (
-        <div className="v4-card p-8 md:p-12 rounded-2xl w-[calc(100vw-2rem)] sm:w-[90vw] md:w-[74vw] lg:w-[48vw] flex-shrink-0">
+        <div className="v4-card p-8 md:p-12 rounded-2xl w-[calc(100vw-1.5rem)] sm:w-[92vw] md:w-[76vw] lg:w-[50vw] flex-shrink-0">
             <div className="space-y-4 text-center">
                 <div className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground">
                     No results
