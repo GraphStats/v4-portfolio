@@ -34,7 +34,6 @@ const FavoriteStarIcon = ({
 )
 
 export function V4Projects({ projects, incidentProjectMarkers = [] }: V4ProjectsProps) {
-    const [filter, setFilter] = useState<string>("all")
     const [query, setQuery] = useState<string>("")
     const [sortBy, setSortBy] = useState<string>("newest")
     const [favorites, setFavorites] = useState<string[]>([])
@@ -68,13 +67,11 @@ export function V4Projects({ projects, incidentProjectMarkers = [] }: V4Projects
     }
 
     const filteredProjects = projects.filter((project) => {
-        const matchesFilter = filter === "all"
-            || (filter === "favorites" ? favoriteSet.has(project.id) : project.tags?.includes(filter))
         const matchesQuery = !normalizedQuery
             || [project.title, project.description, ...(project.tags || [])]
                 .filter(Boolean)
                 .some((value) => value.toLowerCase().includes(normalizedQuery))
-        return matchesFilter && matchesQuery
+        return matchesQuery
     })
 
     const getTimestamp = (value: unknown) => {
@@ -115,31 +112,12 @@ export function V4Projects({ projects, incidentProjectMarkers = [] }: V4Projects
         }
     }, [filteredProjects, sortBy])
 
-    const allTags = useMemo(
-        () => Array.from(new Set(projects.flatMap((p) => p.tags || []))).sort((a, b) => a.localeCompare(b)),
-        [projects]
-    )
-    const tagCounts = useMemo(
-        () =>
-            projects.reduce<Record<string, number>>((acc, project) => {
-                (project.tags || []).forEach((tag) => {
-                    acc[tag] = (acc[tag] || 0) + 1
-                })
-                return acc
-            }, {}),
-        [projects]
-    )
-    const favoriteCount = useMemo(
-        () => projects.filter((project) => favoriteSet.has(project.id)).length,
-        [projects, favoriteSet]
-    )
     const selectedProject = useMemo(
         () => (selectedProjectId ? projects.find((project) => project.id === selectedProjectId) ?? null : null),
         [projects, selectedProjectId]
     )
-    const hasFilters = filter !== "all" || normalizedQuery.length > 0
+    const hasFilters = normalizedQuery.length > 0
     const clearFilters = () => {
-        setFilter("all")
         setQuery("")
     }
 
@@ -162,7 +140,7 @@ export function V4Projects({ projects, incidentProjectMarkers = [] }: V4Projects
                         FEATURED <span className="text-muted-foreground/40 italic">PROJECTS</span>
                     </motion.h2>
                     <p className="text-sm sm:text-base text-muted-foreground max-w-xl">
-                        Filter by tag or search for a project to quickly find what you want to explore.
+                        Search and sort projects quickly to find what you want to explore.
                     </p>
                 </div>
 
@@ -185,55 +163,6 @@ export function V4Projects({ projects, incidentProjectMarkers = [] }: V4Projects
             </div>
 
             <div className="flex flex-col gap-4">
-                <div className="flex flex-wrap gap-2">
-                    <button
-                        type="button"
-                        onClick={() => setFilter("all")}
-                        aria-pressed={filter === "all"}
-                        className={cn(
-                            "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-colors",
-                            filter === "all"
-                                ? "bg-primary text-primary-foreground border-primary/50"
-                                : "bg-white/5 text-muted-foreground border-white/10 hover:text-white hover:border-white/30"
-                        )}
-                    >
-                        All
-                        <span className="ml-2 text-[9px] font-black opacity-70">{projects.length}</span>
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setFilter("favorites")}
-                        aria-pressed={filter === "favorites"}
-                        className={cn(
-                            "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-colors inline-flex items-center gap-1.5",
-                            filter === "favorites"
-                                ? "bg-primary text-primary-foreground border-primary/50"
-                                : "bg-white/5 text-muted-foreground border-white/10 hover:text-white hover:border-white/30"
-                        )}
-                    >
-                        <FavoriteStarIcon className="w-3.5 h-3.5" filled={filter === "favorites"} />
-                        Favorites
-                        <span className="ml-1 text-[9px] font-black opacity-70">{favoriteCount}</span>
-                    </button>
-                    {allTags.map((tag) => (
-                        <button
-                            key={tag}
-                            type="button"
-                            onClick={() => setFilter(tag)}
-                            aria-pressed={filter === tag}
-                            className={cn(
-                                "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-colors",
-                                filter === tag
-                                    ? "bg-primary text-primary-foreground border-primary/50"
-                                    : "bg-white/5 text-muted-foreground border-white/10 hover:text-white hover:border-white/30"
-                            )}
-                        >
-                            {tag}
-                            <span className="ml-2 text-[9px] font-black opacity-70">{tagCounts[tag] || 0}</span>
-                        </button>
-                    ))}
-                </div>
-
                 <div className="flex flex-col sm:flex-row gap-3">
                     <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />

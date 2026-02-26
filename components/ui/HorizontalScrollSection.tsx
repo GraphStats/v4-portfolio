@@ -76,7 +76,7 @@ export const HorizontalScrollSection = ({ children, header }: HorizontalScrollSe
       <section className="relative py-16">
         <div className="container mx-auto px-4 sm:px-6">
           {header}
-          <div className="mt-4 sm:mt-6 grid gap-6">
+          <div className="mt-4 sm:mt-6 grid gap-6 px-1 sm:px-2">
             {children}
           </div>
         </div>
@@ -89,7 +89,7 @@ export const HorizontalScrollSection = ({ children, header }: HorizontalScrollSe
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 h-full flex flex-col gap-6">
           {header}
-          <div ref={viewportRef} className="flex items-start flex-grow pt-2 pb-6">
+          <div ref={viewportRef} className="flex items-start flex-grow pt-2 pb-6 px-1 sm:px-2 md:px-3">
             <motion.div ref={carouselRef} style={{ x }} className="flex gap-8">
               {children}
             </motion.div>
