@@ -323,6 +323,7 @@ function ProjectCard({
 }) {
     const isLocked = project.requires_auth && !isSignedIn
     const hasIncidentIssue = doesProjectMatchIncident(project, incidentProjectMarkers)
+    const hasPrimaryLinks = !isLocked && Boolean(project.project_url || project.github_url)
 
     const getStatusText = () => {
         if (project.in_development) return project.development_status === 'paused' ? "Paused" : "In Development"
@@ -337,7 +338,7 @@ function ProjectCard({
             whileInView={{ opacity: 1 }}
             transition={{ delay: index * 0.1 }}
             viewport={{ once: true }}
-            className={`group relative flex flex-col md:flex-row h-full v4-card p-4 md:p-6 hover:border-primary/50 transition-all duration-500 overflow-hidden ${isLocked ? "scale-[0.98] opacity-90" : ""} w-full sm:w-[90vw] md:w-[70vw] lg:w-[45vw] flex-shrink-0`}
+            className={`group relative flex flex-col md:flex-row h-full min-h-[600px] md:min-h-[500px] v4-card p-4 md:p-6 hover:border-primary/50 transition-all duration-500 overflow-hidden ${isLocked ? "scale-[0.98] opacity-90" : ""} w-full sm:w-[90vw] md:w-[70vw] lg:w-[45vw] flex-shrink-0`}
         >
             <button
                 type="button"
@@ -446,6 +447,7 @@ function ProjectCard({
                         </div>
                     </div>
                 )}
+                {!project.in_development && <div className="h-9" aria-hidden />}
 
                 <div className="flex flex-wrap gap-x-3 gap-y-1 pt-2">
                     {project.tags?.map(tag => (
@@ -456,7 +458,7 @@ function ProjectCard({
                 </div>
 
                 <div className="flex flex-col gap-3 mt-auto pt-2">
-                    {!isLocked && (project.project_url || project.github_url) && (
+                    {hasPrimaryLinks && (
                         <div className="flex flex-col sm:flex-row gap-3 w-full">
                             {project.project_url && (
                                 <Button
@@ -486,6 +488,7 @@ function ProjectCard({
                             )}
                         </div>
                     )}
+                    {!hasPrimaryLinks && <div className="h-10" aria-hidden />}
 
                     <Button
                         type="button"
