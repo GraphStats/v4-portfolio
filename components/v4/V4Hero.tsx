@@ -124,7 +124,7 @@ export function V4Hero({
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                            className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.85] font-display"
+                            className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.92] font-display"
                         >
                             <span className="block text-foreground drop-shadow-sm uppercase">{developerNameUpper}</span>
                             <span className="relative inline-block">
