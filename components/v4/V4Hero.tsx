@@ -128,7 +128,7 @@ export function V4Hero({
                         >
                             <span className="block text-foreground drop-shadow-sm uppercase">{developerNameUpper}</span>
                             <span className="relative inline-block">
-                                <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent italic">PORTFOLIO.</span>
+                                <span className="block pb-[0.04em] bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent italic">PORTFOLIO.</span>
                             </span>
                         </motion.h1>
 
@@ -173,4 +173,3 @@ export function V4Hero({
         </section>
     )
 }
-

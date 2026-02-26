@@ -267,7 +267,7 @@ function ProjectCard({
             whileInView={{ opacity: 1 }}
             transition={{ delay: index * 0.1 }}
             viewport={{ once: true }}
-            className={`group relative flex flex-col md:flex-row h-full min-h-[600px] md:min-h-[500px] v4-card p-4 md:p-6 hover:border-primary/50 transition-all duration-500 overflow-hidden ${isLocked ? "scale-[0.98] opacity-90" : ""} w-[calc(100vw-2.5rem)] sm:w-[88vw] md:w-[70vw] lg:w-[45vw] flex-shrink-0`}
+            className={`group relative flex flex-col md:flex-row h-full min-h-[560px] md:min-h-[460px] v4-card p-4 md:p-6 hover:border-primary/50 transition-all duration-500 overflow-hidden ${isLocked ? "scale-[0.98] opacity-90" : ""} w-[calc(100vw-2.5rem)] sm:w-[88vw] md:w-[70vw] lg:w-[45vw] flex-shrink-0`}
         >
             <button
                 type="button"
