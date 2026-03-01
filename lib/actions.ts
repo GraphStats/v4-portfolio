@@ -2,10 +2,24 @@
 
 import { getFirestoreServer } from "@/lib/firebase/server"
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy, where, getDoc, setDoc, limit } from "firebase/firestore"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache"
 import { auth as clerkAuth, currentUser } from "@clerk/nextjs/server"
 import type { Project, News, NewsComment, Feedback, SearchItem } from "@/lib/types"
 import { normalizeDeveloperName, DEFAULT_DEVELOPER_NAME } from "@/lib/site-settings"
+
+const SETTINGS_GENERAL_TAG = "settings-general"
+const HOME_PAGE_TAG = "home-page-data"
+const PROJECTS_TAG = "projects"
+
+const getGeneralSettingsDataCached = unstable_cache(
+  async () => {
+    const db = await getFirestoreServer()
+    const docSnap = await getDoc(doc(db, "settings", "general"))
+    return docSnap.exists() ? docSnap.data() : null
+  },
+  ["settings-general-doc"],
+  { revalidate: 30, tags: [SETTINGS_GENERAL_TAG] }
+)
 
 export async function createProject(formData: FormData) {
   const db = await getFirestoreServer()
@@ -59,6 +73,8 @@ export async function createProject(formData: FormData) {
 
     revalidatePath("/")
     revalidatePath("/admin/dashboard")
+    revalidateTag(PROJECTS_TAG)
+    revalidateTag(HOME_PAGE_TAG)
     return { success: true }
   } catch (error: any) {
     console.error("Error creating project:", error)
@@ -118,6 +134,8 @@ export async function updateProject(id: string, formData: FormData) {
 
     revalidatePath("/")
     revalidatePath("/admin/dashboard")
+    revalidateTag(PROJECTS_TAG)
+    revalidateTag(HOME_PAGE_TAG)
     return { success: true }
   } catch (error: any) {
     console.error("Error updating project:", error)
@@ -133,6 +151,8 @@ export async function deleteProject(id: string) {
 
     revalidatePath("/")
     revalidatePath("/admin/dashboard")
+    revalidateTag(PROJECTS_TAG)
+    revalidateTag(HOME_PAGE_TAG)
     return { success: true }
   } catch (error: any) {
     console.error("Error deleting project:", error)
@@ -200,13 +220,9 @@ export async function getAdmins() {
 }
 
 export async function getMaintenanceMode() {
-  const db = await getFirestoreServer()
   try {
-    const docRef = doc(db, "settings", "general")
-    const docSnap = await getDoc(docRef)
-
-    if (docSnap.exists()) {
-      const data = docSnap.data()
+    const data = await getGeneralSettingsDataCached()
+    if (data) {
       return {
         success: true,
         isMaintenance: data.maintenance_mode || false,
@@ -222,13 +238,9 @@ export async function getMaintenanceMode() {
 }
 
 export async function getV4Mode() {
-  const db = await getFirestoreServer()
   try {
-    const docRef = doc(db, "settings", "general")
-    const docSnap = await getDoc(docRef)
-
-    if (docSnap.exists()) {
-      const data = docSnap.data()
+    const data = await getGeneralSettingsDataCached()
+    if (data) {
       return {
         success: true,
         isV4Mode: data.v4_mode || false,
@@ -244,12 +256,9 @@ export async function getV4Mode() {
 }
 
 export async function getSiteSettings() {
-  const db = await getFirestoreServer()
   try {
-    const docRef = doc(db, "settings", "general")
-    const docSnap = await getDoc(docRef)
-
-    const developerName = normalizeDeveloperName(docSnap.exists() ? (docSnap.data().developer_name as string | undefined) : undefined)
+    const data = await getGeneralSettingsDataCached()
+    const developerName = normalizeDeveloperName(data ? (data.developer_name as string | undefined) : undefined)
 
     return { success: true, developerName }
   } catch (error: any) {
@@ -259,13 +268,9 @@ export async function getSiteSettings() {
 }
 
 export async function getErrorMode() {
-  const db = await getFirestoreServer()
   try {
-    const docRef = doc(db, "settings", "general")
-    const docSnap = await getDoc(docRef)
-
-    if (docSnap.exists()) {
-      const data = docSnap.data()
+    const data = await getGeneralSettingsDataCached()
+    if (data) {
       return {
         success: true,
         isErrorMode: data.error_mode || false,
@@ -291,6 +296,8 @@ export async function updateV4Mode(isV4Mode: boolean, message?: string, progress
 
     revalidatePath("/")
     revalidatePath("/admin/dashboard")
+    revalidateTag(SETTINGS_GENERAL_TAG)
+    revalidateTag(HOME_PAGE_TAG)
     return { success: true }
   } catch (error: any) {
     console.error("Error updating v4 mode:", error)
@@ -309,6 +316,8 @@ export async function updateErrorMode(isErrorMode: boolean, message?: string) {
 
     revalidatePath("/")
     revalidatePath("/admin/dashboard")
+    revalidateTag(SETTINGS_GENERAL_TAG)
+    revalidateTag(HOME_PAGE_TAG)
     return { success: true }
   } catch (error: any) {
     console.error("Error updating error mode:", error)
@@ -329,6 +338,8 @@ export async function updateMaintenanceMode(isMaintenance: boolean, message?: st
 
     revalidatePath("/")
     revalidatePath("/admin/dashboard")
+    revalidateTag(SETTINGS_GENERAL_TAG)
+    revalidateTag(HOME_PAGE_TAG)
     return { success: true }
   } catch (error: any) {
     console.error("Error updating maintenance mode:", error)
@@ -362,6 +373,8 @@ export async function updateDeveloperName(name: string) {
     await Promise.all(pathsToRevalidate.map((path) => revalidatePath(path)))
     await revalidatePath("/", "layout")
     await revalidatePath("/v2", "layout")
+    revalidateTag(SETTINGS_GENERAL_TAG)
+    revalidateTag(HOME_PAGE_TAG)
 
     return { success: true, developerName }
   } catch (error: any) {

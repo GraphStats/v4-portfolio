@@ -1,4 +1,4 @@
-import type React from "react"
+import { Suspense, type ReactNode } from "react"
 import type { Metadata } from "next"
 import { Inter, Outfit } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
@@ -8,14 +8,13 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { SpecialThemeHandler } from "@/components/special-theme-handler"
 import { ClerkThemeProvider } from "@/components/clerk-theme-provider"
 import { Toaster } from "sonner"
-import { headers } from "next/headers"
 import { getErrorMode, getSiteSettings } from "@/lib/actions"
-import { ErrorModeScreen } from "@/components/error-mode-screen"
 import { RouteTransitionProvider } from "@/components/route-transition"
 import { SiteSettingsProvider } from "@/components/site-settings-provider"
 import { PerformanceModeProvider } from "@/components/performance-mode-provider"
 import { PWAInstaller } from "@/components/pwa-installer"
 import { PerformanceFloatingToggle } from "@/components/performance-floating-toggle"
+import { ErrorModeGate } from "@/components/error-mode-gate"
 
 import "./globals.css"
 
@@ -41,13 +40,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: ReactNode
 }>) {
-  const headersList = await headers()
-  const pathname = headersList.get("x-pathname") || ""
-  const isAdminRoute = pathname.startsWith("/admin")
   const errorMode = await getErrorMode()
-  const showErrorMode = !isAdminRoute && errorMode.isErrorMode
   const { developerName } = await getSiteSettings()
   const isProd = process.env.NODE_ENV === "production"
 
@@ -64,11 +59,11 @@ export default async function RootLayout({
                 <Toaster position="top-right" richColors />
                 <div className="relative flex min-h-screen flex-col">
                   <main className="flex-1">
-                    {showErrorMode ? (
-                      <ErrorModeScreen message={errorMode.message} pathname={pathname} />
-                    ) : (
-                      <RouteTransitionProvider>{children}</RouteTransitionProvider>
-                    )}
+                    <ErrorModeGate enabled={errorMode.isErrorMode} message={errorMode.message}>
+                      <Suspense fallback={children}>
+                        <RouteTransitionProvider>{children}</RouteTransitionProvider>
+                      </Suspense>
+                    </ErrorModeGate>
                   </main>
                 </div>
               {isProd && (
@@ -77,23 +72,23 @@ export default async function RootLayout({
                   <SpeedInsights />
                   <Script
                     id="umami"
-                    strategy="afterInteractive"
+                    strategy="lazyOnload"
                     defer
                     src="https://cloud.umami.is/script.js"
                     data-website-id="43ced19b-1c79-4c9a-abff-4f4e0b5dd798"
                   />
                   <Script
                     id="gtag-loader"
-                    strategy="afterInteractive"
+                    strategy="lazyOnload"
                     src="https://www.googletagmanager.com/gtag/js?id=G-HN2Q6BTFCB"
                   />
-                  <Script id="gtag-init" strategy="afterInteractive">
+                  <Script id="gtag-init" strategy="lazyOnload">
                     {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-HN2Q6BTFCB');`}
                   </Script>
-                  <Script id="statcounter-config" strategy="afterInteractive">
+                  <Script id="statcounter-config" strategy="lazyOnload">
                     {`var sc_project=13204241; var sc_invisible=1; var sc_security="4d852cb5";`}
                   </Script>
-                  <Script id="statcounter-loader" strategy="afterInteractive" src="https://www.statcounter.com/counter/counter.js" />
+                  <Script id="statcounter-loader" strategy="lazyOnload" src="https://www.statcounter.com/counter/counter.js" />
                   <noscript>
                     <div className="statcounter" style={{ position: "absolute", left: "-9999px", width: 0, height: 0, overflow: "hidden" }}>
                       <a title="site stats" href="https://statcounter.com/" target="_blank" rel="noreferrer">

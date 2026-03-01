@@ -28,8 +28,6 @@ export function ClerkThemeProvider({ children }: { children: React.ReactNode }) 
   const currentTheme = theme === 'system' ? systemTheme : theme
   const isDark = currentTheme === 'dark'
 
-  console.log('Clerk Theme Debug:', { theme, systemTheme, currentTheme, isDark })
-
   return (
     <ClerkProvider
       appearance={{

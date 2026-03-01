@@ -4,8 +4,7 @@ import { collection, getDocs, query, orderBy, doc, getDoc } from "firebase/fires
 import type { Project, SiteUpdate } from "@/lib/types"
 import { getMaintenanceMode } from "@/lib/actions"
 import { redirect } from "next/navigation"
-import { getCloudflareStats } from "@/lib/cloudflare"
-import { isLocalRequest } from "@/lib/server-utils"
+import { unstable_cache } from "next/cache"
 import dynamicImport from "next/dynamic"
 import { getActiveIncident, getIncidentLevel, getIncidentProjectMarkers, getStatusSummary, type SystemStatusLevel } from "@/lib/status-summary"
 
@@ -28,15 +27,39 @@ const V4Dock = dynamicImport(() =>
   import("@/components/v4/V4Dock").then((mod) => mod.V4Dock)
 )
 
-export const dynamic = "force-dynamic"
+export const revalidate = 120
+
+const getMaintenanceModeCached = unstable_cache(
+  async () => getMaintenanceMode(),
+  ["maintenance-mode"],
+  { revalidate: 30, tags: ["settings-general"] }
+)
+
+const getHomePageData = unstable_cache(
+  async () => {
+    const [statusSummary, db] = await Promise.all([getStatusSummary(), getFirestoreServer()])
+    const projectsQuery = query(collection(db, "portfolio"), orderBy("created_at", "desc"))
+    const [querySnapshot, updateDocSnap] = await Promise.all([
+      getDocs(projectsQuery),
+      getDoc(doc(db, "update-p", "main")),
+    ])
+
+    const projects = querySnapshot.docs.map((item) => ({
+      id: item.id,
+      ...item.data(),
+    })) as Project[]
+
+    const updateData = updateDocSnap.exists() ? (updateDocSnap.data() as SiteUpdate) : null
+    return { statusSummary, projects, updateData }
+  },
+  ["home-page-data"],
+  { revalidate: 120, tags: ["home-page-data", "projects", "status-summary", "settings-general"] }
+)
 
 export default async function HomePage() {
-  const isLocal = await isLocalRequest()
-  if (!isLocal) {
-    const { isMaintenance } = await getMaintenanceMode()
-    if (isMaintenance) {
-      redirect("/maintenance")
-    }
+  const { isMaintenance } = await getMaintenanceModeCached()
+  if (isMaintenance) {
+    redirect("/maintenance")
   }
 
   let projects: Project[] = []
@@ -44,7 +67,7 @@ export default async function HomePage() {
   let badgeHref = "/status"
   let badgeStatus: SystemStatusLevel = "operational"
 
-  const statusSummary = await getStatusSummary()
+  const { statusSummary, projects: cachedProjects, updateData } = await getHomePageData()
   const activeIncident = getActiveIncident(statusSummary)
   const incidentLevel = getIncidentLevel(activeIncident)
   const incidentProjectMarkers = getIncidentProjectMarkers(activeIncident)
@@ -52,27 +75,9 @@ export default async function HomePage() {
   if (incidentLevel === "outage") badgeText = "OUTAGE NOW"
   if (incidentLevel === "degraded") badgeText = "DEGRADED PERFORMANCE"
 
-  try {
-    const db = await getFirestoreServer()
-    const projectsQuery = query(collection(db, "portfolio"), orderBy("created_at", "desc"))
-    const querySnapshot = await getDocs(projectsQuery)
-
-    projects = querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as Project[]
-
-    if (incidentLevel === "operational") {
-      const updateDocRef = doc(db, "update-p", "main")
-      const updateDocSnap = await getDoc(updateDocRef)
-      if (updateDocSnap.exists()) {
-        const updateData = updateDocSnap.data() as SiteUpdate
-        badgeText = updateData.latest_update_text || badgeText
-      }
-    }
-
-  } catch (e) {
-    console.error("Firebase fetch error:", e)
+  projects = cachedProjects
+  if (incidentLevel === "operational" && updateData?.latest_update_text) {
+    badgeText = updateData.latest_update_text
   }
 
   return (

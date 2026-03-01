@@ -41,7 +41,6 @@ const STATUS_SUMMARY_URL = "https://status.drayko.xyz/api/v1/summary"
 export async function getStatusSummary(): Promise<StatusSummary | null> {
   try {
     const response = await fetch(STATUS_SUMMARY_URL, {
-      cache: "no-store",
       next: { revalidate: 30 },
     })
     if (!response.ok) return null
