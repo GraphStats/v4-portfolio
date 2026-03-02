@@ -9,6 +9,7 @@ import { SpecialThemeHandler } from "@/components/special-theme-handler"
 import { ClerkThemeProvider } from "@/components/clerk-theme-provider"
 import { Toaster } from "sonner"
 import { getErrorMode, getSiteSettings } from "@/lib/actions"
+import { normalizeDeveloperName } from "@/lib/site-settings"
 import { RouteTransitionProvider } from "@/components/route-transition"
 import { SiteSettingsProvider } from "@/components/site-settings-provider"
 import { PerformanceModeProvider } from "@/components/performance-mode-provider"
@@ -23,7 +24,7 @@ const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" })
 
 export async function generateMetadata(): Promise<Metadata> {
   const { developerName } = await getSiteSettings()
-  const name = developerName || "No Name"
+  const name = normalizeDeveloperName(developerName)
 
   return {
     title: `${name} - Creative Developer`,

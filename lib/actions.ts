@@ -10,6 +10,7 @@ import { normalizeDeveloperName, DEFAULT_DEVELOPER_NAME } from "@/lib/site-setti
 const SETTINGS_GENERAL_TAG = "settings-general"
 const HOME_PAGE_TAG = "home-page-data"
 const PROJECTS_TAG = "projects"
+let lastKnownDeveloperName = DEFAULT_DEVELOPER_NAME
 
 const getGeneralSettingsDataCached = unstable_cache(
   async () => {
@@ -259,11 +260,12 @@ export async function getSiteSettings() {
   try {
     const data = await getGeneralSettingsDataCached()
     const developerName = normalizeDeveloperName(data ? (data.developer_name as string | undefined) : undefined)
+    lastKnownDeveloperName = developerName
 
     return { success: true, developerName }
   } catch (error: any) {
     console.error("Error fetching site settings:", error)
-    return { success: false, error: error.message, developerName: DEFAULT_DEVELOPER_NAME }
+    return { success: false, error: error.message, developerName: lastKnownDeveloperName }
   }
 }
 
@@ -351,6 +353,7 @@ export async function updateDeveloperName(name: string) {
   const db = await getFirestoreServer()
   try {
     const developerName = normalizeDeveloperName(name)
+    lastKnownDeveloperName = developerName
     const docRef = doc(db, "settings", "general")
     await setDoc(docRef, { developer_name: developerName }, { merge: true })
 
