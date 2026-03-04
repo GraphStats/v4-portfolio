@@ -1,4 +1,4 @@
-﻿# Drayko - Creative Developer (Next.js)
+# Drayko - Creative Developer (Next.js)
 
 Portfolio and admin panel (dashboard + "Project Ops") built with Next.js (App Router), Firebase/Firestore, Clerk, Tailwind, and Radix UI.
 
@@ -8,6 +8,9 @@ Portfolio and admin panel (dashboard + "Project Ops") built with Next.js (App Ro
 - Admin login + dashboard: project management, news, stats, and global toggles (maintenance, v4, availability, error mode)
 - Project Ops: "Single project" mode + "General" mode (updates/events + global calendar)
 - Firestore as the main data source
+
+## Stats
+![Alt](https://repobeats.axiom.co/api/embed/dea08b428617027867d6865dca9c9664506643e8.svg "Repobeats analytics image")
 
 ## Tech Stack
 
