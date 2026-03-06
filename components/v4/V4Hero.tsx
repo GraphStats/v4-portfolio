@@ -126,7 +126,7 @@ export function V4Hero({
                         >
                             <span className="block text-foreground drop-shadow-sm uppercase">{developerName}</span>
                             <span className="relative inline-block">
-                                <span className="block pb-[0.08em] bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent italic">Portfolio</span>
+                                <span className="block pb-[0.08em] bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent italic uppercase">Portfolio.</span>
                             </span>
                         </motion.h1>
 
