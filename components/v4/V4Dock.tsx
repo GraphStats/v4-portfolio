@@ -28,6 +28,10 @@ export function V4Dock() {
     const [mounted, setMounted] = useState(false)
     const [hideDock, setHideDock] = useState(false)
     const pathname = usePathname()
+    const isItemActive = (href: string) => {
+        if (href === "/#projects") return pathname === "/"
+        return pathname === href
+    }
 
     useEffect(() => setMounted(true), [])
 
@@ -134,7 +138,7 @@ export function V4Dock() {
                     role="navigation"
                     aria-label="Mobile quick navigation"
                     className={cn(
-                        "flex items-center justify-between gap-2 px-3 py-2 rounded-2xl v4-glass bg-background/75 backdrop-blur-xl border border-white/15 shadow-xl shadow-black/25",
+                        "grid grid-cols-3 gap-2 px-3 py-3 rounded-2xl v4-glass bg-background/80 backdrop-blur-xl border border-white/15 shadow-xl shadow-black/25",
                         hideDock && "pointer-events-none"
                     )}
                 >
@@ -142,7 +146,11 @@ export function V4Dock() {
                         <Link
                             key={item.label}
                             href={item.href}
-                            className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-[9px] font-black uppercase tracking-widest text-foreground/75 hover:text-foreground hover:bg-white/10 transition-colors"
+                            className={cn(
+                                    "flex flex-col items-center justify-center min-h-14 gap-1 rounded-xl px-2 py-2 text-[10px] font-black uppercase tracking-widest transition-colors",
+                                isItemActive(item.href) ? "bg-white/10 text-foreground" : "text-foreground/75 hover:text-foreground hover:bg-white/10"
+                            )}
+                            aria-current={isItemActive(item.href) ? "page" : undefined}
                         >
                             <item.icon className="w-5 h-5 drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]" />
                             <span>{item.label}</span>
@@ -150,11 +158,11 @@ export function V4Dock() {
                     ))}
                     <button
                         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                        className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-[9px] font-black uppercase tracking-widest text-foreground/75 hover:text-foreground hover:bg-white/10 transition-colors"
+                        className="col-span-3 flex flex-row items-center justify-center gap-2 min-h-11 rounded-xl px-3 py-2 text-[10px] font-black uppercase tracking-widest text-foreground/75 hover:text-foreground hover:bg-white/10 transition-colors"
                         aria-label="Toggle theme"
                     >
                         {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                        <span>Theme</span>
+                        <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
                     </button>
                 </motion.div>
             </div>

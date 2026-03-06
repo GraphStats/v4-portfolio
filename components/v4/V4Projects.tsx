@@ -135,7 +135,7 @@ export function V4Projects({ projects, incidentProjectMarkers = [] }: V4Projects
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter"
+                        className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter"
                     >
                         FEATURED <span className="text-muted-foreground/40 italic">PROJECTS</span>
                     </motion.h2>
@@ -170,12 +170,13 @@ export function V4Projects({ projects, incidentProjectMarkers = [] }: V4Projects
                             value={query}
                             onChange={(event) => setQuery(event.target.value)}
                             type="search"
+                            aria-label="Search projects"
                             placeholder="Search a project, tag, or keyword"
                             className="h-11 rounded-xl bg-white/5 border-white/10 pl-9 text-sm text-foreground placeholder:text-muted-foreground"
                         />
                     </div>
                     <Select value={sortBy} onValueChange={setSortBy}>
-                        <SelectTrigger className="!h-11 !py-0 w-full sm:w-52 !rounded-xl bg-white/5 border-white/10 text-sm text-foreground">
+                        <SelectTrigger aria-label="Sort projects" className="!h-11 !py-0 w-full sm:w-52 !rounded-xl bg-white/5 border-white/10 text-sm text-foreground">
                             <SelectValue placeholder="Sort by" />
                         </SelectTrigger>
                         <SelectContent className="bg-background/95 border-white/10">
@@ -267,7 +268,7 @@ function ProjectCard({
             whileInView={{ opacity: 1 }}
             transition={{ delay: index * 0.1 }}
             viewport={{ once: true }}
-            className={`group relative flex flex-col md:flex-row h-full min-h-[560px] md:min-h-[460px] v4-card p-4 md:p-6 hover:border-primary/50 transition-all duration-500 overflow-hidden ${isLocked ? "scale-[0.98] opacity-90" : ""} w-[calc(100vw-1.5rem)] sm:w-[92vw] md:w-[76vw] lg:w-[50vw] flex-shrink-0`}
+            className={`group relative flex flex-col md:flex-row h-full min-h-[460px] sm:min-h-[560px] md:min-h-[460px] v4-card p-4 md:p-6 hover:border-primary/50 transition-all duration-500 overflow-hidden ${isLocked ? "scale-[0.98] opacity-90" : ""} w-full md:w-[76vw] lg:w-[50vw] flex-shrink-0`}
         >
             <button
                 type="button"
@@ -614,7 +615,7 @@ function ProjectQuickViewDialog({
 
 function EmptyState({ onReset, hasFilters }: { onReset: () => void; hasFilters: boolean }) {
     return (
-        <div className="v4-card p-8 md:p-12 rounded-2xl w-[calc(100vw-1.5rem)] sm:w-[92vw] md:w-[76vw] lg:w-[50vw] flex-shrink-0">
+        <div className="v4-card p-8 md:p-12 rounded-2xl w-full md:w-[76vw] lg:w-[50vw] flex-shrink-0">
             <div className="space-y-4 text-center">
                 <div className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground">
                     No results

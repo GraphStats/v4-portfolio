@@ -42,6 +42,11 @@ export function V4Navbar() {
         { label: "About", href: "/about" },
         { label: "Contact", href: "/contact" },
     ]
+    const isItemActive = (href: string) => {
+        if (href === "/#projects") return pathname === "/"
+        if (href === "/") return pathname === "/"
+        return pathname.startsWith(href)
+    }
 
     return (
         <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${scrolled ? "py-3" : "py-6"}`}>
@@ -64,7 +69,8 @@ export function V4Navbar() {
                             <Link
                                 key={item.label}
                                 href={item.href}
-                                className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-white transition-colors"
+                                aria-current={isItemActive(item.href) ? "page" : undefined}
+                                className={`text-xs font-black uppercase tracking-[0.2em] transition-colors ${isItemActive(item.href) ? "text-white" : "text-muted-foreground hover:text-white"}`}
                             >
                                 {item.label}
                             </Link>
@@ -123,15 +129,16 @@ export function V4Navbar() {
                             onClick={() => setMobileOpen(false)}
                             aria-label="Close menu overlay"
                         />
-                        <motion.div
-                            initial={{ y: -20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            exit={{ y: -10, opacity: 0 }}
+                        <motion.aside
+                            initial={{ x: 30, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            exit={{ x: 20, opacity: 0 }}
                             transition={{ duration: 0.2 }}
-                            className="absolute left-4 right-4 top-20"
+                            className="absolute top-0 right-0 h-dvh w-[min(90vw,24rem)]"
                             id="mobile-menu"
+                            aria-label="Mobile menu"
                         >
-                            <div className="v4-glass rounded-3xl p-6 border border-white/10 shadow-2xl">
+                            <div className="v4-glass h-full rounded-l-3xl p-6 border-l border-white/10 shadow-2xl flex flex-col">
                                 <div className="flex items-center justify-between">
                                     <span className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground">
                                         Navigation
@@ -147,21 +154,29 @@ export function V4Navbar() {
                                     </Button>
                                 </div>
 
-                                <nav className="mt-6 grid gap-2" aria-label="Mobile navigation">
+                                <nav className="mt-8 grid gap-2" aria-label="Mobile navigation">
                                     {navItems.map((item) => (
                                         <Link
                                             key={item.label}
                                             href={item.href}
                                             onClick={() => setMobileOpen(false)}
-                                            className="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-black uppercase tracking-widest text-muted-foreground hover:text-white hover:bg-white/5 transition-colors"
+                                            aria-current={isItemActive(item.href) ? "page" : undefined}
+                                            className={`flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-black uppercase tracking-widest transition-colors ${isItemActive(item.href) ? "bg-white/10 text-white" : "text-muted-foreground hover:text-white hover:bg-white/5"}`}
                                         >
                                             <span>{item.label}</span>
                                             <ChevronRight className="w-4 h-4" />
                                         </Link>
                                     ))}
                                 </nav>
+                                <div className="mt-auto pt-6">
+                                    <Button asChild className="w-full rounded-2xl text-[10px] font-black uppercase tracking-widest">
+                                        <Link href="/contact" onClick={() => setMobileOpen(false)}>
+                                            Contact
+                                        </Link>
+                                    </Button>
+                                </div>
                             </div>
-                        </motion.div>
+                        </motion.aside>
                     </motion.div>
                 )}
             </AnimatePresence>
