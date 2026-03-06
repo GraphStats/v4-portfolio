@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
-import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, History as HistoryIcon, Activity, ListFilter, NotebookPen, Settings, Sparkles, Newspaper, Server, MessageSquare, BarChart3 } from "lucide-react"
+import { Plus, LogOut, Home, UserPlus, LayoutDashboard, Database, Shield, Activity, ListFilter, NotebookPen, Settings, Sparkles, Newspaper, Server, BarChart3 } from "lucide-react"
 import { AdminProjectCard } from "@/components/admin-project-card"
 import { ProjectDialog } from "@/components/project-dialog"
 import { AdminDialog } from "@/components/admin-dialog"
@@ -13,7 +13,6 @@ import { AdminCard } from "@/components/admin-card"
 import { AdminStats } from "@/components/admin-stats"
 import { AdminMessages } from "@/components/admin-messages"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { UpdateDialog } from "@/components/update-dialog"
 import { BadgeDialog } from "@/components/badge-dialog"
 import { Separator } from "@/components/ui/separator"
 import { AdminNewsCard } from "@/components/admin-news-card"
@@ -34,7 +33,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { SystemUpdateCard } from "@/components/system-update-card"
 
 export default function AdminDashboardPage() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -43,7 +41,6 @@ export default function AdminDashboardPage() {
   const [projectFilter, setProjectFilter] = useState<"all" | "in_dev" | "finished" | "archived">("all")
   const [addProjectOpen, setAddProjectOpen] = useState(false)
   const [addAdminOpen, setAddAdminOpen] = useState(false)
-  const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
   const [badgeDialogOpen, setBadgeDialogOpen] = useState(false)
   const [updateData, setUpdateData] = useState<SiteUpdate | null>(null)
   const [maintenanceMode, setMaintenanceMode] = useState(false)
@@ -57,7 +54,6 @@ export default function AdminDashboardPage() {
   const [isAvailable, setIsAvailable] = useState(true)
   const [news, setNews] = useState<News[]>([])
   const [addNewsOpen, setAddNewsOpen] = useState(false)
-  const [activeThemeName, setActiveThemeName] = useState<string>("Normal Theme")
 
   const fetchProjects = async () => {
     const db = getFirestoreClient()
@@ -129,51 +125,6 @@ export default function AdminDashboardPage() {
     }
   }
 
-  const fetchSpecialThemes = async () => {
-    try {
-      const db = getFirestoreClient()
-      const docRef = doc(db, "special-themes", "config")
-      const docSnap = await getDoc(docRef)
-
-      if (docSnap.exists()) {
-        const data = docSnap.data()
-        if (data.themes) {
-          const now = new Date()
-          let activeName = "Normal Theme"
-
-          for (const theme of data.themes) {
-            const startDate = new Date(
-              theme.startDate.year,
-              theme.startDate.month - 1,
-              theme.startDate.day,
-              theme.startDate.hour,
-              theme.startDate.minute,
-              theme.startDate.second
-            )
-            const endDate = new Date(
-              theme.endDate.year,
-              theme.endDate.month - 1,
-              theme.endDate.day,
-              theme.endDate.hour,
-              theme.endDate.minute,
-              theme.endDate.second
-            )
-
-            if (now >= startDate && now <= endDate) {
-              const startFormatted = `${theme.startDate.day}/${theme.startDate.month}`
-              const endFormatted = `${theme.endDate.day}/${theme.endDate.month}`
-              activeName = `${theme.name} (${startFormatted} - ${endFormatted})`
-              break
-            }
-          }
-          setActiveThemeName(activeName)
-        }
-      }
-    } catch (e) {
-      console.error("Error fetching special themes:", e)
-    }
-  }
-
   const formatDate = (value?: string | null) => {
     if (!value) return "-"
     const date = new Date(value)
@@ -210,7 +161,6 @@ export default function AdminDashboardPage() {
     fetchV4Mode()
     fetchAvailability()
     fetchNews()
-    fetchSpecialThemes()
   }, [])
 
   const handleProjectDeleted = (projectId: string) => {
@@ -654,7 +604,7 @@ export default function AdminDashboardPage() {
                 </div>
                 <div className="text-left">
                   <h3 className="text-xl font-black uppercase tracking-tight italic">System & Identity</h3>
-                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest mt-1">Status, Identity & Themes</p>
+                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest mt-1">Status & Identity</p>
                 </div>
               </div>
             </AccordionTrigger>
@@ -798,95 +748,6 @@ export default function AdminDashboardPage() {
                   </AccordionContent>
                 </AccordionItem>
 
-                {/* SUB-CATEGORY 3.3: ECOSYSTEM */}
-                <AccordionItem value="ecosystem" className="border-white/5 bg-white/[0.01] rounded-[2rem] overflow-hidden border">
-                  <AccordionTrigger className="px-8 py-6 hover:no-underline group hover:bg-white/[0.02] transition-all">
-                    <div className="flex items-center gap-4">
-                      <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-                        <Activity className="h-5 w-5" />
-                      </div>
-                      <div className="text-left">
-                        <h4 className="text-sm font-black uppercase tracking-widest italic">Lifecycle & Events</h4>
-                        <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.2em] mt-0.5">Themes & Roadmap</p>
-                      </div>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-8 pt-8 pb-12 space-y-16">
-                    <section className="space-y-12">
-                      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                            <Sparkles className="h-4 w-4" />
-                            Festive Themes
-                          </div>
-                          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">SPECIAL THEMES</h2>
-                          <p className="text-muted-foreground font-medium max-w-xl text-sm">
-                            Configure activation periods for festive themes to create unique experiences.
-                          </p>
-                        </div>
-                        <Button asChild className="rounded-xl h-12 px-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 self-start md:self-auto transition-all text-sm">
-                          <Link href="/admin/special-themes">
-                            <Sparkles className="mr-2 h-4 w-4" />
-                            Manage Themes
-                          </Link>
-                        </Button>
-                      </div>
-
-                      <div className="glass p-8 rounded-[2rem] border-white/5 bg-white/[0.02] relative overflow-hidden group">
-                        <div className="flex items-center gap-6 relative z-10">
-                          <div className="p-3 rounded-xl bg-primary/10 text-primary shrink-0">
-                            <Sparkles className="h-6 w-6 text-primary shadow-glow shadow-primary/20" />
-                          </div>
-                          <div className="space-y-1">
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">Current Theme</p>
-                            <p className="text-xl md:text-2xl font-bold text-foreground/90 italic">
-                              {activeThemeName}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </section>
-
-                    <Separator className="bg-white/5" />
-
-                    <section className="space-y-12">
-                      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase">
-                            <HistoryIcon className="h-4 w-4" />
-                            Evolution & Roadmap
-                          </div>
-                          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">SITE SYSTEM UPDATES</h2>
-                          <p className="text-muted-foreground font-medium max-w-xl text-sm">
-                            Coordinate the release cycle, document breaking changes, and announce future capabilities.
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="space-y-6">
-                        <SystemUpdateCard />
-
-                        <div className="glass p-8 rounded-[2rem] border-white/5 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-8">
-                          <div className="flex items-center gap-4">
-                            <div className="p-3 rounded-xl bg-primary/10 text-primary shrink-0">
-                              <HistoryIcon className="h-6 w-6" />
-                            </div>
-                            <div className="space-y-1">
-                              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">Historical Records</p>
-                              <p className="text-lg font-bold text-foreground/90 font-sans">
-                                Track the evolution of the platform with detailed version logs.
-                              </p>
-                            </div>
-                          </div>
-                          <Button onClick={() => setUpdateDialogOpen(true)} variant="outline" className="rounded-xl h-12 px-6 glass border-white/10 hover:bg-white/10 hover:text-foreground transition-all shrink-0 text-sm">
-                            <HistoryIcon className="mr-2 h-4 w-4" />
-                            Manage Logs
-                          </Button>
-                        </div>
-                      </div>
-                    </section>
-                  </AccordionContent>
-                </AccordionItem>
               </Accordion>
             </AccordionContent>
           </AccordionItem>
@@ -943,7 +804,6 @@ export default function AdminDashboardPage() {
 
       <ProjectDialog open={addProjectOpen} onOpenChange={setAddProjectOpen} onSuccess={fetchProjects} />
       <AdminDialog open={addAdminOpen} onOpenChange={setAddAdminOpen} onSuccess={fetchAdmins} />
-      <UpdateDialog open={updateDialogOpen} onOpenChange={setUpdateDialogOpen} onSuccess={fetchUpdateData} />
       <BadgeDialog open={badgeDialogOpen} onOpenChange={setBadgeDialogOpen} onSuccess={fetchUpdateData} />
       <NewsDialog open={addNewsOpen} onOpenChange={setAddNewsOpen} onSuccess={fetchNews} />
     </div>
