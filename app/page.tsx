@@ -14,17 +14,8 @@ import { V4Hero } from "@/components/v4/V4Hero"
 const V4Projects = dynamicImport(() =>
   import("@/components/v4/V4Projects").then((mod) => mod.V4Projects)
 )
-const V4TechStack = dynamicImport(() =>
-  import("@/components/v4/V4TechStack").then((mod) => mod.V4TechStack)
-)
-const V4Contact = dynamicImport(() =>
-  import("@/components/v4/V4Contact").then((mod) => mod.V4Contact)
-)
 const V4Footer = dynamicImport(() =>
   import("@/components/v4/V4Footer").then((mod) => mod.V4Footer)
-)
-const V4Dock = dynamicImport(() =>
-  import("@/components/v4/V4Dock").then((mod) => mod.V4Dock)
 )
 
 export const revalidate = 120
@@ -87,21 +78,15 @@ export default async function HomePage() {
 
       <V4Navbar />
 
-      <main className="relative z-10">
+      <div className="relative z-10" role="region" aria-label="Portfolio content">
         <V4Hero badgeText={badgeText} badgeHref={badgeHref} badgeStatus={badgeStatus} />
 
         <div className="relative">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
           <V4Projects projects={projects} incidentProjectMarkers={incidentProjectMarkers} />
         </div>
-        <V4TechStack />
-
-        <V4Contact />
-
         <V4Footer />
-      </main>
-
-      <V4Dock />
+      </div>
     </div >
   )
 }

@@ -5,7 +5,6 @@ import { useRef, useEffect } from "react"
 import { AlertTriangle, ArrowRight, CheckCircle2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { FaCoffee } from "react-icons/fa"
 import { useSiteSettings } from "@/components/site-settings-provider"
 import type { SystemStatusLevel } from "@/lib/status-summary"
 
@@ -22,7 +21,6 @@ export function V4Hero({
 }: V4HeroProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const { developerName } = useSiteSettings()
-    const developerNameUpper = developerName.toUpperCase()
     const badgeClassName =
         badgeStatus === "outage"
             ? "border-red-500/35 text-red-300 hover:border-red-400/70"
@@ -126,9 +124,9 @@ export function V4Hero({
                             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                             className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[1] font-display"
                         >
-                            <span className="block text-foreground drop-shadow-sm uppercase">{developerNameUpper}</span>
+                            <span className="block text-foreground drop-shadow-sm uppercase">{developerName}</span>
                             <span className="relative inline-block">
-                                <span className="block pb-[0.08em] bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent italic">PORTFOLIO.</span>
+                                <span className="block pb-[0.08em] bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent italic">Portfolio</span>
                             </span>
                         </motion.h1>
 
@@ -138,9 +136,7 @@ export function V4Hero({
                             transition={{ delay: 0.2 }}
                             className="text-base sm:text-lg md:text-2xl text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed"
                         >
-                            Crafting high-fidelity digital experiences with
-                            <span className="text-foreground"> precision </span> and
-                            <span className="text-primary italic"> artistic vision</span>.
+                            An independent developer who codes innovative websites and applications.
                         </motion.p>
                     </div>
 
@@ -152,19 +148,13 @@ export function V4Hero({
                     >
                         <Button asChild size="lg" className="h-14 sm:h-16 px-8 sm:px-10 rounded-2xl bg-primary text-primary-foreground hover:scale-105 transition-transform shadow-2xl shadow-primary/20 text-sm sm:text-md font-bold uppercase tracking-widest w-full sm:w-auto">
                             <Link href="#projects">
-                                Explore Work
+                                View Projects
                                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </Link>
                         </Button>
                         <Button variant="outline" size="lg" className="h-14 sm:h-16 px-8 sm:px-10 rounded-2xl border-white/10 glass hover:bg-white/5 text-sm sm:text-md font-bold uppercase tracking-widest transition-all w-full sm:w-auto">
                             <Link href="/contact">
                                 Get in touch
-                            </Link>
-                        </Button>
-                        <Button variant="outline" size="lg" className="h-14 sm:h-16 px-8 sm:px-10 rounded-2xl border-white/10 glass hover:bg-white/5 text-sm sm:text-md font-bold uppercase tracking-widest transition-all w-full sm:w-auto">
-                            <Link href="https://buymeacoffee.com/drayko_dev" className="flex items-center justify-center">
-                                <FaCoffee className="w-5 h-5 mr-2" />
-                                <span>Buy Me a Coffee</span>
                             </Link>
                         </Button>
                     </motion.div>

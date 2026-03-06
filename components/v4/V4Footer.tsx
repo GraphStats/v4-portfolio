@@ -5,12 +5,11 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { FaCoffee } from "react-icons/fa"
 import { useSiteSettings } from "@/components/site-settings-provider"
-import { NewsletterForm } from "@/components/newsletter-form"
-
 
 export function V4Footer() {
     const { developerName } = useSiteSettings()
     const brandUpper = developerName.toUpperCase()
+
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" })
     }
@@ -18,15 +17,12 @@ export function V4Footer() {
     const navItems = [
         { label: "Home", href: "/" },
         { label: "Projects", href: "/#projects" },
-        { label: "Feedback", href: "/feedback" },
         { label: "About", href: "/about" },
         { label: "Contact", href: "/contact" },
-        { label: "Stats", href: "/stats" },
-        { label: "Tags", href: "/tags-info" },
     ]
 
     return (
-        <footer className="relative pt-20 sm:pt-24 md:pt-32 pb-28 sm:pb-32 md:pb-40 overflow-hidden border-t border-white/5">
+        <footer className="relative pt-20 sm:pt-24 md:pt-32 pb-28 sm:pb-32 md:pb-40 overflow-hidden border-t border-white/5" aria-label="Site footer">
             <div className="container mx-auto px-4 sm:px-6">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-16 mb-16 md:mb-20">
                     <div className="col-span-1 md:col-span-2 space-y-8">
@@ -37,21 +33,21 @@ export function V4Footer() {
                             <span className="text-3xl font-black tracking-tighter">{brandUpper} <span className="text-primary italic">.</span></span>
                         </div>
                         <p className="text-base sm:text-lg text-muted-foreground max-w-sm leading-relaxed">
-                            Building the next generation of digital tools and experiences with a focus on human-centric design.
+                            Portfolio focused on concrete projects, clear outcomes, and useful digital experiences.
                         </p>
                         <div className="flex gap-4">
                             <Button asChild variant="outline" size="icon" className="rounded-xl glass border-white/5 hover:bg-primary hover:text-primary-foreground transition-all">
-                                <a href="https://github.com/graphstats" target="_blank" rel="noopener noreferrer">
+                                <a href="https://github.com/graphstats" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
                                     <Github className="w-5 h-5" />
                                 </a>
                             </Button>
                             <Button asChild variant="outline" size="icon" className="rounded-xl glass border-white/5 hover:bg-primary hover:text-primary-foreground transition-all">
-                                <a href="https://buymeacoffee.com/drayko_dev">
+                                <a href="https://buymeacoffee.com/drayko_dev" aria-label="Buy me a coffee">
                                     <FaCoffee className="w-5 h-5" />
                                 </a>
                             </Button>
                             <Button asChild variant="outline" size="icon" className="rounded-xl glass border-white/5 hover:bg-primary hover:text-primary-foreground transition-all">
-                                <a href="mailto:hello@drayko.xyz">
+                                <a href="mailto:hello@drayko.xyz" aria-label="Send email">
                                     <Mail className="w-5 h-5" />
                                 </a>
                             </Button>
@@ -90,18 +86,6 @@ export function V4Footer() {
                                 </Link>
                             </li>
                         </ul>
-                        <h4 className="text-xs font-black uppercase tracking-widest text-primary">Social</h4>
-                        <ul className="space-y-4">
-                            <li>
-                                <Link href="https://buymeacoffee.com/drayko_dev" className="text-muted-foreground hover:text-primary transition-colors font-medium">
-                                    Buy Me a Coffee
-                                </Link>
-                            </li>
-                        </ul>
-                        <div className="pt-2 space-y-2">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-primary">Newsletter</h4>
-                            <NewsletterForm />
-                        </div>
                     </div>
                 </div>
 
@@ -122,7 +106,6 @@ export function V4Footer() {
                 </div>
             </div>
 
-            {/* Background Text */}
             <div className="absolute -bottom-10 left-0 right-0 pointer-events-none select-none overflow-hidden whitespace-nowrap opacity-[0.02]">
                 <span className="text-[8rem] sm:text-[12rem] md:text-[20rem] font-black tracking-tighter leading-none italic uppercase">
                     {`${brandUpper}   ${brandUpper}   ${brandUpper}   ${brandUpper}`}
@@ -131,4 +114,3 @@ export function V4Footer() {
         </footer>
     )
 }
-

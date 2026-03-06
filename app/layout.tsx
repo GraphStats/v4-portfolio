@@ -50,6 +50,9 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${outfit.variable}`}>
       <body className="font-sans antialiased selection:bg-primary/30 selection:text-primary transition-colors duration-300" suppressHydrationWarning>
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
         <SiteSettingsProvider developerName={developerName}>
           <PerformanceModeProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange storageKey="theme">
@@ -59,13 +62,13 @@ export default async function RootLayout({
                 <PerformanceFloatingToggle />
                 <Toaster position="top-right" richColors />
                 <div className="relative flex min-h-screen flex-col">
-                  <main className="flex-1">
+                  <div id="main-content" className="flex-1" tabIndex={-1}>
                     <ErrorModeGate enabled={errorMode.isErrorMode} message={errorMode.message}>
                       <Suspense fallback={children}>
                         <RouteTransitionProvider>{children}</RouteTransitionProvider>
                       </Suspense>
                     </ErrorModeGate>
-                  </main>
+                  </div>
                 </div>
               {isProd && (
                 <>

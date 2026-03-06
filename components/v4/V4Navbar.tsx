@@ -1,14 +1,11 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { Command, Menu, X, ChevronRight, Search } from "lucide-react"
+import { Command, Menu, X, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { AuthButtons } from "@/components/auth-buttons"
-import { VersionSelector } from "@/components/version-selector"
-import { FaCoffee } from "react-icons/fa"
 import { useRouteTransition } from "@/components/route-transition"
 import { useSiteSettings } from "@/components/site-settings-provider"
 
@@ -40,12 +37,8 @@ export function V4Navbar() {
             document.body.style.overflow = originalOverflow
         }
     }, [mobileOpen])
-
-    
-
     const navItems = [
         { label: "Projects", href: "/#projects" },
-        { label: "News", href: "/news" },
         { label: "About", href: "/about" },
         { label: "Contact", href: "/contact" },
     ]
@@ -62,11 +55,11 @@ export function V4Navbar() {
                             <Command className="w-5 h-5" />
                         </motion.div>
                         <span className="text-xl font-black tracking-tighter uppercase italic">
-                            {developerName}<span className="text-primary group-hover:text-white transition-colors">.</span>
+                            {developerName}<span className="text-primary group-hover:text-white transition-colors"> Portfolio</span>
                         </span>
                     </Link>
 
-                    <div className="hidden lg:flex items-center gap-8">
+                    <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
                         {navItems.map((item) => (
                             <Link
                                 key={item.label}
@@ -76,23 +69,12 @@ export function V4Navbar() {
                                 {item.label}
                             </Link>
                         ))}
-                    </div>
+                    </nav>
 
                     <div className="flex items-center gap-3">
-                        <div className="hidden md:flex items-center gap-3">
-                            <Button asChild variant="outline" size="sm" className="rounded-xl glass border-white/5 text-[10px] font-black uppercase tracking-widest px-4">
-                                <Link href="/search">
-                                    <Search className="w-3.5 h-3.5 mr-2" />
-                                    Search
-                                </Link>
-                            </Button>
-                            <VersionSelector />
-                            <AuthButtons />
-                        </div>
-                        <Button asChild variant="outline" size="sm" className="hidden lg:flex rounded-xl glass border-white/5 text-[10px] font-black uppercase tracking-widest px-6 hover:bg-primary hover:text-primary-foreground transition-all">
-                            <Link href="https://buymeacoffee.com/drayko_dev">
-                                <FaCoffee className="w-3.5 h-3.5 mr-2" />
-                                Buy Me a Coffee
+                        <Button asChild variant="outline" size="sm" className="hidden md:flex rounded-xl glass border-white/5 text-[10px] font-black uppercase tracking-widest px-6 hover:bg-primary hover:text-primary-foreground transition-all">
+                            <Link href="/contact">
+                                Contact
                             </Link>
                         </Button>
                         <Button
@@ -101,6 +83,7 @@ export function V4Navbar() {
                             className="lg:hidden rounded-xl"
                             aria-label="Open menu"
                             aria-expanded={mobileOpen}
+                            aria-controls="mobile-menu"
                             onClick={() => setMobileOpen(true)}
                         >
                             <Menu className="w-5 h-5" />
@@ -146,6 +129,7 @@ export function V4Navbar() {
                             exit={{ y: -10, opacity: 0 }}
                             transition={{ duration: 0.2 }}
                             className="absolute left-4 right-4 top-20"
+                            id="mobile-menu"
                         >
                             <div className="v4-glass rounded-3xl p-6 border border-white/10 shadow-2xl">
                                 <div className="flex items-center justify-between">
@@ -163,7 +147,7 @@ export function V4Navbar() {
                                     </Button>
                                 </div>
 
-                                <div className="mt-6 grid gap-2">
+                                <nav className="mt-6 grid gap-2" aria-label="Mobile navigation">
                                     {navItems.map((item) => (
                                         <Link
                                             key={item.label}
@@ -175,28 +159,7 @@ export function V4Navbar() {
                                             <ChevronRight className="w-4 h-4" />
                                         </Link>
                                     ))}
-                                </div>
-
-                                <div className="mt-6 grid gap-3">
-                                    <div className="flex items-center justify-between rounded-2xl px-4 py-3 bg-white/5 border border-white/10">
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                                            Version
-                                        </span>
-                                        <VersionSelector />
-                                    </div>
-                                    <div className="flex items-center justify-between rounded-2xl px-4 py-3 bg-white/5 border border-white/10">
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                                            Account
-                                        </span>
-                                        <AuthButtons />
-                                    </div>
-                                    <Button asChild variant="outline" className="w-full rounded-2xl glass border-white/5 text-[10px] font-black uppercase tracking-widest">
-                                        <Link href="https://buymeacoffee.com/drayko_dev" className="flex items-center justify-center">
-                                            <FaCoffee className="w-4 h-4 mr-2" />
-                                            Buy Me a Coffee
-                                        </Link>
-                                    </Button>
-                                </div>
+                                </nav>
                             </div>
                         </motion.div>
                     </motion.div>

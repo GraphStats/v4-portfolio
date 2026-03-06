@@ -106,6 +106,10 @@
     @apply border-border/40 outline-ring/30 selection:bg-primary/30 selection:text-primary;
   }
 
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+
   body {
     @apply bg-background text-foreground transition-colors duration-700 antialiased;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
@@ -128,6 +132,28 @@
 
   ::-webkit-scrollbar-thumb:hover {
     background: oklch(0.7 0.25 260 / 0.3);
+  }
+
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 200;
+    border-radius: 0.75rem;
+    border: 1px solid color-mix(in oklab, var(--color-primary), white 15%);
+    background: color-mix(in oklab, var(--color-background), black 20%);
+    color: var(--color-foreground);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transform: translateY(-160%);
+    transition: transform 0.2s ease;
+  }
+
+  .skip-link:focus-visible {
+    transform: translateY(0);
   }
 }
 

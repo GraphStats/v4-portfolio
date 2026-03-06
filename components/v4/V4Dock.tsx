@@ -1,29 +1,24 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { Home, User, Briefcase, Mail, BarChart3, Settings, Moon, Sun, MessageSquare } from "lucide-react"
+import { Home, User, Briefcase, Mail, Moon, Sun } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useTheme } from "next-themes"
+import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { FaCoffee } from "react-icons/fa"
 
 const items = [
     { icon: Home, label: "Home", href: "/" },
     { icon: Briefcase, label: "Projects", href: "/#projects" },
-    { icon: BarChart3, label: "Stats", href: "/stats" },
-    { icon: MessageSquare, label: "Feedback", href: "/feedback" },
     { icon: User, label: "About", href: "/about" },
     { icon: Mail, label: "Contact", href: "/contact" },
-    { icon: FaCoffee, label: "Buy Me a Coffee", href: "https://buymeacoffee.com/drayko_dev" },
-    { icon: Settings, label: "Admin", href: "/admin" },
 ]
 
 const mobileItems = [
     { icon: Home, label: "Home", href: "/" },
     { icon: Briefcase, label: "Projects", href: "/#projects" },
-    { icon: BarChart3, label: "Stats", href: "/stats" },
-    { icon: MessageSquare, label: "Feedback", href: "/feedback" },
+    { icon: User, label: "About", href: "/about" },
     { icon: Mail, label: "Contact", href: "/contact" },
 ]
 
@@ -32,6 +27,7 @@ export function V4Dock() {
     const { theme, setTheme } = useTheme()
     const [mounted, setMounted] = useState(false)
     const [hideDock, setHideDock] = useState(false)
+    const pathname = usePathname()
 
     useEffect(() => setMounted(true), [])
 
@@ -78,6 +74,8 @@ export function V4Dock() {
                     initial={{ y: 100, opacity: 0.5 }}
                     animate={{ y: hideDock ? 30 : 0, opacity: hideDock ? 0 : 1 }}
                     transition={{ duration: 0.25 }}
+                    role="navigation"
+                    aria-label="Quick navigation"
                     className={cn(
                         "flex items-center gap-2 p-2 rounded-3xl v4-glass bg-background/70 backdrop-blur-xl border border-white/15 shadow-2xl shadow-black/30",
                         hideDock && "pointer-events-none"
@@ -92,7 +90,9 @@ export function V4Dock() {
                                 whileTap={{ scale: 0.9 }}
                                 className={cn(
                                     "relative p-4 rounded-2xl transition-colors",
-                                    hovered === i ? "bg-primary text-primary-foreground" : "text-foreground/75 hover:text-foreground hover:bg-white/10"
+                                    hovered === i || pathname === item.href
+                                        ? "bg-primary text-primary-foreground"
+                                        : "text-foreground/75 hover:text-foreground hover:bg-white/10"
                                 )}
                             >
                                 <item.icon className="w-6 h-6 drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]" />
@@ -131,6 +131,8 @@ export function V4Dock() {
                     initial={{ y: 80, opacity: 0 }}
                     animate={{ y: hideDock ? 20 : 0, opacity: hideDock ? 0 : 1 }}
                     transition={{ duration: 0.25 }}
+                    role="navigation"
+                    aria-label="Mobile quick navigation"
                     className={cn(
                         "flex items-center justify-between gap-2 px-3 py-2 rounded-2xl v4-glass bg-background/75 backdrop-blur-xl border border-white/15 shadow-xl shadow-black/25",
                         hideDock && "pointer-events-none"
