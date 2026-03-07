@@ -100,7 +100,7 @@ export function V4Hero({
                 />
             </div>
 
-            <div className="container relative z-10 mx-auto -mt-20 sm:-mt-32">
+            <div className="container relative z-10 mx-auto pt-16 sm:pt-20 md:pt-24">
                 <div className="flex flex-col items-center text-center space-y-8 sm:space-y-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
