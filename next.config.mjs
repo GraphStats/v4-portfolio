@@ -3,6 +3,15 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  experimental: {
+    optimizePackageImports: [
+      "lucide-react",
+      "recharts",
+      "react-icons",
+      "date-fns",
+      "firebase",
+    ],
+  },
   images: {
     remotePatterns: [
       {

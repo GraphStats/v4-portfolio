@@ -4,8 +4,8 @@ import { Inter, Outfit } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import Script from "next/script"
+import dynamic from "next/dynamic"
 import { ThemeProvider } from "@/components/theme-provider"
-import { SpecialThemeHandler } from "@/components/special-theme-handler"
 import { ClerkThemeProvider } from "@/components/clerk-theme-provider"
 import { Toaster } from "sonner"
 import { getErrorMode, getSiteSettings } from "@/lib/actions"
@@ -13,14 +13,21 @@ import { normalizeDeveloperName } from "@/lib/site-settings"
 import { RouteTransitionProvider } from "@/components/route-transition"
 import { SiteSettingsProvider } from "@/components/site-settings-provider"
 import { PerformanceModeProvider } from "@/components/performance-mode-provider"
-import { PWAInstaller } from "@/components/pwa-installer"
-import { PerformanceFloatingToggle } from "@/components/performance-floating-toggle"
 import { ErrorModeGate } from "@/components/error-mode-gate"
 
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" })
+const SpecialThemeHandler = dynamic(
+  () => import("@/components/special-theme-handler").then((mod) => mod.SpecialThemeHandler)
+)
+const PWAInstaller = dynamic(
+  () => import("@/components/pwa-installer").then((mod) => mod.PWAInstaller)
+)
+const PerformanceFloatingToggle = dynamic(
+  () => import("@/components/performance-floating-toggle").then((mod) => mod.PerformanceFloatingToggle)
+)
 
 export async function generateMetadata(): Promise<Metadata> {
   const { developerName } = await getSiteSettings()
@@ -43,8 +50,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: ReactNode
 }>) {
-  const errorMode = await getErrorMode()
-  const { developerName } = await getSiteSettings()
+  const [errorMode, siteSettings] = await Promise.all([getErrorMode(), getSiteSettings()])
+  const { developerName } = siteSettings
   const isProd = process.env.NODE_ENV === "production"
 
   return (
@@ -58,7 +65,7 @@ export default async function RootLayout({
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange storageKey="theme">
               <ClerkThemeProvider>
                 <SpecialThemeHandler />
-                <PWAInstaller />
+                {isProd && <PWAInstaller />}
                 <PerformanceFloatingToggle />
                 <Toaster position="top-right" richColors />
                 <div className="relative flex min-h-screen flex-col">

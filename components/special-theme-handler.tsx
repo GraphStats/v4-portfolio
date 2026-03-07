@@ -40,6 +40,71 @@ interface ActiveThemes {
     christmas: boolean
 }
 
+const AVAILABLE_THEMES: ThemeConfig[] = [
+    {
+        id: "new-year",
+        name: "New Year",
+        description: "New Year seasonal visual theme",
+        startDate: { day: 25, month: 12, year: 2025, hour: 0, minute: 0, second: 0 },
+        endDate: { day: 7, month: 1, year: 2026, hour: 23, minute: 59, second: 59 },
+    },
+    {
+        id: "christmas",
+        name: "Christmas",
+        description: "Christmas seasonal visual theme",
+        startDate: { day: 15, month: 12, year: 2025, hour: 0, minute: 0, second: 0 },
+        endDate: { day: 31, month: 12, year: 2025, hour: 23, minute: 59, second: 59 },
+    },
+]
+
+const THEMES_CACHE_KEY = "special-themes-config-v1"
+const THEMES_CACHE_TTL_MS = 1000 * 60 * 60 * 6
+
+function toDate(input: ThemeConfig["startDate"]): Date {
+    return new Date(input.year, input.month - 1, input.day, input.hour, input.minute, input.second)
+}
+
+function isPotentiallyActiveWindow(now: Date, themes: ThemeConfig[]): boolean {
+    const month = now.getMonth() + 1
+    if (month === 12 || month === 1) return true
+
+    return themes.some((theme) => {
+        const startDate = toDate(theme.startDate)
+        const endDate = toDate(theme.endDate)
+        const diffToStart = Math.abs(startDate.getTime() - now.getTime())
+        const diffToEnd = Math.abs(endDate.getTime() - now.getTime())
+        const oneMonthMs = 1000 * 60 * 60 * 24 * 31
+        return diffToStart <= oneMonthMs || diffToEnd <= oneMonthMs
+    })
+}
+
+function readCachedThemes(now: number): ThemeConfig[] | null {
+    try {
+        const cachedRaw = localStorage.getItem(THEMES_CACHE_KEY)
+        if (!cachedRaw) return null
+        const cached = JSON.parse(cachedRaw) as { themes?: ThemeConfig[]; savedAt?: number }
+        if (!Array.isArray(cached.themes) || typeof cached.savedAt !== "number") return null
+        if (now - cached.savedAt > THEMES_CACHE_TTL_MS) return null
+        return cached.themes
+    } catch {
+        return null
+    }
+}
+
+function writeCachedThemes(themes: ThemeConfig[]) {
+    try {
+        localStorage.setItem(
+            THEMES_CACHE_KEY,
+            JSON.stringify({
+                themes,
+                savedAt: Date.now(),
+            })
+        )
+    } catch {
+        // Ignore storage errors.
+    }
+}
+
 export function SpecialThemeHandler() {
     const [activeThemes, setActiveThemes] = useState<ActiveThemes>({
         newYear: false,
@@ -49,72 +114,47 @@ export function SpecialThemeHandler() {
     useEffect(() => {
         const checkThemes = async () => {
             const now = new Date()
+            let themes: ThemeConfig[] = AVAILABLE_THEMES
 
             try {
-                const { getFirestoreClient } = await import("@/lib/firebase/client")
-                const { doc, getDoc } = await import("firebase/firestore")
+                const cachedThemes = readCachedThemes(now.getTime())
+                if (cachedThemes) {
+                    themes = cachedThemes
+                } else if (isPotentiallyActiveWindow(now, AVAILABLE_THEMES)) {
+                    const { getFirestoreClient } = await import("@/lib/firebase/client")
+                    const { doc, getDoc } = await import("firebase/firestore")
 
-                const db = getFirestoreClient()
-                const docRef = doc(db, "special-themes", "config")
-                const docSnap = await getDoc(docRef)
+                    const db = getFirestoreClient()
+                    const docRef = doc(db, "special-themes", "config")
+                    const docSnap = await getDoc(docRef)
 
-                let themes: ThemeConfig[] = []
-
-                if (docSnap.exists()) {
-                    const data = docSnap.data()
-                    if (data.themes) {
-                        const savedThemes = data.themes
-                        const mergedThemes = AVAILABLE_THEMES.map(defaultTheme => {
-                            const savedTheme = savedThemes.find(t => t.id === defaultTheme.id)
-                            return savedTheme || defaultTheme
-                        })
-                        themes = mergedThemes
+                    if (docSnap.exists()) {
+                        const data = docSnap.data() as { themes?: ThemeConfig[] }
+                        if (Array.isArray(data.themes)) {
+                            const mergedThemes = AVAILABLE_THEMES.map((defaultTheme) => {
+                                const savedTheme = data.themes?.find((theme) => theme.id === defaultTheme.id)
+                                return savedTheme || defaultTheme
+                            })
+                            themes = mergedThemes
+                            writeCachedThemes(themes)
+                        }
                     }
                 }
-
 
                 const newYearTheme = themes.find(t => t.id === 'new-year')
                 const christmasTheme = themes.find(t => t.id === 'christmas')
 
                 let isNewYearActive = false
                 if (newYearTheme) {
-                    const startDate = new Date(
-                        newYearTheme.startDate.year,
-                        newYearTheme.startDate.month - 1,
-                        newYearTheme.startDate.day,
-                        newYearTheme.startDate.hour,
-                        newYearTheme.startDate.minute,
-                        newYearTheme.startDate.second
-                    )
-                    const endDate = new Date(
-                        newYearTheme.endDate.year,
-                        newYearTheme.endDate.month - 1,
-                        newYearTheme.endDate.day,
-                        newYearTheme.endDate.hour,
-                        newYearTheme.endDate.minute,
-                        newYearTheme.endDate.second
-                    )
+                    const startDate = toDate(newYearTheme.startDate)
+                    const endDate = toDate(newYearTheme.endDate)
                     isNewYearActive = now >= startDate && now <= endDate
                 }
 
                 let isChristmasActive = false
                 if (christmasTheme) {
-                    const startDate = new Date(
-                        christmasTheme.startDate.year,
-                        christmasTheme.startDate.month - 1,
-                        christmasTheme.startDate.day,
-                        christmasTheme.startDate.hour,
-                        christmasTheme.startDate.minute,
-                        christmasTheme.startDate.second
-                    )
-                    const endDate = new Date(
-                        christmasTheme.endDate.year,
-                        christmasTheme.endDate.month - 1,
-                        christmasTheme.endDate.day,
-                        christmasTheme.endDate.hour,
-                        christmasTheme.endDate.minute,
-                        christmasTheme.endDate.second
-                    )
+                    const startDate = toDate(christmasTheme.startDate)
+                    const endDate = toDate(christmasTheme.endDate)
                     isChristmasActive = now >= startDate && now <= endDate
                 }
 
@@ -166,7 +206,7 @@ export function SpecialThemeHandler() {
         }
 
         checkThemes()
-        const interval = setInterval(checkThemes, 1000 * 60 * 60)
+        const interval = setInterval(checkThemes, THEMES_CACHE_TTL_MS)
 
         return () => {
             clearInterval(interval)

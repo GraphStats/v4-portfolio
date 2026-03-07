@@ -37,17 +37,32 @@ export interface StatusSummary {
 export type SystemStatusLevel = "operational" | "degraded" | "outage"
 
 const STATUS_SUMMARY_URL = "https://status.drayko.xyz/api/v1/summary"
+const STATUS_SUMMARY_TIMEOUT_MS = 600
+
+function createTimeoutSignal(timeoutMs: number) {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+  return { signal: controller.signal, timeoutId }
+}
 
 export async function getStatusSummary(): Promise<StatusSummary | null> {
+  const { signal, timeoutId } = createTimeoutSignal(STATUS_SUMMARY_TIMEOUT_MS)
+
   try {
     const response = await fetch(STATUS_SUMMARY_URL, {
+      signal,
+      cache: "force-cache",
       next: { revalidate: 30 },
     })
     if (!response.ok) return null
     return (await response.json()) as StatusSummary
   } catch (error) {
-    console.error("status summary fetch failed:", error)
+    if (!(error instanceof Error && error.name === "AbortError")) {
+      console.error("status summary fetch failed:", error)
+    }
     return null
+  } finally {
+    clearTimeout(timeoutId)
   }
 }
 

@@ -26,9 +26,15 @@ const getMaintenanceModeCached = unstable_cache(
   { revalidate: 30, tags: ["settings-general"] }
 )
 
-const getHomePageData = unstable_cache(
+const getStatusSummaryCached = unstable_cache(
+  async () => getStatusSummary(),
+  ["home-status-summary"],
+  { revalidate: 30, tags: ["status-summary"] }
+)
+
+const getHomePageStaticData = unstable_cache(
   async () => {
-    const [statusSummary, db] = await Promise.all([getStatusSummary(), getFirestoreServer()])
+    const db = await getFirestoreServer()
     const projectsQuery = query(collection(db, "portfolio"), orderBy("created_at", "desc"))
     const [querySnapshot, updateDocSnap] = await Promise.all([
       getDocs(projectsQuery),
@@ -41,10 +47,10 @@ const getHomePageData = unstable_cache(
     })) as Project[]
 
     const updateData = updateDocSnap.exists() ? (updateDocSnap.data() as SiteUpdate) : null
-    return { statusSummary, projects, updateData }
+    return { projects, updateData }
   },
-  ["home-page-data"],
-  { revalidate: 120, tags: ["home-page-data", "projects", "status-summary", "settings-general"] }
+  ["home-page-static-data"],
+  { revalidate: 300, tags: ["home-page-data", "projects", "settings-general"] }
 )
 
 export default async function HomePage() {
@@ -58,7 +64,10 @@ export default async function HomePage() {
   let badgeHref = "/status"
   let badgeStatus: SystemStatusLevel = "operational"
 
-  const { statusSummary, projects: cachedProjects, updateData } = await getHomePageData()
+  const [{ projects: cachedProjects, updateData }, statusSummary] = await Promise.all([
+    getHomePageStaticData(),
+    getStatusSummaryCached(),
+  ])
   const activeIncident = getActiveIncident(statusSummary)
   const incidentLevel = getIncidentLevel(activeIncident)
   const incidentProjectMarkers = getIncidentProjectMarkers(activeIncident)
