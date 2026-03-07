@@ -62,7 +62,7 @@ export function V4Hero({
     return (
         <section
             ref={containerRef}
-            className="relative min-h-[90vh] sm:min-h-screen flex items-center justify-center overflow-hidden bg-background py-20 sm:py-24 px-4 sm:px-6"
+            className="relative min-h-[90vh] sm:min-h-screen flex items-start xl:items-center justify-center overflow-hidden bg-background py-20 sm:py-24 px-4 sm:px-6"
             style={{
                 ["--mouse-x" as string]: "50%",
                 ["--mouse-y" as string]: "50%",
@@ -100,7 +100,7 @@ export function V4Hero({
                 />
             </div>
 
-            <div className="container relative z-10 mx-auto pt-16 sm:pt-20 md:pt-24">
+            <div className="container relative z-10 mx-auto pt-20 sm:pt-24 md:pt-28 xl:pt-0">
                 <div className="flex flex-col items-center text-center space-y-8 sm:space-y-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
