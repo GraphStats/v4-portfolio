@@ -91,7 +91,7 @@ export function V4Footer() {
 
                 <div className="flex flex-col md:flex-row justify-between items-center py-8 sm:py-10 md:py-12 border-t border-white/5 gap-6 md:gap-8">
                     <p className="text-sm text-muted-foreground font-medium">
-                        © {new Date().getFullYear()} {developerName}. All rights reserved. <span className="text-primary">v4.0.0</span>
+                        © {new Date().getFullYear()} {developerName}. All rights reserved. <span className="text-primary">v5.0.0</span>
                     </p>
                     <Button
                         onClick={scrollToTop}
